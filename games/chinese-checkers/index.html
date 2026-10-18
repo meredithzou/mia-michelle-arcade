@@ -7,9 +7,7 @@
 <style>
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",system-ui,sans-serif;background:#f0f5ee;color:#223a35;-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible{outline:3px solid #276f63;outline-offset:3px}
 #cc-app{max-width:750px;margin:0 auto;padding:12px 12px 18px;--forest:#265c4d;--mint:#e5f3e8}.shell{border:1px solid #d5e4d9;border-radius:22px;background:#fffefa;box-shadow:0 10px 34px #1b4a3020;overflow:hidden}.header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:17px 18px 10px}.eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:900;color:#6a9280}.heading{font-weight:900;font-size:clamp(19px,4.7vw,29px);line-height:1.18;letter-spacing:-.65px}.subheading{font-size:12px;color:#789085;margin-top:3px}.headerActions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.iconBtn{border-radius:11px;padding:9px 12px;background:#f0f5ee;border:1px solid #dce7db;font-weight:800;color:#395e4c;min-height:41px;white-space:nowrap;font-size:13px}.turnCard{margin:5px 14px 0;background:#eff6ef;border:1px solid #e0ece2;border-radius:14px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:63px}.turnLeft{display:flex;align-items:center;gap:10px;min-width:0}.pieceIcon{width:35px;height:35px;border-radius:50%;background:var(--current,#ed6466);border:3px solid #fff9;box-shadow:inset -5px -6px 0 #0002,0 2px 4px #1e413029;flex:none}.turnLabel{font-size:10px;letter-spacing:.4px;color:#678077;font-weight:800}.turnName{font-size:17px;font-weight:900;white-space:nowrap}.turnDetail{font-size:12px;font-weight:700;color:#5e8470;text-align:right;max-width:45%}.boardArea{position:relative;margin:0 auto;width:min(100%,680px);touch-action:manipulation;user-select:none;-webkit-user-select:none}.boardArea svg{display:block;width:100%;height:auto;touch-action:manipulation;overflow:visible}.boardArea svg [data-k]{cursor:pointer;touch-action:manipulation}.boardArea svg [data-k] .hit{fill:transparent}.instruction{margin:0 14px 9px;padding:10px 11px;background:#fff7e6;border:1px solid #f0e4c8;border-radius:11px;color:#7c6027;font-size:12px;font-weight:700;line-height:1.45;min-height:37px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 14px 12px}.control{min-height:49px;padding:9px;border-radius:12px;border:1px solid #d2e0d4;background:#f0f4ef;color:#345b47;font-size:14px;font-weight:850}.control.primary{background:#267659;color:white;border-color:#267659;box-shadow:0 3px 0 #1a5642}.control:disabled{opacity:.38;cursor:default;box-shadow:none}
-.stopGuide{margin:10px 14px 0;padding:8px 11px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#e9f8e9;border:2px solid #6db78b;border-radius:13px;color:#246247;font-size:13px;font-weight:850;line-height:1.35}.stopGuide button{background:#277e5a;color:white;font-weight:900;border:0;border-radius:9px;padding:12px 14px;min-height:48px;font-size:14px;white-space:nowrap}.stopGuide.hidden,.stopFloating.hidden{display:none}
-.stopFloating{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom, 0px));left:50%;transform:translateX(-50%);z-index:40;border:3px solid #f7fff7;border-radius:999px;padding:15px 23px;min-height:57px;background:#247b56;color:white;box-shadow:0 6px 20px #163c3273;font-size:16px;font-weight:900;white-space:nowrap;max-width:96vw;touch-action:manipulation}
-@media(min-width:900px){.stopFloating{bottom:26px}}.progress{padding:12px 14px 13px;border-top:1px solid #ecf1eb}.progressTitle{font-size:10px;letter-spacing:1.1px;font-weight:900;color:#889b8d;margin-bottom:8px}.progressItems{display:flex;flex-wrap:wrap;gap:6px}.progressChip{display:flex;gap:5px;align-items:center;border-radius:8px;padding:6px 8px;border:1px solid #e4ece2;background:#f9fbf7;font-size:12px;color:#4c685b;font-weight:850}.progressDot{width:10px;height:10px;border-radius:50%;background:var(--chip)}.progressChip.active{border-color:#7cbaa3;background:#eef8ef}.tinyFoot{text-align:center;color:#8ba092;font-size:10px;padding:10px 8px 3px}.scrim{position:absolute;inset:0;background:#193e2f99;display:flex;align-items:center;justify-content:center;padding:14px;border-radius:8px;z-index:5}.scrim.hidden{display:none}.modal{width:min(100%,430px);max-height:95%;overflow:auto;background:#fffefa;border:2px solid #c8dfd2;border-radius:20px;padding:19px 18px;box-shadow:0 10px 30px #122f2945}.modal h2{font-size:22px;margin:0 0 6px;letter-spacing:-.4px}.modal p{font-size:13px;color:#647e6c;margin:5px 0 12px;line-height:1.65}.groupTitle{font-size:13px;font-weight:850;color:#345a4c;margin:12px 0 8px}.countButtons{display:flex;gap:7px}.countButtons button{flex:1;border:1px solid #dce7de;background:#f6f8f5;border-radius:12px;min-height:45px;font-size:16px;color:#497061;font-weight:900}.countButtons button.chosen{background:#2c775e;color:white;border-color:#2c775e}.rulePicker{display:grid;grid-template-columns:1fr 1fr;gap:8px}.rulePicker button{display:flex;flex-direction:column;gap:3px;padding:10px;border-radius:12px;text-align:left;border:1px solid #dbe5d9;background:#f9faf7;min-height:69px}.rulePicker button.chosen{border:2px solid #3b9376;background:#ebf6ef;padding:9px}.rulePicker strong{font-size:13px;color:#294f3e}.rulePicker small{font-size:10px;color:#788c7d;line-height:1.35}.modalButtons{display:flex;gap:8px;margin-top:16px}.modalButtons button{min-height:47px;border-radius:12px;font-size:14px;font-weight:900;border:1px solid #cfe0d3;flex:1}.modalButtons .go{background:#27785d;color:white;border-color:#27785d}.modalButtons .secondary{background:#f1f5ef;color:#3b6651}.helpText{font-size:13px;line-height:1.8;color:#496958}.helpText b{color:#275b43}.helpText .ruleLine{padding:6px 0;border-bottom:1px solid #eaf0e9}.winner{font-size:19px;text-align:center;margin:14px 0 0;font-weight:900;color:#27785d}
+.progress{padding:12px 14px 13px;border-top:1px solid #ecf1eb}.progressTitle{font-size:10px;letter-spacing:1.1px;font-weight:900;color:#889b8d;margin-bottom:8px}.progressItems{display:flex;flex-wrap:wrap;gap:6px}.progressChip{display:flex;gap:5px;align-items:center;border-radius:8px;padding:6px 8px;border:1px solid #e4ece2;background:#f9fbf7;font-size:12px;color:#4c685b;font-weight:850}.progressDot{width:10px;height:10px;border-radius:50%;background:var(--chip)}.progressChip.active{border-color:#7cbaa3;background:#eef8ef}.tinyFoot{text-align:center;color:#8ba092;font-size:10px;padding:10px 8px 3px}.scrim{position:absolute;inset:0;background:#193e2f99;display:flex;align-items:center;justify-content:center;padding:14px;border-radius:8px;z-index:5}.scrim.hidden{display:none}.modal{width:min(100%,430px);max-height:95%;overflow:auto;background:#fffefa;border:2px solid #c8dfd2;border-radius:20px;padding:19px 18px;box-shadow:0 10px 30px #122f2945}.modal h2{font-size:22px;margin:0 0 6px;letter-spacing:-.4px}.modal p{font-size:13px;color:#647e6c;margin:5px 0 12px;line-height:1.65}.groupTitle{font-size:13px;font-weight:850;color:#345a4c;margin:12px 0 8px}.countButtons{display:flex;gap:7px}.countButtons button{flex:1;border:1px solid #dce7de;background:#f6f8f5;border-radius:12px;min-height:45px;font-size:16px;color:#497061;font-weight:900}.countButtons button.chosen{background:#2c775e;color:white;border-color:#2c775e}.rulePicker{display:grid;grid-template-columns:1fr 1fr;gap:8px}.rulePicker button{display:flex;flex-direction:column;gap:3px;padding:10px;border-radius:12px;text-align:left;border:1px solid #dbe5d9;background:#f9faf7;min-height:69px}.rulePicker button.chosen{border:2px solid #3b9376;background:#ebf6ef;padding:9px}.rulePicker strong{font-size:13px;color:#294f3e}.rulePicker small{font-size:10px;color:#788c7d;line-height:1.35}.modalButtons{display:flex;gap:8px;margin-top:16px}.modalButtons button{min-height:47px;border-radius:12px;font-size:14px;font-weight:900;border:1px solid #cfe0d3;flex:1}.modalButtons .go{background:#27785d;color:white;border-color:#27785d}.modalButtons .secondary{background:#f1f5ef;color:#3b6651}.helpText{font-size:13px;line-height:1.8;color:#496958}.helpText b{color:#275b43}.helpText .ruleLine{padding:6px 0;border-bottom:1px solid #eaf0e9}.winner{font-size:19px;text-align:center;margin:14px 0 0;font-weight:900;color:#27785d}
 @media(min-width:500px){#cc-app{padding:20px}.header{padding:19px 23px 11px}.boardArea{width:min(95%,680px)}}
 @media(max-width:375px){.headerActions{gap:4px}.heading{font-size:18px}.header{padding:12px 11px 8px}.iconBtn{padding:7px 9px;font-size:12px}.modal{padding:12px}.scrim{padding:5px}.turnName{font-size:15px}}
 @media(prefers-reduced-motion:no-preference){.pieceIcon{transition:background .2s}.control:not(:disabled):active,.iconBtn:active{transform:translateY(2px)}}
@@ -23,13 +21,11 @@
   <div class="headerActions"><button class="iconBtn" id="cc-sound" type="button" aria-label="关闭音效" aria-pressed="true">🔊 音效开</button><button class="iconBtn" id="cc-help" type="button">❔规则</button><button class="iconBtn" id="cc-settings" type="button">⚙️ 新游戏</button></div>
  </div>
  <div class="turnCard"><div class="turnLeft"><span class="pieceIcon" id="cc-color"></span><div><div class="turnLabel">轮到谁了？</div><div class="turnName" id="cc-turn">红方 · 玩家 1</div></div></div><div class="turnDetail" id="cc-detail">目标：走到正对面的三角形</div></div>
- <div class="stopGuide hidden" id="cc-stop-guide"><span>🦘 继续点黄色落点跳跃，或随时停下</span><button id="cc-stop-top" type="button">✓ 停在这里 · 下一位</button></div>
  <div class="boardArea"><svg id="cc-board" viewBox="0 0 660 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Chinese Checkers 棋盘，点击棋子和目标圆孔走棋"></svg>
   <div class="scrim hidden" id="cc-scrim"><div class="modal" id="cc-modal"></div></div>
  </div>
- <button class="stopFloating hidden" type="button" id="cc-stop-floating">✅ 停在这里 · 结束本回合</button>
  <div class="instruction" id="cc-status" aria-live="polite">👆 点击红色棋子，再点击亮起的圆孔。每人轮流走一步！</div>
- <div class="controls"><button id="cc-undo" class="control" type="button" disabled>↶ 撤销上一步跳跃</button><button id="cc-finish" class="control primary" type="button" disabled>✓ 停在这里 · 换人</button></div>
+ <div class="controls"><button id="cc-undo" class="control" type="button" disabled>↶ 撤销上一步跳跃</button><button id="cc-finish" class="control primary" type="button" disabled>✓ 结束回合 · 换人</button></div>
  <div class="progress"><div class="progressTitle">🏁 抵达对面终点（满 10 颗获胜）</div><div class="progressItems" id="cc-progress"></div></div>
 </div>
 <div class="tinyFoot">专为同一台 iPad 上一起玩的家人设计 ♡</div>
@@ -110,27 +106,33 @@
   if(winner!==null||overlay)return;
   const arm=current().arm;
   if(selected===null){if(occupancy.get(k)===arm){selected=k;render();}else{status('👆 现在轮到'+names[arm]+'方，请先点一颗'+names[arm]+'色棋子。');}return;}
-  // During a jump chain, tapping the current piece also means "stop here".
+  // A tap on any opponent's piece ends the chain. If it belongs to the next
+  // player, finish() also selects it so that player can move immediately.
+  if(chain.length>0&&occupancy.has(k)&&occupancy.get(k)!==arm){finish(k);return;}
+  // Tapping the current jumping piece is also a quiet way to end the turn.
   if(k===selected&&chain.length>0){finish();return;}
   if(k===selected&&chain.length===0){selected=null;render();return;}
   if(chain.length===0&&occupancy.get(k)===arm){selected=k;render();return;}
   const options=legal(selected,chain.length>0);
   if(!options.has(k)){
-   status(chain.length>0?'🦘 你可以继续跳黄色落点，也可以立刻点绿色「停在这里」！':'👆 请点亮起的空位，或者重新选一颗自己的棋子。');return;
+   status(chain.length>0?'👆 点黄色落点继续跳；点其他颜色的棋子或「结束回合」即可换人。':'👆 请点亮起的空位，或者重新选一颗自己的棋子。');return;
   }
   const typ=options.get(k),from=selected;
   occupancy.delete(from);occupancy.set(k,arm);selected=k;
   pling(typ,chain.length);
   if(typ==='step'){finish();return;}
   // Every hop is a valid stopping point, even when more yellow options remain.
-  // Do not automatically advance on a hop; the player explicitly ends their turn.
+  // Never force further hops: the player decides when to finish.
   chain.push({from,to:k});
   render();
  }
- function finish(){
+ function finish(nextSelected=null){
   const p=current();
   if(campProgress(p)===10){winner=p.arm;selected=null;chain=[];render();showWinner();return;}
-  turnIndex=(turnIndex+1)%players.length;selected=null;chain=[];render();
+  turnIndex=(turnIndex+1)%players.length;chain=[];
+  // Only auto-select if the tapped piece belongs to the actual next player.
+  selected=nextSelected!==null&&occupancy.get(nextSelected)===current().arm?nextSelected:null;
+  render();
  }
  function undo(){if(chain.length===0)return;const last=chain.pop();occupancy.delete(last.to);occupancy.set(last.from,current().arm);selected=last.from;render();}
  function status(t){$('status').textContent=t;}
@@ -138,7 +140,7 @@
  function showOverlay(type){overlay=type;scrim.classList.remove('hidden');if(type==='settings'){
   configCount=count;configRule=rule;renderSettings();
  }else if(type==='help'){
-  modal.innerHTML='<h2>📚 怎么玩？</h2><div class="helpText"><div class="ruleLine"><b>🏁 目标：</b>让自己的 10 颗棋子全部走进正对面的彩色三角形。</div><div class="ruleLine"><b>👆 走一步：</b>先点自己的棋子，再点旁边亮起的空位，每轮只能走一次。</div><div class="ruleLine"><b>🦘 连续跳：</b>每跳完一次，都可以自由选择继续跳或立刻停在当前落点，无需跳到最后。点「停在这里」，或再点一下正在跳的棋子即可结束这手。</div><div class="ruleLine"><b>🌈 隔空跳（默认）：</b>被跳的棋子不必紧挨着你，但它必须是直线上遇到的第一颗棋子，且你到它、它到落点的距离相等；中间不能有其他棋子。</div><div class="ruleLine"><b>🎲 经典跳：</b>只能跳紧挨着的一颗棋子，落在下一格。</div><div class="ruleLine"><b>👨‍👩‍👧‍👧 多人：</b>一台 iPad 轮流点棋，没有电脑玩家。2 人为正对角。</div></div><div class="modalButtons"><button class="go" id="cc-close-help">知道啦！开始玩 ✓</button></div>';
+  modal.innerHTML='<h2>📚 怎么玩？</h2><div class="helpText"><div class="ruleLine"><b>🏁 目标：</b>让自己的 10 颗棋子全部走进正对面的彩色三角形。</div><div class="ruleLine"><b>👆 走一步：</b>先点自己的棋子，再点旁边亮起的空位，每轮只能走一次。</div><div class="ruleLine"><b>🦘 连续跳：</b>每跳完一次，都可选择继续跳或停下，不必跳到最后。点其他颜色的棋子即可结束回合；如果点的是下一位玩家的棋子，还会顺便选中它。也可以再点正在跳的棋子，或点「结束回合」。</div><div class="ruleLine"><b>🌈 隔空跳（默认）：</b>被跳的棋子不必紧挨着你，但它必须是直线上遇到的第一颗棋子，且你到它、它到落点的距离相等；中间不能有其他棋子。</div><div class="ruleLine"><b>🎲 经典跳：</b>只能跳紧挨着的一颗棋子，落在下一格。</div><div class="ruleLine"><b>👨‍👩‍👧‍👧 多人：</b>一台 iPad 轮流点棋，没有电脑玩家。2 人为正对角。</div></div><div class="modalButtons"><button class="go" id="cc-close-help">知道啦！开始玩 ✓</button></div>';
   $('close-help').addEventListener('click',hideOverlay);
  }else if(type==='winner')showWinner();
  }
@@ -188,15 +190,14 @@
   $('color').style.setProperty('--current',colors[a]);$('turn').textContent=names[a]+'方 · 玩家 '+(turnIndex+1);
   $('detail').textContent='隔空跳'+(rule==='long'?' ✓':' ✗')+' · '+count+' 人对局';
   $('undo').disabled=chain.length===0;$('finish').disabled=chain.length===0;
-  $('stop-guide').classList.toggle('hidden',chain.length===0);$('stop-floating').classList.toggle('hidden',chain.length===0);
   if(selected===null)status('👆 轮到'+names[a]+'方啦！先点一颗自己的棋子，再点亮起的圆孔。');
-  else if(chain.length>0)status('🦘 已跳 '+chain.length+' 次！继续点黄色落点，或随时点「停在这里」结束这一手。');
+  else if(chain.length>0)status('✨ 已跳 '+chain.length+' 次 · 可继续跳，也可点其他颜色棋子结束回合。');
   else status('✨ 选择亮起的落点。黄色 = 跳跃，绿色 = 走一步；点击原棋子取消。');
   $('progress').innerHTML=players.map((p,i)=>'<div class="progressChip '+(i===turnIndex?'active':'')+'"><span class="progressDot" style="--chip:'+colors[p.arm]+'"></span>'+names[p.arm]+'方 '+campProgress(p)+'/10</div>').join('');
   draw();
  }
  svg.addEventListener('click',e=>{const el=e.target.closest('[data-k]');if(el)selectOrMove(el.dataset.k);});
- $('undo').addEventListener('click',undo);['finish','stop-top','stop-floating'].forEach(id=>$(id).addEventListener('click',()=>{if(chain.length)finish();}));
+ $('undo').addEventListener('click',undo);$('finish').addEventListener('click',()=>{if(chain.length)finish();});
  $('settings').addEventListener('click',()=>showOverlay('settings'));$('help').addEventListener('click',()=>showOverlay('help'));
  setup(2,'long');
 })();
