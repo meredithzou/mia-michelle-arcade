@@ -1,205 +1,222 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>家庭跳棋 · 自由连跳版 v1.2 | Chinese Checkers</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Chinese Checkers | Mia and Michelle's Arcade</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",system-ui,sans-serif;background:#f0f5ee;color:#223a35;-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible{outline:3px solid #276f63;outline-offset:3px}
-#cc-app{max-width:750px;margin:0 auto;padding:12px 12px 18px;--forest:#265c4d;--mint:#e5f3e8}.shell{border:1px solid #d5e4d9;border-radius:22px;background:#fffefa;box-shadow:0 10px 34px #1b4a3020;overflow:hidden}.header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:17px 18px 10px}.eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:900;color:#6a9280}.heading{font-weight:900;font-size:clamp(19px,4.7vw,29px);line-height:1.18;letter-spacing:-.65px}.subheading{font-size:12px;color:#789085;margin-top:3px}.headerActions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.iconBtn{border-radius:11px;padding:9px 12px;background:#f0f5ee;border:1px solid #dce7db;font-weight:800;color:#395e4c;min-height:41px;white-space:nowrap;font-size:13px}.turnCard{margin:5px 14px 0;background:#eff6ef;border:1px solid #e0ece2;border-radius:14px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:63px}.turnLeft{display:flex;align-items:center;gap:10px;min-width:0}.pieceIcon{width:35px;height:35px;border-radius:50%;background:var(--current,#ed6466);border:3px solid #fff9;box-shadow:inset -5px -6px 0 #0002,0 2px 4px #1e413029;flex:none}.turnLabel{font-size:10px;letter-spacing:.4px;color:#678077;font-weight:800}.turnName{font-size:17px;font-weight:900;white-space:nowrap}.turnDetail{font-size:12px;font-weight:700;color:#5e8470;text-align:right;max-width:45%}.boardArea{position:relative;margin:0 auto;width:min(100%,680px);touch-action:manipulation;user-select:none;-webkit-user-select:none}.boardArea svg{display:block;width:100%;height:auto;touch-action:manipulation;overflow:visible}.boardArea svg [data-k]{cursor:pointer;touch-action:manipulation}.boardArea svg [data-k] .hit{fill:transparent}.instruction{margin:0 14px 9px;padding:10px 11px;background:#fff7e6;border:1px solid #f0e4c8;border-radius:11px;color:#7c6027;font-size:12px;font-weight:700;line-height:1.45;min-height:37px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 14px 12px}.control{min-height:49px;padding:9px;border-radius:12px;border:1px solid #d2e0d4;background:#f0f4ef;color:#345b47;font-size:14px;font-weight:850}.control.primary{background:#267659;color:white;border-color:#267659;box-shadow:0 3px 0 #1a5642}.control:disabled{opacity:.38;cursor:default;box-shadow:none}
-.progress{padding:12px 14px 13px;border-top:1px solid #ecf1eb}.progressTitle{font-size:10px;letter-spacing:1.1px;font-weight:900;color:#889b8d;margin-bottom:8px}.progressItems{display:flex;flex-wrap:wrap;gap:6px}.progressChip{display:flex;gap:5px;align-items:center;border-radius:8px;padding:6px 8px;border:1px solid #e4ece2;background:#f9fbf7;font-size:12px;color:#4c685b;font-weight:850}.progressDot{width:10px;height:10px;border-radius:50%;background:var(--chip)}.progressChip.active{border-color:#7cbaa3;background:#eef8ef}.tinyFoot{text-align:center;color:#8ba092;font-size:10px;padding:10px 8px 3px}.scrim{position:absolute;inset:0;background:#193e2f99;display:flex;align-items:center;justify-content:center;padding:14px;border-radius:8px;z-index:5}.scrim.hidden{display:none}.modal{width:min(100%,430px);max-height:95%;overflow:auto;background:#fffefa;border:2px solid #c8dfd2;border-radius:20px;padding:19px 18px;box-shadow:0 10px 30px #122f2945}.modal h2{font-size:22px;margin:0 0 6px;letter-spacing:-.4px}.modal p{font-size:13px;color:#647e6c;margin:5px 0 12px;line-height:1.65}.groupTitle{font-size:13px;font-weight:850;color:#345a4c;margin:12px 0 8px}.countButtons{display:flex;gap:7px}.countButtons button{flex:1;border:1px solid #dce7de;background:#f6f8f5;border-radius:12px;min-height:45px;font-size:16px;color:#497061;font-weight:900}.countButtons button.chosen{background:#2c775e;color:white;border-color:#2c775e}.rulePicker{display:grid;grid-template-columns:1fr 1fr;gap:8px}.rulePicker button{display:flex;flex-direction:column;gap:3px;padding:10px;border-radius:12px;text-align:left;border:1px solid #dbe5d9;background:#f9faf7;min-height:69px}.rulePicker button.chosen{border:2px solid #3b9376;background:#ebf6ef;padding:9px}.rulePicker strong{font-size:13px;color:#294f3e}.rulePicker small{font-size:10px;color:#788c7d;line-height:1.35}.modalButtons{display:flex;gap:8px;margin-top:16px}.modalButtons button{min-height:47px;border-radius:12px;font-size:14px;font-weight:900;border:1px solid #cfe0d3;flex:1}.modalButtons .go{background:#27785d;color:white;border-color:#27785d}.modalButtons .secondary{background:#f1f5ef;color:#3b6651}.helpText{font-size:13px;line-height:1.8;color:#496958}.helpText b{color:#275b43}.helpText .ruleLine{padding:6px 0;border-bottom:1px solid #eaf0e9}.winner{font-size:19px;text-align:center;margin:14px 0 0;font-weight:900;color:#27785d}
-@media(min-width:500px){#cc-app{padding:20px}.header{padding:19px 23px 11px}.boardArea{width:min(95%,680px)}}
-@media(max-width:375px){.headerActions{gap:4px}.heading{font-size:18px}.header{padding:12px 11px 8px}.iconBtn{padding:7px 9px;font-size:12px}.modal{padding:12px}.scrim{padding:5px}.turnName{font-size:15px}}
-@media(prefers-reduced-motion:no-preference){.pieceIcon{transition:background .2s}.control:not(:disabled):active,.iconBtn:active{transform:translateY(2px)}}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',system-ui,sans-serif;background:#edf4ed;color:#254236}button{font:inherit;touch-action:manipulation;cursor:pointer}button:focus-visible{outline:3px solid #366e58;outline-offset:2px}
+#cc-preview-18{width:100%;max-width:750px;margin:auto;padding:12px 6px 20px}#cc-preview-18 .cc-shell{background:#fffefa;border:1px solid #d7e6d9;border-radius:20px;overflow:hidden;box-shadow:0 12px 24px #16472c18}#cc-preview-18 .cc-header{display:flex;align-items:center;justify-content:space-between;gap:7px;padding:15px 15px 7px}#cc-preview-18 .cc-title{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:900;letter-spacing:-.5px}#cc-preview-18 .cc-title-text{display:inline-block;line-height:1.05}#cc-preview-18 .cc-title-icon{width:28px;height:28px;flex:none;display:inline-flex;align-items:center;justify-content:center}#cc-preview-18 .cc-title-icon img{display:block;width:100%;height:100%;object-fit:contain}#cc-preview-18 .cc-sub{font-size:11px;color:#6d8b7b;margin-top:3px}#cc-preview-18 .cc-headerbuttons{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}#cc-preview-18 .cc-mini{border:1px solid #dce9dc;border-radius:10px;padding:9px 8px;min-height:40px;background:#f4f8f2;color:#345c4b;font-size:12px;font-weight:800}#cc-preview-18 .cc-turn{margin:6px 12px 0;background:#eef7ee;border:1px solid #deebdf;border-radius:12px;padding:10px;display:flex;align-items:center;gap:9px}#cc-preview-18 .cc-turncolor{width:32px;height:32px;border-radius:50%;flex:none;background:var(--turn-color,#ee696a);border:3px solid #fff8;box-shadow:inset -4px -5px 0 #0002}#cc-preview-18 .cc-turntext{flex:1;min-width:0}#cc-preview-18 .cc-kicker{font-size:10px;color:#728e7b;font-weight:800}#cc-preview-18 .cc-player{font-size:16px;font-weight:900;white-space:nowrap}#cc-preview-18 .cc-gameinfo{font-size:11px;color:#628272;text-align:right;font-weight:700;white-space:nowrap}#cc-preview-18 .cc-board{width:min(100%,690px);margin:auto;user-select:none;-webkit-user-select:none;touch-action:manipulation}#cc-preview-18 .cc-board svg{width:100%;height:auto;display:block;touch-action:manipulation}#cc-preview-18 .cc-board [data-key]{cursor:pointer;touch-action:manipulation}#cc-preview-18 .cc-board .cc-hit{fill:transparent}#cc-preview-18 .cc-status{margin:0 12px 9px;padding:9px 10px;border-radius:10px;background:#f7f5eb;color:#6a6952;min-height:35px;font-size:12px;line-height:1.4;font-weight:700}#cc-preview-18 .cc-bottom{border-top:1px solid #edf1e8;padding:12px}#cc-preview-18 .cc-bottomtitle{font-size:10px;letter-spacing:.7px;font-weight:800;color:#7f9784;margin-bottom:8px}#cc-preview-18 .cc-progress{display:flex;flex-wrap:wrap;gap:6px}#cc-preview-18 .cc-chip{display:flex;align-items:center;gap:5px;border-radius:8px;border:1px solid #e2eadf;background:#f7faf5;padding:5px 7px;font-size:11px;color:#536958;font-weight:800}#cc-preview-18 .cc-chip.cc-active{background:#e4f4e9;border-color:#7fbda1}#cc-preview-18 .cc-chipdot{width:10px;height:10px;border-radius:50%;background:var(--chip-color)}#cc-preview-18 .cc-local{font-size:10px;color:#829889;text-align:center;margin-top:10px}#cc-preview-18 .cc-overlay{position:fixed;inset:0;z-index:100;background:#09282099;display:flex;align-items:center;justify-content:center;padding:16px}#cc-preview-18 .cc-overlay[hidden]{display:none}#cc-preview-18 .cc-modal{max-width:440px;width:100%;max-height:90vh;overflow:auto;background:#fffefa;border-radius:18px;padding:19px;box-shadow:0 10px 32px #12251e52}#cc-preview-18 .cc-modal h2{font-size:21px;margin:0 0 8px}#cc-preview-18 .cc-modal p{font-size:13px;line-height:1.6;color:#61796b}#cc-preview-18 .cc-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:9px 0 14px}#cc-preview-18 .cc-grid button,#cc-preview-18 .cc-rules button{background:#f5f8f4;border:1px solid #dbe7dc;border-radius:10px;min-height:44px;font-weight:900;color:#315e4c}#cc-preview-18 .cc-grid button.cc-choice,#cc-preview-18 .cc-rules button.cc-choice{background:#2e8062;color:#fff;border-color:#2e8062}#cc-preview-18 .cc-rules{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}#cc-preview-18 .cc-rules button{padding:12px 6px;font-size:13px}#cc-preview-18 .cc-modalactions{display:flex;gap:8px;margin-top:18px}#cc-preview-18 .cc-modalactions button{flex:1;min-height:43px;border-radius:10px;border:1px solid #c9dccf;font-weight:900;background:#f2f6f0;color:#2e5746}#cc-preview-18 .cc-modalactions .cc-go{background:#24765a;color:white}#cc-preview-18 .cc-helptext{font-size:13px;line-height:1.8;color:#4e695a}#cc-preview-18 .cc-helptext p{border-bottom:1px solid #eaf0e9;padding-bottom:7px;margin:7px 0}#cc-preview-18 .cc-wintitle{text-align:center;color:#2b7c5b;font-size:22px;font-weight:900;margin-top:9px}
+@media(max-width:550px){#cc-preview-18 .cc-headerbuttons{display:grid;grid-template-columns:repeat(2,auto)}}@media(max-width:410px){#cc-preview-18{padding:6px 2px}#cc-preview-18 .cc-header{padding:12px 10px 5px}#cc-preview-18 .cc-title{font-size:18px}#cc-preview-18 .cc-sub{font-size:10px}#cc-preview-18 .cc-mini{padding:6px;font-size:11px;min-height:35px}#cc-preview-18 .cc-gameinfo{font-size:10px}}@media(prefers-reduced-motion:no-preference){#cc-preview-18 button:active{transform:scale(.98)}}
+
+#cc-preview-18 .cc-option{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #e4ede4;background:#f8faf7;border-radius:12px;padding:12px;margin:8px 0}
+#cc-preview-18 .cc-option strong{font-size:14px;display:block}
+#cc-preview-18 .cc-option small{font-size:11px;color:#789184;display:block;margin-top:4px;line-height:1.3}
+#cc-preview-18 .cc-toggle{border:1px solid #c6dbc9;border-radius:20px;padding:9px 13px;background:#f1f5f0;color:#426954;font-weight:900;min-width:77px;white-space:nowrap}
+#cc-preview-18 .cc-toggle.enabled{background:#277b5b;border-color:#277b5b;color:#fff}
+#cc-preview-18 .cc-languages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:9px 0 17px}
+#cc-preview-18 .cc-languages button{border:1px solid #d5e4d8;background:#f6faf6;border-radius:10px;min-height:45px;padding:7px 3px;color:#315c4d;font-weight:800;font-size:12px}
+#cc-preview-18 .cc-languages button.cc-choice{background:#277b5b;border-color:#277b5b;color:#fff}
+#cc-preview-18 .cc-section{font-size:12px;font-weight:900;color:#537461;letter-spacing:.2px;margin:17px 0 9px}
+#cc-preview-18 .cc-sectionline{border:0;border-top:1px solid #e5ece4;margin:19px 0 13px}
+#cc-preview-18 .cc-modalactions button.cc-primary{background:#277b5b;border-color:#277b5b;color:#fff}
+#cc-preview-18 .cc-mini.cc-restart{background:#276b50;color:#fff;border-color:#276b50;font-weight:900;min-width:0;padding-inline:7px;box-shadow:none}
+#cc-preview-18 .cc-mini.cc-restart:focus-visible{outline:3px solid #91bda1;outline-offset:2px}
+@media(max-width:550px){#cc-preview-18 .cc-header{flex-wrap:wrap}#cc-preview-18 .cc-headerbuttons{display:flex;flex-wrap:nowrap;width:100%;justify-content:flex-end;gap:6px}#cc-preview-18 .cc-mini{min-height:40px}}
+/* Unified controls: natural width, exactly the same height. */
+#cc-preview-18 .cc-headerbuttons .cc-mini{height:40px;min-height:40px;line-height:1;padding-block:0;white-space:nowrap}
 </style>
 </head>
-<body><div style="position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:12px;z-index:10000;font:700 13px system-ui,-apple-system,sans-serif"><a href="../../index.html" style="display:inline-block;padding:9px 13px;border-radius:999px;background:#214f43;color:white;text-decoration:none;box-shadow:0 3px 12px #173d3433">← Mia and Michelle's Arcade</a></div><style>body{padding-top:65px!important}</style>
-<div id="cc-app">
-<div class="shell">
- <div class="header">
-  <div><div class="eyebrow">FAMILY GAME NIGHT ✦</div><div class="heading">🌟 家庭跳棋 <span style="font-size:.53em;color:#6d9882;font-weight:700;white-space:nowrap">Chinese Checkers</span></div><div class="subheading">2–6 人同屏对战 · 自由结束连跳 · iPad 触屏</div></div>
-  <div class="headerActions"><button class="iconBtn" id="cc-sound" type="button" aria-label="关闭音效" aria-pressed="true">🔊 音效开</button><button class="iconBtn" id="cc-help" type="button">❔规则</button><button class="iconBtn" id="cc-settings" type="button">⚙️ 新游戏</button></div>
- </div>
- <div class="turnCard"><div class="turnLeft"><span class="pieceIcon" id="cc-color"></span><div><div class="turnLabel">轮到谁了？</div><div class="turnName" id="cc-turn">红方 · 玩家 1</div></div></div><div class="turnDetail" id="cc-detail">目标：走到正对面的三角形</div></div>
- <div class="boardArea"><svg id="cc-board" viewBox="0 0 660 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Chinese Checkers 棋盘，点击棋子和目标圆孔走棋"></svg>
-  <div class="scrim hidden" id="cc-scrim"><div class="modal" id="cc-modal"></div></div>
- </div>
- <div class="instruction" id="cc-status" aria-live="polite">👆 点击红色棋子，再点击亮起的圆孔。每人轮流走一步！</div>
- <div class="controls"><button id="cc-undo" class="control" type="button" disabled>↶ 撤销上一步跳跃</button><button id="cc-finish" class="control primary" type="button" disabled>✓ 结束回合 · 换人</button></div>
- <div class="progress"><div class="progressTitle">🏁 抵达对面终点（满 10 颗获胜）</div><div class="progressItems" id="cc-progress"></div></div>
+<body>
+<div id="cc-preview-18">
+<div class="cc-shell">
+  <div class="cc-header"><div><div class="cc-title" data-ui="title"><span class="cc-title-icon" aria-hidden="true"><img alt="" src="data:image/webp;base64,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" /></span><span class="cc-title-text" data-ui="titletext">家庭跳棋</span></div><div class="cc-sub">Chinese Checkers · Family Edition</div></div><div class="cc-headerbuttons"><button type="button" class="cc-mini" data-act="help">❔ 规则</button><button type="button" class="cc-mini" data-act="settings">⚙️ 设置</button><button type="button" class="cc-mini cc-restart" data-act="newgame">↻ 重新开局</button></div></div>
+  <div class="cc-turn"><span class="cc-turncolor" data-ui="swatch"></span><div class="cc-turntext"><div class="cc-kicker" data-ui="turnlabel">现在轮到</div><div class="cc-player" data-ui="player">红方 · 玩家 1</div></div></div>
+  <div class="cc-board"><svg data-ui="board" viewBox="0 0 660 720" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Chinese Checkers 游戏棋盘，点击棋子和亮起的目标格"></svg></div>
+  <div class="cc-status" data-ui="status" aria-live="off">先点击红色棋子，再点击亮起的落点。</div>
+  <div class="cc-bottom"><div class="cc-bottomtitle" data-ui="goal">🏁 到达对面三角区 · 10 颗棋子获胜</div><div class="cc-progress" data-ui="progress"></div></div>
 </div>
-<div class="tinyFoot">专为同一台 iPad 上一起玩的家人设计 ♡</div>
+<div class="cc-local" data-ui="local">专为家人同屏游戏设计 ♡</div>
+<div class="cc-overlay" data-ui="overlay" hidden><div class="cc-modal" data-ui="modal"></div></div>
 </div>
 <script>
 (function(){
  'use strict';
- const ROOT=document.getElementById('cc-app');if(!ROOT)return;
- const $=id=>document.getElementById('cc-'+id);
- const svg=$('board'),modal=$('modal'),scrim=$('scrim');
- // iPad Safari: sound is created only after the player taps the board.
- let soundOn=true,audio=null;
- try{soundOn=localStorage.getItem('cc-sound')!=='off';}catch(e){}
- const soundButton=$('sound');
- function updateSoundButton(){soundButton.textContent=soundOn?'🔊 音效开':'🔇 音效关';soundButton.setAttribute('aria-label',soundOn?'关闭音效':'开启音效');soundButton.setAttribute('aria-pressed',String(soundOn));}
- function audioEngine(){const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return null;try{if(!audio)audio=new Ctx();if(audio.state==='suspended')audio.resume().catch(()=>{});return audio;}catch(e){return null;}}
- function pling(kind,combo=0){
-  if(!soundOn)return;
-  let ctx=audioEngine();if(!ctx)return;
-  const now=ctx.currentTime,hop=kind==='hop',base=(hop?580:420)+Math.min(5,combo)*68;
-  function tone(freq,at,dur,loud){
-   const osc=ctx.createOscillator(),vol=ctx.createGain();osc.type=hop?'sine':'triangle';osc.frequency.setValueAtTime(freq,at);osc.frequency.exponentialRampToValueAtTime(freq*.80,at+dur);
-   vol.gain.setValueAtTime(.0001,at);vol.gain.exponentialRampToValueAtTime(loud,at+.008);vol.gain.exponentialRampToValueAtTime(.0001,at+dur);
-   osc.connect(vol);vol.connect(ctx.destination);osc.start(at);osc.stop(at+dur+.01);
-  }
-  tone(base,now,.105,hop?.065:.038);
-  if(hop)tone(base*1.45,now+.044,.10,.035);
- }
- soundButton.addEventListener('click',()=>{soundOn=!soundOn;try{localStorage.setItem('cc-sound',soundOn?'on':'off');}catch(e){}updateSoundButton();if(soundOn)pling('step');});updateSoundButton();
- const dirs=[[1,0],[0,1],[-1,1],[-1,0],[0,-1],[1,-1]];
- const colors=['#ED696A','#EDAC4C','#2CB89D','#658DE9','#A078D4','#E47CAE'];
- const names=['红','橙','绿','蓝','紫','粉'];
- const turns={2:[0,3],3:[0,2,4],4:[0,1,3,4],5:[0,1,2,3,4],6:[0,1,2,3,4,5]};
- const S=39,CX=330,CY=357;
- const key=(q,r)=>q+','+r;
- const rotate=([q,r])=>[-r,q+r];
+ const root=document.getElementById('cc-preview-18');if(!root||root.dataset.init)return;root.dataset.init='1';
+ const $=s=>root.querySelector(s),board=$('[data-ui="board"]'),overlay=$('[data-ui="overlay"]'),modal=$('[data-ui="modal"]');
+ const COLORS=['#ed696a','#edac4c','#2cb89d','#658de9','#a078d4','#e47cae'];
+ const NAMES=['红','橙','绿','蓝','紫','粉'];
+
+ const TEXT={
+  zh:{title:'家庭跳棋',rulesButton:'❔ 规则',settingsButton:'⚙️ 设置',newGameButton:'↻ 重新开局',turnLabel:'现在轮到',player:'玩家',color:['红','橙','绿','蓝','紫','粉'],faction:'方',people:'人',long:'隔空跳',short:'经典跳',goal:'🏁 抵达对面三角形 · 10 颗棋子获胜',local:'专为家人同屏游戏设计 ♡',boardLabel:'跳棋棋盘，点击棋子和落点',piece:'色棋子',landing:'可走落点',empty:'空位',startHints:'👆 点自己的棋子，再点亮起的落点。',startNoHints:'👆 点自己的棋子，再尝试选择合法空位。',chainHints:'黄色落点可继续跳 · 点其他颜色棋子即可换人。',chainNoHints:'可继续尝试跳跃 · 点其他颜色棋子即可换人。',moveHints:'✨ 黄色落点可跳跃，绿色落点可走一步。',moveNoHints:'✨ 尝试选择相邻空位或合法跳跃落点。',settings:'⚙️ 游戏设置',preferences:'游戏偏好',sound:'🔊 音效',soundSub:'播放走棋和跳跃的声音',hints:'💡 落点提示',hintsSub:'显示绿色和黄色的合法落点',language:'🌐 语言',on:'开启',off:'关闭',newGame:'下一局的设置',players:'玩家人数',jumpRule:'跳跃规则',longDefault:'✨ 隔空跳',classic:'🟢 经典跳',cancel:'完成',start:'开始新局 →',settingsNote:'音效、落点提示和语言立即生效；玩家人数和跳跃规则将在点击顶部「重新开局」后生效。',helpTitle:'📚 游戏规则',help:[['目标','把自己的 10 颗棋子全部送进正对面的三角形。'],['走一步','选自己的棋子，再点相邻的合法空位。走完会自动换人。'],['连续跳','选择合法跳跃落点。如果还有跳法，可以继续或随时停止；没有后续跳法时自动换人。'],['如何停止','连跳时再点当前棋子，或点其他颜色棋子结束回合。点下一位玩家的棋子，还能直接选中它。'],['落点提示','开启后显示绿色和黄色的合法落点；关闭后必须自己判断，规则不变。'],['隔空跳','沿直线越过第一颗棋子，跳跃前后距离相等，路径不能有其他棋子阻挡。'],['多人','支持 2–6 位真人在同一台屏幕上轮流玩。']],helpClose:'好，继续玩',winTitle:'🎉 恭喜获胜！',wins:'方获胜！',winBody:'10 颗棋子全部抵达终点。',again:'再来一局',change:'更改设置'},
+  en:{title:'Chinese Checkers',rulesButton:'❔ Rules',settingsButton:'⚙️ Settings',newGameButton:'↻ Restart',turnLabel:'Current turn',player:'Player',color:['Red','Orange','Green','Blue','Purple','Pink'],faction:'',people:'players',long:'Long jumps',short:'Classic jumps',goal:'🏁 Reach the opposite triangle · All 10 pieces to win',local:'Made for family play on one iPad ♡',boardLabel:'Chinese Checkers board. Tap pieces and destinations.',piece:' piece',landing:'Legal landing',empty:'Empty space',startHints:'👆 Tap your piece, then choose a highlighted destination.',startNoHints:'👆 Tap your piece, then try a legal destination.',chainHints:'Yellow dots: keep jumping · Tap another color to end your turn.',chainNoHints:'Keep jumping if possible · Tap another color to end your turn.',moveHints:'✨ Yellow = jump · Green = adjacent step.',moveNoHints:'✨ Try an adjacent empty space or a legal jump.',settings:'⚙️ Game settings',preferences:'Preferences',sound:'🔊 Sound',soundSub:'Play sounds for steps and jumps',hints:'💡 Move hints',hintsSub:'Show green and yellow legal destinations',language:'🌐 Language',on:'On',off:'Off',newGame:'For the next game',players:'Number of players',jumpRule:'Jump rules',longDefault:'✨ Long jumps',classic:'🟢 Classic jumps',cancel:'Done',start:'New game →',settingsNote:'Sound, hints and language apply immediately. Player count and jump rules apply when you tap Restart above.',helpTitle:'📚 How to play',help:[['Goal','Move all 10 of your pieces into the opposite triangle.'],['One step','Tap your piece, then an adjacent empty space. The turn ends automatically.'],['Jump chains','Tap a legal jump destination. You may continue or stop after any hop. If no hops remain, the turn ends automatically.'],['Ending a turn','During a chain, tap your moving piece again or tap an opponent’s piece. Tapping the next player’s piece also selects it for them.'],['Move hints','When on, green and yellow destinations appear. When off, you must work out the moves yourself; the rules stay the same.'],['Long jumps','Jump in a straight line over the first piece with equal distances on each side and a clear path.'],['Players','2–6 people can play together on one screen.']],helpClose:'Back to game',winTitle:'🎉 You won!',wins:' wins!',winBody:'All 10 pieces reached the goal.',again:'Play again',change:'Settings'},
+  es:{title:'Damas chinas',rulesButton:'❔ Reglas',settingsButton:'⚙️ Ajustes',newGameButton:'↻ Reiniciar',turnLabel:'Turno de',player:'Jugador',color:['Rojo','Naranja','Verde','Azul','Morado','Rosa'],faction:'',people:'jugadores',long:'Saltos largos',short:'Saltos clásicos',goal:'🏁 Llega al triángulo opuesto · Gana con las 10 fichas',local:'Para jugar en familia en un iPad ♡',boardLabel:'Tablero de damas chinas. Toca fichas y destinos.',piece:' ficha',landing:'Destino válido',empty:'Casilla vacía',startHints:'👆 Toca tu ficha y elige un destino marcado.',startNoHints:'👆 Toca tu ficha e intenta llegar a una casilla válida.',chainHints:'Amarillo: sigue saltando · Toca otro color para terminar.',chainNoHints:'Puedes seguir saltando · Toca otro color para terminar.',moveHints:'✨ Amarillo = salto · Verde = paso adyacente.',moveNoHints:'✨ Prueba una casilla contigua o un salto válido.',settings:'⚙️ Ajustes del juego',preferences:'Preferencias',sound:'🔊 Sonido',soundSub:'Reproducir sonidos al mover y saltar',hints:'💡 Pistas de movimiento',hintsSub:'Mostrar destinos válidos verdes y amarillos',language:'🌐 Idioma',on:'Sí',off:'No',newGame:'Para la próxima partida',players:'Número de jugadores',jumpRule:'Reglas de salto',longDefault:'✨ Saltos largos',classic:'🟢 Saltos clásicos',cancel:'Listo',start:'Nueva partida →',settingsNote:'Sonido, pistas e idioma cambian al instante. El número de jugadores y las reglas se aplican al tocar Reiniciar arriba.',helpTitle:'📚 Cómo jugar',help:[['Objetivo','Lleva tus 10 fichas al triángulo opuesto.'],['Un paso','Toca tu ficha y una casilla vacía contigua. El turno termina automáticamente.'],['Saltos seguidos','Elige un salto válido. Puedes seguir o detenerte tras cualquier salto. Si no hay más saltos, el turno termina solo.'],['Fin del turno','Durante los saltos, vuelve a tocar tu ficha o toca una ficha de otro color. Si es del siguiente jugador, también la seleccionas.'],['Pistas','Si están activadas, aparecen destinos verdes y amarillos. Si las desactivas, debes descubrir las jugadas; las reglas no cambian.'],['Saltos largos','Salta en línea recta sobre la primera ficha, a igual distancia por ambos lados y sin obstáculos.'],['Jugadores','Pueden jugar entre 2 y 6 personas en una misma pantalla.']],helpClose:'Volver al juego',winTitle:'🎉 ¡Ganaste!',wins:' gana!',winBody:'Las 10 fichas llegaron a la meta.',again:'Jugar otra vez',change:'Ajustes'}
+ };
+ let language='zh';
+ try{const saved=localStorage.getItem('cc-v17-language');if(['zh','en','es'].includes(saved))language=saved;}catch(e){}
+ const T=()=>TEXT[language];
+ const savePref=(k,v)=>{try{localStorage.setItem('cc-v17-'+k,v);}catch(e){}};
+
+ const TURN_ARMS={2:[0,3],3:[0,2,4],4:[0,1,3,4],5:[0,1,2,3,4],6:[0,1,2,3,4,5]};
+ const DIRS=[[1,0],[0,1],[-1,1],[-1,0],[0,-1],[1,-1]];
+ const SPACING=39,CX=330,CY=357;
+ const key=(q,r)=>q+','+r,rot=([q,r])=>[-r,q+r];
  const cells=new Map(),camps=Array.from({length:6},()=>[]);
  for(let q=-4;q<=4;q++)for(let r=-4;r<=4;r++)if(Math.max(Math.abs(q),Math.abs(r),Math.abs(q+r))<=4)cells.set(key(q,r),{q,r,arm:-1});
  for(let arm=0;arm<6;arm++)for(let d=1;d<=4;d++)for(let q=d;q<=4;q++){
-  let v=[q,-4-d];for(let k=0;k<arm;k++)v=rotate(v);const [x,y]=v,k=key(x,y);camps[arm].push(k);cells.set(k,{q:x,r:y,arm});
+   let [x,y]=[q,-4-d];for(let k=0;k<arm;k++)[x,y]=rot([x,y]);
+   const k=key(x,y);camps[arm].push(k);cells.set(k,{q:x,r:y,arm});
  }
- const point=(q,r)=>[CX+(q+r/2)*S,CY+r*S*Math.sqrt(3)/2];
- let occupancy=new Map(),players=[],turnIndex=0,selected=null,chain=[],rule='long',count=2,configCount=2,configRule='long',winner=null,overlay=null;
- const current=()=>players[turnIndex];
- const occupied=k=>occupancy.has(k);
- function campProgress(p){return camps[(p.arm+3)%6].filter(k=>occupancy.get(k)===p.arm).length;}
- function setup(n=2,r='long'){
-  count=n;rule=r;players=turns[n].map(arm=>({arm}));turnIndex=0;selected=null;chain=[];winner=null;occupancy=new Map();
-  for(const p of players)for(const k of camps[p.arm])occupancy.set(k,p.arm);
-  hideOverlay();render();
+ const position=(q,r)=>[CX+(q+r/2)*SPACING,CY+r*SPACING*Math.sqrt(3)/2];
+ let count=2,rule='long',players=[],turnIndex=0,occupied=new Map(),selected=null,chain=[],winner=null;
+ let cfgCount=2,cfgRule='long',sound=true,hints=true,audioCtx=null;
+ try{hints=localStorage.getItem('cc-v17-hints')!=='off';sound=localStorage.getItem('cc-v17-sound')!=='off';const savedCount=Number(localStorage.getItem('cc-v17-player-count'));const savedRule=localStorage.getItem('cc-v17-jump-rule');if(savedCount>=2&&savedCount<=6)cfgCount=savedCount;if(savedRule==='short'||savedRule==='long')cfgRule=savedRule;}catch(e){}
+ const current=()=>players[turnIndex],isOccupied=k=>occupied.has(k);
+ const countArrived=arm=>camps[(arm+3)%6].filter(k=>occupied.get(k)===arm).length;
+ function init(n=2,r='long'){
+   count=n;rule=r;players=TURN_ARMS[count].map(arm=>({arm}));turnIndex=0;selected=null;chain=[];winner=null;occupied=new Map();
+   for(const p of players)for(const k of camps[p.arm])occupied.set(k,p.arm);
+   closeModal();render();
  }
- function legal(k,onlyHops=false){
-  const cell=cells.get(k);if(!cell)return new Map();const options=new Map();
-  for(const [dq,dr] of dirs){
-   if(!onlyHops){const n=key(cell.q+dq,cell.r+dr);if(cells.has(n)&&!occupied(n))options.set(n,'step');}
-   for(let d=1;d<=8;d++){
-    const mid=key(cell.q+d*dq,cell.r+d*dr);
-    if(!cells.has(mid))break;
-    if(occupied(mid)){
-     if(rule==='short'&&d!==1)break;
-     const end=key(cell.q+2*d*dq,cell.r+2*d*dr);
-     if(!cells.has(end)||occupied(end))break;
-     let clear=true;
-     for(let j=d+1;j<2*d;j++){
-      const b=key(cell.q+j*dq,cell.r+j*dr);
-      if(!cells.has(b)||occupied(b)){clear=false;break;}
+ function legal(from,onlyHops=false){
+   const cell=cells.get(from),opts=new Map();if(!cell)return opts;
+   for(const [dq,dr] of DIRS){
+     if(!onlyHops){const to=key(cell.q+dq,cell.r+dr);if(cells.has(to)&&!isOccupied(to))opts.set(to,'step');}
+     for(let dist=1;dist<=8;dist++){
+       const mid=key(cell.q+dist*dq,cell.r+dist*dr);if(!cells.has(mid))break;
+       if(isOccupied(mid)){
+         if(rule==='short'&&dist!==1)break;
+         const to=key(cell.q+2*dist*dq,cell.r+2*dist*dr);
+         if(!cells.has(to)||isOccupied(to))break;
+         let clear=true;
+         for(let j=dist+1;j<dist*2;j++)if(!cells.has(key(cell.q+j*dq,cell.r+j*dr))||isOccupied(key(cell.q+j*dq,cell.r+j*dr))){clear=false;break;}
+         if(clear)opts.set(to,'hop');break;
+       }
+       if(rule==='short')break;
      }
-     if(clear)options.set(end,'hop');
-     break;
-    }
-    if(rule==='short')break;
    }
-  }
-  if(chain.length>0){const visited=new Set([chain[0].from,...chain.map(x=>x.to)]);for(const k of options.keys())if(visited.has(k))options.delete(k);}
-  return options;
+   if(chain.length){const visited=new Set([chain[0].from,...chain.map(h=>h.to)]);for(const k of opts.keys())if(visited.has(k))opts.delete(k);}
+   return opts;
  }
- function selectOrMove(k){
-  if(winner!==null||overlay)return;
-  const arm=current().arm;
-  if(selected===null){if(occupancy.get(k)===arm){selected=k;render();}else{status('👆 现在轮到'+names[arm]+'方，请先点一颗'+names[arm]+'色棋子。');}return;}
-  // A tap on any opponent's piece ends the chain. If it belongs to the next
-  // player, finish() also selects it so that player can move immediately.
-  if(chain.length>0&&occupancy.has(k)&&occupancy.get(k)!==arm){finish(k);return;}
-  // Tapping the current jumping piece is also a quiet way to end the turn.
-  if(k===selected&&chain.length>0){finish();return;}
-  if(k===selected&&chain.length===0){selected=null;render();return;}
-  if(chain.length===0&&occupancy.get(k)===arm){selected=k;render();return;}
-  const options=legal(selected,chain.length>0);
-  if(!options.has(k)){
-   status(chain.length>0?'👆 点黄色落点继续跳；点其他颜色的棋子或「结束回合」即可换人。':'👆 请点亮起的空位，或者重新选一颗自己的棋子。');return;
-  }
-  const typ=options.get(k),from=selected;
-  occupancy.delete(from);occupancy.set(k,arm);selected=k;
-  pling(typ,chain.length);
-  if(typ==='step'){finish();return;}
-  // Every hop is a valid stopping point, even when more yellow options remain.
-  // Never force further hops: the player decides when to finish.
-  chain.push({from,to:k});
-  render();
+ function tap(k){
+   if(winner!==null||!overlay.hidden)return;
+   const arm=current().arm,piece=occupied.get(k);
+   if(selected===null){if(piece===arm){selected=k;render();}return;}
+   // Quiet tap-to-pass. Never skip a player's turn, even if a non-next color is tapped.
+   if(chain.length>0&&piece!==undefined&&piece!==arm){finish(k);return;}
+   if(k===selected){if(chain.length>0)finish();else{selected=null;render();}return;}
+   if(chain.length===0&&piece===arm){selected=k;render();return;}
+   const options=legal(selected,chain.length>0);if(!options.has(k))return;
+   const typ=options.get(k),from=selected;
+   occupied.delete(from);occupied.set(k,arm);selected=k;playSound(typ,chain.length);
+   if(typ==='step'){finish();return;}
+   chain.push({from,to:k});
+   // A hop without any further legal hops ends automatically.
+   // As long as an option exists, the player may still stop voluntarily.
+   if(legal(k,true).size===0){finish();return;}
+   render();
  }
- function finish(nextSelected=null){
-  const p=current();
-  if(campProgress(p)===10){winner=p.arm;selected=null;chain=[];render();showWinner();return;}
-  turnIndex=(turnIndex+1)%players.length;chain=[];
-  // Only auto-select if the tapped piece belongs to the actual next player.
-  selected=nextSelected!==null&&occupancy.get(nextSelected)===current().arm?nextSelected:null;
-  render();
- }
- function undo(){if(chain.length===0)return;const last=chain.pop();occupancy.delete(last.to);occupancy.set(last.from,current().arm);selected=last.from;render();}
- function status(t){$('status').textContent=t;}
- function esc(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
- function showOverlay(type){overlay=type;scrim.classList.remove('hidden');if(type==='settings'){
-  configCount=count;configRule=rule;renderSettings();
- }else if(type==='help'){
-  modal.innerHTML='<h2>📚 怎么玩？</h2><div class="helpText"><div class="ruleLine"><b>🏁 目标：</b>让自己的 10 颗棋子全部走进正对面的彩色三角形。</div><div class="ruleLine"><b>👆 走一步：</b>先点自己的棋子，再点旁边亮起的空位，每轮只能走一次。</div><div class="ruleLine"><b>🦘 连续跳：</b>每跳完一次，都可选择继续跳或停下，不必跳到最后。点其他颜色的棋子即可结束回合；如果点的是下一位玩家的棋子，还会顺便选中它。也可以再点正在跳的棋子，或点「结束回合」。</div><div class="ruleLine"><b>🌈 隔空跳（默认）：</b>被跳的棋子不必紧挨着你，但它必须是直线上遇到的第一颗棋子，且你到它、它到落点的距离相等；中间不能有其他棋子。</div><div class="ruleLine"><b>🎲 经典跳：</b>只能跳紧挨着的一颗棋子，落在下一格。</div><div class="ruleLine"><b>👨‍👩‍👧‍👧 多人：</b>一台 iPad 轮流点棋，没有电脑玩家。2 人为正对角。</div></div><div class="modalButtons"><button class="go" id="cc-close-help">知道啦！开始玩 ✓</button></div>';
-  $('close-help').addEventListener('click',hideOverlay);
- }else if(type==='winner')showWinner();
- }
- function hideOverlay(){overlay=null;scrim.classList.add('hidden');modal.innerHTML='';}
- function renderSettings(){
-  modal.innerHTML='<h2>🎲 开一局新跳棋</h2><p>同一台 iPad，面对面或围坐轮流玩。所有玩家都是真人！</p><div class="groupTitle">选择人数</div><div class="countButtons">'+[2,3,4,5,6].map(n=>'<button type="button" data-count="'+n+'" class="'+(configCount===n?'chosen':'')+'">'+n+' 人</button>').join('')+'</div><p style="font-size:11px;margin:7px 0 8px">2 人双方正对面；其他人数会自动安排起始三角形。</p><div class="groupTitle">选择跳棋规则</div><div class="rulePicker"><button type="button" data-rule="long" class="'+(configRule==='long'?'chosen':'')+'"><strong>✨ 隔空跳</strong><small>空几格也能等距跳跃（推荐）</small></button><button type="button" data-rule="short" class="'+(configRule==='short'?'chosen':'')+'"><strong>🟢 经典跳</strong><small>只跳紧挨着的棋子</small></button></div><div class="modalButtons"><button type="button" class="secondary" id="cc-cancel">取消</button><button type="button" class="go" id="cc-go">开始新游戏 →</button></div>';
-  modal.querySelectorAll('[data-count]').forEach(b=>b.addEventListener('click',()=>{configCount=Number(b.dataset.count);renderSettings();}));
-  modal.querySelectorAll('[data-rule]').forEach(b=>b.addEventListener('click',()=>{configRule=b.dataset.rule;renderSettings();}));
-  $('cancel').addEventListener('click',hideOverlay);
-  $('go').addEventListener('click',()=>setup(configCount,configRule));
- }
- function showWinner(){
-  const c=colors[winner];overlay='winner';scrim.classList.remove('hidden');
-  modal.innerHTML='<h2 style="text-align:center">🎉 太棒啦！</h2><div class="winner" style="color:'+c+'">🏆 '+names[winner]+'方获胜！</div><p style="text-align:center">10 颗棋子全部到达对面的家！<br>要不要再来一盘？</p><div class="modalButtons"><button class="go" id="cc-rematch">再来一局 ↗</button><button class="secondary" id="cc-change">换人数/规则</button></div>';
-  $('rematch').addEventListener('click',()=>setup(count,rule));$('change').addEventListener('click',()=>showOverlay('settings'));
+ function finish(nextPiece=null){
+   const arm=current().arm;
+   if(countArrived(arm)===10){winner=arm;selected=null;chain=[];render();showWinner();return;}
+   turnIndex=(turnIndex+1)%players.length;chain=[];
+   selected=nextPiece!==null&&occupied.get(nextPiece)===current().arm?nextPiece:null;
+   render();
  }
  function draw(){
-  const star=[];for(let i=0;i<12;i++){const ang=(-90+i*30)*Math.PI/180,rad=(i%2===0?7.65:4.58)*S;star.push((CX+Math.cos(ang)*rad).toFixed(1)+','+(CY+Math.sin(ang)*rad).toFixed(1));}
-  const dots=Array.from(cells.entries()).sort((a,b)=>a[1].r-b[1].r||a[1].q-b[1].q);
-  const opts=selected!==null?legal(selected,chain.length>0):new Map();
-  let s='<defs><linearGradient id="cc-board-bg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fffdf6"/><stop offset="1" stop-color="#f0f8ec"/></linearGradient><filter id="cc-marble-shadow" x="-30%" y="-20%" width="160%" height="165%"><feDropShadow dx="1" dy="2.2" stdDeviation="1.5" flood-opacity="0.19"/></filter></defs>';
-  s+='<polygon points="'+star.join(' ')+'" fill="url(#cc-board-bg)" stroke="#d2e3d4" stroke-width="3" stroke-linejoin="round"/>';
-  // delicate radial lines under the board holes
-  for(let a=0;a<6;a++){const p=point(...(() => {let v=[4,-8];for(let j=0;j<a;j++)v=rotate(v);return v;})());s+='<line x1="'+CX+'" y1="'+CY+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="#b9d6c3" stroke-width="1" stroke-dasharray="3 9" opacity=".42"/>';}
-  for(const [k,v] of dots){
-   const [x,y]=point(v.q,v.r),arm=occupancy.get(k),isOwn=arm===current().arm,active=k===selected,m=opts.get(k);
-   const fill=v.arm===-1?'#e5ede5':colors[v.arm]+'25';
-   s+='<g data-k="'+k+'" role="button" aria-label="棋盘格 '+k+'" tabindex="-1">';
-   if(m)s+='<circle cx="'+x+'" cy="'+y+'" r="22" fill="'+(m==='hop'?'#fff1b6':'#b4ecce')+'" stroke="'+(m==='hop'?'#e6a642':'#57ac88')+'" stroke-width="2" stroke-dasharray="3 3"/>';
-   if(active)s+='<circle cx="'+x+'" cy="'+y+'" r="22" fill="none" stroke="#234e3b" stroke-width="3.5"/>';
-   s+='<circle cx="'+x+'" cy="'+y+'" r="15.7" fill="'+fill+'" stroke="'+(v.arm===-1?'#c7d7ca':colors[v.arm]+'65')+'" stroke-width="1.25"/>';
-   if(arm!==undefined){
-    s+='<circle cx="'+x+'" cy="'+y+'" r="14.3" fill="'+colors[arm]+'" stroke="#ffffffbb" stroke-width="1.7" filter="url(#cc-marble-shadow)"/>';
-    s+='<ellipse cx="'+(x-4.4)+'" cy="'+(y-5.7)+'" rx="5.3" ry="3.4" fill="#ffffff" opacity=".54" transform="rotate(-25 '+(x-4.4)+' '+(y-5.7)+')"/>';
-    s+='<path d="M '+(x+7)+' '+(y+6)+' Q '+(x+2)+' '+(y+12)+' '+(x-3)+' '+(y+10)+'" fill="none" stroke="#000000" stroke-width="2" opacity=".10"/>';
-   }else if(m){
-    s+='<circle cx="'+x+'" cy="'+y+'" r="7.5" fill="'+(m==='hop'?'#e5a53a':'#55ad81')+'"/>';
-    s+='<circle cx="'+x+'" cy="'+y+'" r="3.2" fill="#ffffff" opacity=".85"/>';
+   // Exact equilateral six-pointed star. The outer radius comes from the
+   // 4-row triangular lattice extent (4*sqrt(3)*SPACING), plus one lattice
+   // spacing. This puts every straight edge precisely half a spacing beyond
+   // the outside row of board holes, without moving any hole or marble.
+   const outerRadius=(4*Math.sqrt(3)+1)*SPACING;
+   const innerRadius=outerRadius/Math.sqrt(3);
+   const star=[];
+   for(let i=0;i<12;i++){
+     const angle=(-90+i*30)*Math.PI/180;
+     const radius=i%2===0?outerRadius:innerRadius;
+     star.push((CX+Math.cos(angle)*radius).toFixed(3)+','+(CY+Math.sin(angle)*radius).toFixed(3));
    }
-   s+='<circle class="hit" cx="'+x+'" cy="'+y+'" r="19.4"/><title>'+(arm!==undefined?names[arm]+'色棋子':m?'可以跳到这里':'空位')+'</title></g>';
-  }
-  svg.innerHTML=s;
+   const dots=Array.from(cells.entries()).sort((a,b)=>a[1].r-b[1].r||a[1].q-b[1].q);
+   const options=selected!==null?legal(selected,chain.length>0):new Map();
+   let html='<defs><linearGradient id="cc-preview-bg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fffdf7"/><stop offset="1" stop-color="#edf8ed"/></linearGradient><filter id="cc-preview-shadow" x="-30%" y="-30%" width="170%" height="180%"><feDropShadow dx="1" dy="2" stdDeviation="1.5" flood-opacity=".18"/></filter></defs>';
+   html+='<polygon points="'+star.join(' ')+'" fill="url(#cc-preview-bg)" stroke="#d6e5d6" stroke-width="3" stroke-linejoin="round"/>';
+   for(const [k,cell] of dots){
+     const [x,y]=position(cell.q,cell.r),piece=occupied.get(k),highlight=options.get(k),active=k===selected;
+     const base=cell.arm===-1?'#e6eee5':COLORS[cell.arm]+'25';
+     html+='<g data-key="'+k+'" aria-label="'+(piece!==undefined?T().color[piece]+T().piece:highlight&&hints?T().landing:T().empty)+'">';
+     if(highlight&&hints)html+='<circle cx="'+x+'" cy="'+y+'" r="22" fill="'+(highlight==='hop'?'#fff0b7':'#b9edd0')+'" stroke="'+(highlight==='hop'?'#eba941':'#62b28b')+'" stroke-width="2.3" stroke-dasharray="4 3"/>';
+     if(active)html+='<circle cx="'+x+'" cy="'+y+'" r="22" fill="none" stroke="#204936" stroke-width="3.5"/>';
+     html+='<circle cx="'+x+'" cy="'+y+'" r="15.5" fill="'+base+'" stroke="'+(cell.arm===-1?'#cadacb':COLORS[cell.arm]+'55')+'" stroke-width="1.2"/>';
+     if(piece!==undefined){
+       html+='<circle cx="'+x+'" cy="'+y+'" r="14.2" fill="'+COLORS[piece]+'" stroke="#fff9" stroke-width="1.7" filter="url(#cc-preview-shadow)"/>';
+       html+='<ellipse cx="'+(x-4.3)+'" cy="'+(y-5.7)+'" rx="5" ry="3.4" fill="white" opacity=".55" transform="rotate(-25 '+(x-4.3)+' '+(y-5.7)+')"/>';
+     }else if(highlight&&hints){html+='<circle cx="'+x+'" cy="'+y+'" r="6.8" fill="'+(highlight==='hop'?'#dda43d':'#4baa7d')+'"/>';}
+     html+='<circle class="cc-hit" cx="'+x+'" cy="'+y+'" r="19.4"/></g>';
+   }
+   board.innerHTML=html;
  }
  function render(){
-  if(players.length===0)return;
-  const a=current().arm;
-  $('color').style.setProperty('--current',colors[a]);$('turn').textContent=names[a]+'方 · 玩家 '+(turnIndex+1);
-  $('detail').textContent='隔空跳'+(rule==='long'?' ✓':' ✗')+' · '+count+' 人对局';
-  $('undo').disabled=chain.length===0;$('finish').disabled=chain.length===0;
-  if(selected===null)status('👆 轮到'+names[a]+'方啦！先点一颗自己的棋子，再点亮起的圆孔。');
-  else if(chain.length>0)status('✨ 已跳 '+chain.length+' 次 · 可继续跳，也可点其他颜色棋子结束回合。');
-  else status('✨ 选择亮起的落点。黄色 = 跳跃，绿色 = 走一步；点击原棋子取消。');
-  $('progress').innerHTML=players.map((p,i)=>'<div class="progressChip '+(i===turnIndex?'active':'')+'"><span class="progressDot" style="--chip:'+colors[p.arm]+'"></span>'+names[p.arm]+'方 '+campProgress(p)+'/10</div>').join('');
-  draw();
+   const t=T(),arm=current().arm;
+   root.lang=language==='zh'?'zh-CN':language;
+   $('[data-ui="titletext"]').textContent=t.title;
+   $('[data-act="help"]').textContent=t.rulesButton;
+   $('[data-act="settings"]').textContent=t.settingsButton;
+   $('[data-act="newgame"]').textContent=t.newGameButton;
+   $('[data-ui="turnlabel"]').textContent=t.turnLabel;
+   $('[data-ui="goal"]').textContent=t.goal;
+   $('[data-ui="local"]').textContent=t.local;
+   board.setAttribute('aria-label',t.boardLabel);
+   $('[data-ui="swatch"]').style.setProperty('--turn-color',COLORS[arm]);
+   $('[data-ui="player"]').textContent=language==='zh'?t.color[arm]+t.faction+' · '+t.player+' '+(turnIndex+1):t.color[arm]+' · '+t.player+' '+(turnIndex+1);
+   $('[data-ui="status"]').textContent=selected===null?(hints?t.startHints:t.startNoHints):chain.length?(hints?t.chainHints:t.chainNoHints):(hints?t.moveHints:t.moveNoHints);
+   $('[data-ui="progress"]').innerHTML=players.map((p,i)=>'<span class="cc-chip '+(i===turnIndex?'cc-active':'')+'"><span class="cc-chipdot" style="--chip-color:'+COLORS[p.arm]+'"></span>'+t.color[p.arm]+t.faction+' '+countArrived(p.arm)+'/10</span>').join('');
+   draw();
  }
- svg.addEventListener('click',e=>{const el=e.target.closest('[data-k]');if(el)selectOrMove(el.dataset.k);});
- $('undo').addEventListener('click',undo);$('finish').addEventListener('click',()=>{if(chain.length)finish();});
- $('settings').addEventListener('click',()=>showOverlay('settings'));$('help').addEventListener('click',()=>showOverlay('help'));
- setup(2,'long');
+ function playSound(kind,jumps){
+   if(!sound)return;
+   try{
+     const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;
+     if(!audioCtx)audioCtx=new Ctx();if(audioCtx.state==='suspended')audioCtx.resume();
+     const now=audioCtx.currentTime,hop=kind==='hop',freq=(hop?560:420)+Math.min(5,jumps)*65;
+     function note(hz,t,d,level){const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type=hop?'sine':'triangle';osc.frequency.setValueAtTime(hz,t);osc.frequency.exponentialRampToValueAtTime(hz*.8,t+d);gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(level,t+.008);gain.gain.exponentialRampToValueAtTime(.0001,t+d);osc.connect(gain);gain.connect(audioCtx.destination);osc.start(t);osc.stop(t+d+.01);}
+     note(freq,now,.11,hop?.06:.04);if(hop)note(freq*1.45,now+.04,.09,.03);
+   }catch(e){}
+ }
+ function showModal(html){modal.innerHTML=html;overlay.hidden=false;}
+ function closeModal(){overlay.hidden=true;modal.innerHTML='';}
+ function settings(){renderSettings();}
+ function renderSettings(){
+   const t=T();
+   showModal('<h2>'+t.settings+'</h2><p>'+t.settingsNote+'</p><div class="cc-section">'+t.preferences+'</div>'+
+    '<div class="cc-option"><div><strong>'+t.sound+'</strong><small>'+t.soundSub+'</small></div><button type="button" class="cc-toggle '+(sound?'enabled':'')+'" data-opt="sound" aria-pressed="'+sound+'">'+(sound?t.on:t.off)+'</button></div>'+
+    '<div class="cc-option"><div><strong>'+t.hints+'</strong><small>'+t.hintsSub+'</small></div><button type="button" class="cc-toggle '+(hints?'enabled':'')+'" data-opt="hints" aria-pressed="'+hints+'">'+(hints?t.on:t.off)+'</button></div>'+
+    '<div class="cc-section">'+t.language+'</div><div class="cc-languages">'+[['zh','中文'],['en','English'],['es','Español']].map(([code,name])=>'<button type="button" data-lang="'+code+'" class="'+(language===code?'cc-choice':'')+'" aria-pressed="'+(language===code)+'">'+name+'</button>').join('')+'</div>'+
+    '<hr class="cc-sectionline"><div class="cc-section">'+t.newGame+'</div><strong>'+t.players+'</strong><div class="cc-grid">'+[2,3,4,5,6].map(n=>'<button type="button" data-n="'+n+'" class="'+(cfgCount===n?'cc-choice':'')+'">'+n+'</button>').join('')+'</div><strong>'+t.jumpRule+'</strong><div class="cc-rules"><button type="button" data-r="long" class="'+(cfgRule==='long'?'cc-choice':'')+'">'+t.longDefault+'</button><button type="button" data-r="short" class="'+(cfgRule==='short'?'cc-choice':'')+'">'+t.classic+'</button></div>'+
+    '<div class="cc-modalactions"><button type="button" class="cc-primary" data-do="close">'+t.cancel+'</button></div>');
+   modal.querySelector('[data-opt="sound"]').onclick=()=>{sound=!sound;savePref('sound',sound?'on':'off');if(sound)playSound('step',0);renderSettings();};
+   modal.querySelector('[data-opt="hints"]').onclick=()=>{hints=!hints;savePref('hints',hints?'on':'off');render();renderSettings();};
+   modal.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{language=b.dataset.lang;savePref('language',language);render();renderSettings();});
+   modal.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{cfgCount=Number(b.dataset.n);savePref('player-count',String(cfgCount));renderSettings();});
+   modal.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{cfgRule=b.dataset.r;savePref('jump-rule',cfgRule);renderSettings();});
+   modal.querySelector('[data-do="close"]').onclick=closeModal;
+ }
+ function help(){
+   const t=T();
+   showModal('<h2>'+t.helpTitle+'</h2><div class="cc-helptext">'+t.help.map(([heading,description])=>'<p><b>'+heading+'：</b>'+description+'</p>').join('')+'</div><div class="cc-modalactions"><button class="cc-go" data-do="close">'+t.helpClose+'</button></div>');
+   modal.querySelector('[data-do="close"]').onclick=closeModal;
+ }
+ function showWinner(){
+   const t=T(),arm=winner;
+   showModal('<h2 style="text-align:center">'+t.winTitle+'</h2><div class="cc-wintitle" style="color:'+COLORS[arm]+'">🏆 '+t.color[arm]+t.faction+t.wins+'</div><p style="text-align:center">'+t.winBody+'</p><div class="cc-modalactions"><button class="cc-go" data-do="again">'+t.again+'</button><button data-do="change">'+t.change+'</button></div>');
+   modal.querySelector('[data-do="again"]').onclick=()=>init(cfgCount,cfgRule);
+   modal.querySelector('[data-do="change"]').onclick=settings;
+ }
+ board.addEventListener('click',e=>{const target=e.target.closest('[data-key]');if(target&&board.contains(target))tap(target.getAttribute('data-key'));});
+ $('[data-act="settings"]').addEventListener('click',settings);
+ $('[data-act="newgame"]').addEventListener('click',()=>init(cfgCount,cfgRule));
+ $('[data-act="help"]').addEventListener('click',help);
+ init(cfgCount,cfgRule);
 })();
 </script>
-</body></html>
+</body>
+</html>
