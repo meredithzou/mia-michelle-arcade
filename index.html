@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Mia and Michelle's Arcade</title>
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" id="arcade-theme" href="themes/pastel-rainbow/theme.css" />
+  <script src="site-config.js"></script>
+  <script>
+    (function () {
+      const theme = (window.ARCADE_CONFIG && window.ARCADE_CONFIG.activeTheme) || "pastel-rainbow";
+      // Only allow folder-like theme identifiers; never accept arbitrary URLs.
+      if (/^[a-z0-9-]+$/.test(theme)) {
+        document.getElementById("arcade-theme").href = "themes/" + theme + "/theme.css";
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Welcome to our Game Corner</div>
+      <h1>🎮 Mia and Michelle's Arcade</h1>
+      <p>A tiny collection of family games made for fun on iPad. Tap a card below to start playing — simple, playful, and easy to share with friends.</p>
+      <div class="bubbles">
+        <span class="pill">iPad-friendly</span>
+        <span class="pill">Family-made</span>
+        <span class="pill">Just for fun</span>
+        <span class="pill">Made with ChatGPT</span>
+      </div>
+    </section>
+
+    <h2>Pick a game ✨</h2>
+
+    <section class="grid">
+      <article class="card">
+        <a class="thumb" href="games/chicken-jockey-dash/index.html"><div class="thumbFrame"><img src="assets/chicken-jockey-preview.png" alt="Chicken Jockey Dash preview" /></div></a>
+        <div class="body">
+          <div class="name">🐔 Chicken Jockey Dash</div>
+          <div class="desc">The very first jumping game we made together. Tap to jump, dodge obstacles, and see how far your chicken jockey can go!</div>
+          <div class="meta"><span class="chip">1 Player</span></div>
+          <div class="actions"><a class="btn primary" href="games/chicken-jockey-dash/index.html">Play now</a></div>
+        </div>
+      </article>
+
+
+      <article class="card">
+        <a class="thumb" href="games/chinese-checkers/index.html"><div class="thumbFrame"><img src="assets/chinese-checkers-preview.png" alt="Chinese Checkers preview" /></div></a>
+        <div class="body">
+          <div class="name">🎲 Chinese Checkers</div>
+          <div class="desc">A family touch version for 2–6 players, with sound effects and your custom free-stop jumping rule, so you can stop a jump chain exactly where you want.</div>
+          <div class="meta"><span class="chip">2–6 Players</span></div>
+          <div class="actions"><a class="btn primary" href="games/chinese-checkers/index.html">Play now</a></div>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      <div>Mia and Michelle's Arcade · Made for family fun</div>
+      <div class="legal">A small, non-commercial family project created with love for play and learning. If you have any copyright or licensing concerns, please contact <a href="mailto:mingzou.cn@gmail.com">mingzou.cn@gmail.com</a>.</div>
+    </footer>
+  </div>
+</body>
+</html>

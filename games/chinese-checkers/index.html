@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>家庭跳棋 · 自由连跳版 v1.2 | Chinese Checkers</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",system-ui,sans-serif;background:#f0f5ee;color:#223a35;-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible{outline:3px solid #276f63;outline-offset:3px}
+#cc-app{max-width:750px;margin:0 auto;padding:12px 12px 18px;--forest:#265c4d;--mint:#e5f3e8}.shell{border:1px solid #d5e4d9;border-radius:22px;background:#fffefa;box-shadow:0 10px 34px #1b4a3020;overflow:hidden}.header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:17px 18px 10px}.eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:900;color:#6a9280}.heading{font-weight:900;font-size:clamp(19px,4.7vw,29px);line-height:1.18;letter-spacing:-.65px}.subheading{font-size:12px;color:#789085;margin-top:3px}.headerActions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.iconBtn{border-radius:11px;padding:9px 12px;background:#f0f5ee;border:1px solid #dce7db;font-weight:800;color:#395e4c;min-height:41px;white-space:nowrap;font-size:13px}.turnCard{margin:5px 14px 0;background:#eff6ef;border:1px solid #e0ece2;border-radius:14px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:63px}.turnLeft{display:flex;align-items:center;gap:10px;min-width:0}.pieceIcon{width:35px;height:35px;border-radius:50%;background:var(--current,#ed6466);border:3px solid #fff9;box-shadow:inset -5px -6px 0 #0002,0 2px 4px #1e413029;flex:none}.turnLabel{font-size:10px;letter-spacing:.4px;color:#678077;font-weight:800}.turnName{font-size:17px;font-weight:900;white-space:nowrap}.turnDetail{font-size:12px;font-weight:700;color:#5e8470;text-align:right;max-width:45%}.boardArea{position:relative;margin:0 auto;width:min(100%,680px);touch-action:manipulation;user-select:none;-webkit-user-select:none}.boardArea svg{display:block;width:100%;height:auto;touch-action:manipulation;overflow:visible}.boardArea svg [data-k]{cursor:pointer;touch-action:manipulation}.boardArea svg [data-k] .hit{fill:transparent}.instruction{margin:0 14px 9px;padding:10px 11px;background:#fff7e6;border:1px solid #f0e4c8;border-radius:11px;color:#7c6027;font-size:12px;font-weight:700;line-height:1.45;min-height:37px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 14px 12px}.control{min-height:49px;padding:9px;border-radius:12px;border:1px solid #d2e0d4;background:#f0f4ef;color:#345b47;font-size:14px;font-weight:850}.control.primary{background:#267659;color:white;border-color:#267659;box-shadow:0 3px 0 #1a5642}.control:disabled{opacity:.38;cursor:default;box-shadow:none}
+.stopGuide{margin:10px 14px 0;padding:8px 11px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#e9f8e9;border:2px solid #6db78b;border-radius:13px;color:#246247;font-size:13px;font-weight:850;line-height:1.35}.stopGuide button{background:#277e5a;color:white;font-weight:900;border:0;border-radius:9px;padding:12px 14px;min-height:48px;font-size:14px;white-space:nowrap}.stopGuide.hidden,.stopFloating.hidden{display:none}
+.stopFloating{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom, 0px));left:50%;transform:translateX(-50%);z-index:40;border:3px solid #f7fff7;border-radius:999px;padding:15px 23px;min-height:57px;background:#247b56;color:white;box-shadow:0 6px 20px #163c3273;font-size:16px;font-weight:900;white-space:nowrap;max-width:96vw;touch-action:manipulation}
+@media(min-width:900px){.stopFloating{bottom:26px}}.progress{padding:12px 14px 13px;border-top:1px solid #ecf1eb}.progressTitle{font-size:10px;letter-spacing:1.1px;font-weight:900;color:#889b8d;margin-bottom:8px}.progressItems{display:flex;flex-wrap:wrap;gap:6px}.progressChip{display:flex;gap:5px;align-items:center;border-radius:8px;padding:6px 8px;border:1px solid #e4ece2;background:#f9fbf7;font-size:12px;color:#4c685b;font-weight:850}.progressDot{width:10px;height:10px;border-radius:50%;background:var(--chip)}.progressChip.active{border-color:#7cbaa3;background:#eef8ef}.tinyFoot{text-align:center;color:#8ba092;font-size:10px;padding:10px 8px 3px}.scrim{position:absolute;inset:0;background:#193e2f99;display:flex;align-items:center;justify-content:center;padding:14px;border-radius:8px;z-index:5}.scrim.hidden{display:none}.modal{width:min(100%,430px);max-height:95%;overflow:auto;background:#fffefa;border:2px solid #c8dfd2;border-radius:20px;padding:19px 18px;box-shadow:0 10px 30px #122f2945}.modal h2{font-size:22px;margin:0 0 6px;letter-spacing:-.4px}.modal p{font-size:13px;color:#647e6c;margin:5px 0 12px;line-height:1.65}.groupTitle{font-size:13px;font-weight:850;color:#345a4c;margin:12px 0 8px}.countButtons{display:flex;gap:7px}.countButtons button{flex:1;border:1px solid #dce7de;background:#f6f8f5;border-radius:12px;min-height:45px;font-size:16px;color:#497061;font-weight:900}.countButtons button.chosen{background:#2c775e;color:white;border-color:#2c775e}.rulePicker{display:grid;grid-template-columns:1fr 1fr;gap:8px}.rulePicker button{display:flex;flex-direction:column;gap:3px;padding:10px;border-radius:12px;text-align:left;border:1px solid #dbe5d9;background:#f9faf7;min-height:69px}.rulePicker button.chosen{border:2px solid #3b9376;background:#ebf6ef;padding:9px}.rulePicker strong{font-size:13px;color:#294f3e}.rulePicker small{font-size:10px;color:#788c7d;line-height:1.35}.modalButtons{display:flex;gap:8px;margin-top:16px}.modalButtons button{min-height:47px;border-radius:12px;font-size:14px;font-weight:900;border:1px solid #cfe0d3;flex:1}.modalButtons .go{background:#27785d;color:white;border-color:#27785d}.modalButtons .secondary{background:#f1f5ef;color:#3b6651}.helpText{font-size:13px;line-height:1.8;color:#496958}.helpText b{color:#275b43}.helpText .ruleLine{padding:6px 0;border-bottom:1px solid #eaf0e9}.winner{font-size:19px;text-align:center;margin:14px 0 0;font-weight:900;color:#27785d}
+@media(min-width:500px){#cc-app{padding:20px}.header{padding:19px 23px 11px}.boardArea{width:min(95%,680px)}}
+@media(max-width:375px){.headerActions{gap:4px}.heading{font-size:18px}.header{padding:12px 11px 8px}.iconBtn{padding:7px 9px;font-size:12px}.modal{padding:12px}.scrim{padding:5px}.turnName{font-size:15px}}
+@media(prefers-reduced-motion:no-preference){.pieceIcon{transition:background .2s}.control:not(:disabled):active,.iconBtn:active{transform:translateY(2px)}}
+</style>
+</head>
+<body><div style="position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:12px;z-index:10000;font:700 13px system-ui,-apple-system,sans-serif"><a href="../../index.html" style="display:inline-block;padding:9px 13px;border-radius:999px;background:#214f43;color:white;text-decoration:none;box-shadow:0 3px 12px #173d3433">← Mia and Michelle's Arcade</a></div><style>body{padding-top:65px!important}</style>
+<div id="cc-app">
+<div class="shell">
+ <div class="header">
+  <div><div class="eyebrow">FAMILY GAME NIGHT ✦</div><div class="heading">🌟 家庭跳棋 <span style="font-size:.53em;color:#6d9882;font-weight:700;white-space:nowrap">Chinese Checkers</span></div><div class="subheading">2–6 人同屏对战 · 自由结束连跳 · iPad 触屏</div></div>
+  <div class="headerActions"><button class="iconBtn" id="cc-sound" type="button" aria-label="关闭音效" aria-pressed="true">🔊 音效开</button><button class="iconBtn" id="cc-help" type="button">❔规则</button><button class="iconBtn" id="cc-settings" type="button">⚙️ 新游戏</button></div>
+ </div>
+ <div class="turnCard"><div class="turnLeft"><span class="pieceIcon" id="cc-color"></span><div><div class="turnLabel">轮到谁了？</div><div class="turnName" id="cc-turn">红方 · 玩家 1</div></div></div><div class="turnDetail" id="cc-detail">目标：走到正对面的三角形</div></div>
+ <div class="stopGuide hidden" id="cc-stop-guide"><span>🦘 继续点黄色落点跳跃，或随时停下</span><button id="cc-stop-top" type="button">✓ 停在这里 · 下一位</button></div>
+ <div class="boardArea"><svg id="cc-board" viewBox="0 0 660 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Chinese Checkers 棋盘，点击棋子和目标圆孔走棋"></svg>
+  <div class="scrim hidden" id="cc-scrim"><div class="modal" id="cc-modal"></div></div>
+ </div>
+ <button class="stopFloating hidden" type="button" id="cc-stop-floating">✅ 停在这里 · 结束本回合</button>
+ <div class="instruction" id="cc-status" aria-live="polite">👆 点击红色棋子，再点击亮起的圆孔。每人轮流走一步！</div>
+ <div class="controls"><button id="cc-undo" class="control" type="button" disabled>↶ 撤销上一步跳跃</button><button id="cc-finish" class="control primary" type="button" disabled>✓ 停在这里 · 换人</button></div>
+ <div class="progress"><div class="progressTitle">🏁 抵达对面终点（满 10 颗获胜）</div><div class="progressItems" id="cc-progress"></div></div>
+</div>
+<div class="tinyFoot">专为同一台 iPad 上一起玩的家人设计 ♡</div>
+</div>
+<script>
+(function(){
+ 'use strict';
+ const ROOT=document.getElementById('cc-app');if(!ROOT)return;
+ const $=id=>document.getElementById('cc-'+id);
+ const svg=$('board'),modal=$('modal'),scrim=$('scrim');
+ // iPad Safari: sound is created only after the player taps the board.
+ let soundOn=true,audio=null;
+ try{soundOn=localStorage.getItem('cc-sound')!=='off';}catch(e){}
+ const soundButton=$('sound');
+ function updateSoundButton(){soundButton.textContent=soundOn?'🔊 音效开':'🔇 音效关';soundButton.setAttribute('aria-label',soundOn?'关闭音效':'开启音效');soundButton.setAttribute('aria-pressed',String(soundOn));}
+ function audioEngine(){const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return null;try{if(!audio)audio=new Ctx();if(audio.state==='suspended')audio.resume().catch(()=>{});return audio;}catch(e){return null;}}
+ function pling(kind,combo=0){
+  if(!soundOn)return;
+  let ctx=audioEngine();if(!ctx)return;
+  const now=ctx.currentTime,hop=kind==='hop',base=(hop?580:420)+Math.min(5,combo)*68;
+  function tone(freq,at,dur,loud){
+   const osc=ctx.createOscillator(),vol=ctx.createGain();osc.type=hop?'sine':'triangle';osc.frequency.setValueAtTime(freq,at);osc.frequency.exponentialRampToValueAtTime(freq*.80,at+dur);
+   vol.gain.setValueAtTime(.0001,at);vol.gain.exponentialRampToValueAtTime(loud,at+.008);vol.gain.exponentialRampToValueAtTime(.0001,at+dur);
+   osc.connect(vol);vol.connect(ctx.destination);osc.start(at);osc.stop(at+dur+.01);
+  }
+  tone(base,now,.105,hop?.065:.038);
+  if(hop)tone(base*1.45,now+.044,.10,.035);
+ }
+ soundButton.addEventListener('click',()=>{soundOn=!soundOn;try{localStorage.setItem('cc-sound',soundOn?'on':'off');}catch(e){}updateSoundButton();if(soundOn)pling('step');});updateSoundButton();
+ const dirs=[[1,0],[0,1],[-1,1],[-1,0],[0,-1],[1,-1]];
+ const colors=['#ED696A','#EDAC4C','#2CB89D','#658DE9','#A078D4','#E47CAE'];
+ const names=['红','橙','绿','蓝','紫','粉'];
+ const turns={2:[0,3],3:[0,2,4],4:[0,1,3,4],5:[0,1,2,3,4],6:[0,1,2,3,4,5]};
+ const S=39,CX=330,CY=357;
+ const key=(q,r)=>q+','+r;
+ const rotate=([q,r])=>[-r,q+r];
+ const cells=new Map(),camps=Array.from({length:6},()=>[]);
+ for(let q=-4;q<=4;q++)for(let r=-4;r<=4;r++)if(Math.max(Math.abs(q),Math.abs(r),Math.abs(q+r))<=4)cells.set(key(q,r),{q,r,arm:-1});
+ for(let arm=0;arm<6;arm++)for(let d=1;d<=4;d++)for(let q=d;q<=4;q++){
+  let v=[q,-4-d];for(let k=0;k<arm;k++)v=rotate(v);const [x,y]=v,k=key(x,y);camps[arm].push(k);cells.set(k,{q:x,r:y,arm});
+ }
+ const point=(q,r)=>[CX+(q+r/2)*S,CY+r*S*Math.sqrt(3)/2];
+ let occupancy=new Map(),players=[],turnIndex=0,selected=null,chain=[],rule='long',count=2,configCount=2,configRule='long',winner=null,overlay=null;
+ const current=()=>players[turnIndex];
+ const occupied=k=>occupancy.has(k);
+ function campProgress(p){return camps[(p.arm+3)%6].filter(k=>occupancy.get(k)===p.arm).length;}
+ function setup(n=2,r='long'){
+  count=n;rule=r;players=turns[n].map(arm=>({arm}));turnIndex=0;selected=null;chain=[];winner=null;occupancy=new Map();
+  for(const p of players)for(const k of camps[p.arm])occupancy.set(k,p.arm);
+  hideOverlay();render();
+ }
+ function legal(k,onlyHops=false){
+  const cell=cells.get(k);if(!cell)return new Map();const options=new Map();
+  for(const [dq,dr] of dirs){
+   if(!onlyHops){const n=key(cell.q+dq,cell.r+dr);if(cells.has(n)&&!occupied(n))options.set(n,'step');}
+   for(let d=1;d<=8;d++){
+    const mid=key(cell.q+d*dq,cell.r+d*dr);
+    if(!cells.has(mid))break;
+    if(occupied(mid)){
+     if(rule==='short'&&d!==1)break;
+     const end=key(cell.q+2*d*dq,cell.r+2*d*dr);
+     if(!cells.has(end)||occupied(end))break;
+     let clear=true;
+     for(let j=d+1;j<2*d;j++){
+      const b=key(cell.q+j*dq,cell.r+j*dr);
+      if(!cells.has(b)||occupied(b)){clear=false;break;}
+     }
+     if(clear)options.set(end,'hop');
+     break;
+    }
+    if(rule==='short')break;
+   }
+  }
+  if(chain.length>0){const visited=new Set([chain[0].from,...chain.map(x=>x.to)]);for(const k of options.keys())if(visited.has(k))options.delete(k);}
+  return options;
+ }
+ function selectOrMove(k){
+  if(winner!==null||overlay)return;
+  const arm=current().arm;
+  if(selected===null){if(occupancy.get(k)===arm){selected=k;render();}else{status('👆 现在轮到'+names[arm]+'方，请先点一颗'+names[arm]+'色棋子。');}return;}
+  // During a jump chain, tapping the current piece also means "stop here".
+  if(k===selected&&chain.length>0){finish();return;}
+  if(k===selected&&chain.length===0){selected=null;render();return;}
+  if(chain.length===0&&occupancy.get(k)===arm){selected=k;render();return;}
+  const options=legal(selected,chain.length>0);
+  if(!options.has(k)){
+   status(chain.length>0?'🦘 你可以继续跳黄色落点，也可以立刻点绿色「停在这里」！':'👆 请点亮起的空位，或者重新选一颗自己的棋子。');return;
+  }
+  const typ=options.get(k),from=selected;
+  occupancy.delete(from);occupancy.set(k,arm);selected=k;
+  pling(typ,chain.length);
+  if(typ==='step'){finish();return;}
+  // Every hop is a valid stopping point, even when more yellow options remain.
+  // Do not automatically advance on a hop; the player explicitly ends their turn.
+  chain.push({from,to:k});
+  render();
+ }
+ function finish(){
+  const p=current();
+  if(campProgress(p)===10){winner=p.arm;selected=null;chain=[];render();showWinner();return;}
+  turnIndex=(turnIndex+1)%players.length;selected=null;chain=[];render();
+ }
+ function undo(){if(chain.length===0)return;const last=chain.pop();occupancy.delete(last.to);occupancy.set(last.from,current().arm);selected=last.from;render();}
+ function status(t){$('status').textContent=t;}
+ function esc(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+ function showOverlay(type){overlay=type;scrim.classList.remove('hidden');if(type==='settings'){
+  configCount=count;configRule=rule;renderSettings();
+ }else if(type==='help'){
+  modal.innerHTML='<h2>📚 怎么玩？</h2><div class="helpText"><div class="ruleLine"><b>🏁 目标：</b>让自己的 10 颗棋子全部走进正对面的彩色三角形。</div><div class="ruleLine"><b>👆 走一步：</b>先点自己的棋子，再点旁边亮起的空位，每轮只能走一次。</div><div class="ruleLine"><b>🦘 连续跳：</b>每跳完一次，都可以自由选择继续跳或立刻停在当前落点，无需跳到最后。点「停在这里」，或再点一下正在跳的棋子即可结束这手。</div><div class="ruleLine"><b>🌈 隔空跳（默认）：</b>被跳的棋子不必紧挨着你，但它必须是直线上遇到的第一颗棋子，且你到它、它到落点的距离相等；中间不能有其他棋子。</div><div class="ruleLine"><b>🎲 经典跳：</b>只能跳紧挨着的一颗棋子，落在下一格。</div><div class="ruleLine"><b>👨‍👩‍👧‍👧 多人：</b>一台 iPad 轮流点棋，没有电脑玩家。2 人为正对角。</div></div><div class="modalButtons"><button class="go" id="cc-close-help">知道啦！开始玩 ✓</button></div>';
+  $('close-help').addEventListener('click',hideOverlay);
+ }else if(type==='winner')showWinner();
+ }
+ function hideOverlay(){overlay=null;scrim.classList.add('hidden');modal.innerHTML='';}
+ function renderSettings(){
+  modal.innerHTML='<h2>🎲 开一局新跳棋</h2><p>同一台 iPad，面对面或围坐轮流玩。所有玩家都是真人！</p><div class="groupTitle">选择人数</div><div class="countButtons">'+[2,3,4,5,6].map(n=>'<button type="button" data-count="'+n+'" class="'+(configCount===n?'chosen':'')+'">'+n+' 人</button>').join('')+'</div><p style="font-size:11px;margin:7px 0 8px">2 人双方正对面；其他人数会自动安排起始三角形。</p><div class="groupTitle">选择跳棋规则</div><div class="rulePicker"><button type="button" data-rule="long" class="'+(configRule==='long'?'chosen':'')+'"><strong>✨ 隔空跳</strong><small>空几格也能等距跳跃（推荐）</small></button><button type="button" data-rule="short" class="'+(configRule==='short'?'chosen':'')+'"><strong>🟢 经典跳</strong><small>只跳紧挨着的棋子</small></button></div><div class="modalButtons"><button type="button" class="secondary" id="cc-cancel">取消</button><button type="button" class="go" id="cc-go">开始新游戏 →</button></div>';
+  modal.querySelectorAll('[data-count]').forEach(b=>b.addEventListener('click',()=>{configCount=Number(b.dataset.count);renderSettings();}));
+  modal.querySelectorAll('[data-rule]').forEach(b=>b.addEventListener('click',()=>{configRule=b.dataset.rule;renderSettings();}));
+  $('cancel').addEventListener('click',hideOverlay);
+  $('go').addEventListener('click',()=>setup(configCount,configRule));
+ }
+ function showWinner(){
+  const c=colors[winner];overlay='winner';scrim.classList.remove('hidden');
+  modal.innerHTML='<h2 style="text-align:center">🎉 太棒啦！</h2><div class="winner" style="color:'+c+'">🏆 '+names[winner]+'方获胜！</div><p style="text-align:center">10 颗棋子全部到达对面的家！<br>要不要再来一盘？</p><div class="modalButtons"><button class="go" id="cc-rematch">再来一局 ↗</button><button class="secondary" id="cc-change">换人数/规则</button></div>';
+  $('rematch').addEventListener('click',()=>setup(count,rule));$('change').addEventListener('click',()=>showOverlay('settings'));
+ }
+ function draw(){
+  const star=[];for(let i=0;i<12;i++){const ang=(-90+i*30)*Math.PI/180,rad=(i%2===0?7.65:4.58)*S;star.push((CX+Math.cos(ang)*rad).toFixed(1)+','+(CY+Math.sin(ang)*rad).toFixed(1));}
+  const dots=Array.from(cells.entries()).sort((a,b)=>a[1].r-b[1].r||a[1].q-b[1].q);
+  const opts=selected!==null?legal(selected,chain.length>0):new Map();
+  let s='<defs><linearGradient id="cc-board-bg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fffdf6"/><stop offset="1" stop-color="#f0f8ec"/></linearGradient><filter id="cc-marble-shadow" x="-30%" y="-20%" width="160%" height="165%"><feDropShadow dx="1" dy="2.2" stdDeviation="1.5" flood-opacity="0.19"/></filter></defs>';
+  s+='<polygon points="'+star.join(' ')+'" fill="url(#cc-board-bg)" stroke="#d2e3d4" stroke-width="3" stroke-linejoin="round"/>';
+  // delicate radial lines under the board holes
+  for(let a=0;a<6;a++){const p=point(...(() => {let v=[4,-8];for(let j=0;j<a;j++)v=rotate(v);return v;})());s+='<line x1="'+CX+'" y1="'+CY+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="#b9d6c3" stroke-width="1" stroke-dasharray="3 9" opacity=".42"/>';}
+  for(const [k,v] of dots){
+   const [x,y]=point(v.q,v.r),arm=occupancy.get(k),isOwn=arm===current().arm,active=k===selected,m=opts.get(k);
+   const fill=v.arm===-1?'#e5ede5':colors[v.arm]+'25';
+   s+='<g data-k="'+k+'" role="button" aria-label="棋盘格 '+k+'" tabindex="-1">';
+   if(m)s+='<circle cx="'+x+'" cy="'+y+'" r="22" fill="'+(m==='hop'?'#fff1b6':'#b4ecce')+'" stroke="'+(m==='hop'?'#e6a642':'#57ac88')+'" stroke-width="2" stroke-dasharray="3 3"/>';
+   if(active)s+='<circle cx="'+x+'" cy="'+y+'" r="22" fill="none" stroke="#234e3b" stroke-width="3.5"/>';
+   s+='<circle cx="'+x+'" cy="'+y+'" r="15.7" fill="'+fill+'" stroke="'+(v.arm===-1?'#c7d7ca':colors[v.arm]+'65')+'" stroke-width="1.25"/>';
+   if(arm!==undefined){
+    s+='<circle cx="'+x+'" cy="'+y+'" r="14.3" fill="'+colors[arm]+'" stroke="#ffffffbb" stroke-width="1.7" filter="url(#cc-marble-shadow)"/>';
+    s+='<ellipse cx="'+(x-4.4)+'" cy="'+(y-5.7)+'" rx="5.3" ry="3.4" fill="#ffffff" opacity=".54" transform="rotate(-25 '+(x-4.4)+' '+(y-5.7)+')"/>';
+    s+='<path d="M '+(x+7)+' '+(y+6)+' Q '+(x+2)+' '+(y+12)+' '+(x-3)+' '+(y+10)+'" fill="none" stroke="#000000" stroke-width="2" opacity=".10"/>';
+   }else if(m){
+    s+='<circle cx="'+x+'" cy="'+y+'" r="7.5" fill="'+(m==='hop'?'#e5a53a':'#55ad81')+'"/>';
+    s+='<circle cx="'+x+'" cy="'+y+'" r="3.2" fill="#ffffff" opacity=".85"/>';
+   }
+   s+='<circle class="hit" cx="'+x+'" cy="'+y+'" r="19.4"/><title>'+(arm!==undefined?names[arm]+'色棋子':m?'可以跳到这里':'空位')+'</title></g>';
+  }
+  svg.innerHTML=s;
+ }
+ function render(){
+  if(players.length===0)return;
+  const a=current().arm;
+  $('color').style.setProperty('--current',colors[a]);$('turn').textContent=names[a]+'方 · 玩家 '+(turnIndex+1);
+  $('detail').textContent='隔空跳'+(rule==='long'?' ✓':' ✗')+' · '+count+' 人对局';
+  $('undo').disabled=chain.length===0;$('finish').disabled=chain.length===0;
+  $('stop-guide').classList.toggle('hidden',chain.length===0);$('stop-floating').classList.toggle('hidden',chain.length===0);
+  if(selected===null)status('👆 轮到'+names[a]+'方啦！先点一颗自己的棋子，再点亮起的圆孔。');
+  else if(chain.length>0)status('🦘 已跳 '+chain.length+' 次！继续点黄色落点，或随时点「停在这里」结束这一手。');
+  else status('✨ 选择亮起的落点。黄色 = 跳跃，绿色 = 走一步；点击原棋子取消。');
+  $('progress').innerHTML=players.map((p,i)=>'<div class="progressChip '+(i===turnIndex?'active':'')+'"><span class="progressDot" style="--chip:'+colors[p.arm]+'"></span>'+names[p.arm]+'方 '+campProgress(p)+'/10</div>').join('');
+  draw();
+ }
+ svg.addEventListener('click',e=>{const el=e.target.closest('[data-k]');if(el)selectOrMove(el.dataset.k);});
+ $('undo').addEventListener('click',undo);['finish','stop-top','stop-floating'].forEach(id=>$(id).addEventListener('click',()=>{if(chain.length)finish();}));
+ $('settings').addEventListener('click',()=>showOverlay('settings'));$('help').addEventListener('click',()=>showOverlay('help'));
+ setup(2,'long');
+})();
+</script>
+</body></html>

@@ -1,0 +1,12 @@
+/* Preserved Pastel Rainbow home theme — seasonal themes live in sibling folders. */
+:root{
+      --bg1:#fff4fb; --bg2:#eef9ff; --bg3:#f5fff0; --text:#28433b; --muted:#67847a;
+      --card:#ffffffcc; --border:#e5d9f3; --shadow:0 16px 36px rgba(126, 85, 177, .12);
+      --pink:#ff7db7; --purple:#8f7cff; --mint:#63d4b0; --yellow:#ffd76e;
+    }
+:root{
+--page-background:radial-gradient(circle at 15% 18%, #ffd9f0 0 10%, transparent 10.5%),radial-gradient(circle at 88% 20%, #dff4ff 0 11%, transparent 11.5%),radial-gradient(circle at 18% 82%, #e9ffd7 0 9%, transparent 9.5%),radial-gradient(circle at 86% 78%, #ffe9a9 0 10%, transparent 10.5%),linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 48%,var(--bg3) 100%);
+--hero-background:linear-gradient(135deg,#ff8fc5 0%, #ffcf6d 34%, #81d8ff 68%, #80e0b2 100%);
+--card-edge-background:linear-gradient(135deg,rgba(255,125,183,.35),rgba(143,124,255,.25),rgba(99,212,176,.35));
+--play-button-background:linear-gradient(135deg,#ff7db7,#8f7cff);
+}
