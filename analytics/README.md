@@ -12,21 +12,22 @@ GA4 Measurement ID: `G-9FE0PH4LHC` (public identifier, not a secret).
 - `analytics/config.js`: global feature flag and GA4 measurement ID.
 - `analytics/analytics.js`: opt-in consent storage, controlled tag loading,
   privacy preference changes, and cookie cleanup after withdrawal.
-- `analytics/consent.css`: banner styles; loaded **only if enabled**.
 - `privacy.html`: plain-language privacy notice and preference control.
 - Homepage and game pages load the same configuration/loader at the end
   of the HTML; game code and homepage theme implementation are unchanged.
 
 ## When enabled, behavior
-1. First visit: GA4 does not load; visitor sees `Allow statistics` /
-   `No thanks`. Neither choice is required to use any game.
-2. Decline: a choice is stored locally, without loading GA4.
-3. Allow: the choice is stored locally and GA4 loads. Measurement is limited
+1. First visit: GA4 does not load. The homepage and games show no consent popup;
+   playing is unaffected. A visitor can choose only from `privacy.html`.
+2. The Privacy page provides inline `Off · No thanks` / `On · Allow` controls,
+   defaulting to Off; they are disabled while the site feature flag is off.
+3. Decline: a choice is stored locally, without loading GA4.
+4. Allow: a choice is stored locally and GA4 loads. Measurement is limited
    to page views in Phase 1, with the GA4 property configured separately.
-4. Returning visitors: saved choice applies across this website's pages.
-5. Change: open `privacy.html`, click `Change analytics choice`; withdrawal
-   disables analytics, removes accessible GA cookies, and reloads the page.
-6. Browsers that block localStorage remain untracked (fail-closed).
+5. Returning visitors: saved choice applies across this website's pages.
+6. Change: open `privacy.html` and choose On/Off; withdrawal stops future
+   analytics, removes accessible GA cookies, and reloads the page.
+7. Browsers that block localStorage remain untracked (fail-closed).
 
 The preference is scoped to this browser and storage; other devices require
 their own choice. Withdrawing cannot remove historical aggregated GA4 reports.
@@ -52,5 +53,5 @@ their own choice. Withdrawing cannot remove historical aggregated GA4 reports.
   that setting) and test: no tag before choice, none after decline, one tag
   after allow, no further collection after withdrawal.
 - Verify home + all three game pages on iPad Safari, including navigation,
-  sound, touch inputs, and banner not blocking game controls.
+  sound, touch inputs, and absence of consent popups outside Privacy.
 - Verify Realtime reports only after permission and the separate activation.
