@@ -5,14 +5,10 @@
   "use strict";
 
   var config = window.ARCADE_ANALYTICS_CONFIG;
-  var script = document.currentScript;
   var id = config && config.measurementId;
   var active = !!(config && config.enabled === true && /^G-[A-Z0-9]+$/.test(id));
   var key = "arcade.analytics.consent.v" + (config && config.consentVersion || 1);
   var loaded = false;
-  var panel = null;
-  var privacyUrl = script && script.src
-    ? new URL("../privacy.html", script.src).href : "privacy.html";
 
   function choice() {
     try {
@@ -37,10 +33,6 @@
         document.cookie = name + "=; Max-Age=0; path=" + path + "; SameSite=Lax; Secure";
       });
     });
-  }
-
-  function removePanel() {
-    if (panel) { panel.remove(); panel = null; }
   }
 
   function dispatchChange() {
@@ -80,7 +72,6 @@
       window.alert("Your browser could not save this choice. Analytics will stay off.");
       return false;
     }
-    removePanel();
     if (value === "allow") {
       loadGoogleTag();
     } else {
@@ -96,43 +87,17 @@
     return true;
   }
 
-  function showChoices() {
-    if (!active) return false;
-    if (panel) return true;
-    panel = document.createElement("section");
-    panel.className = "arcade-analytics-consent";
-    panel.setAttribute("aria-label", "Optional website statistics");
-    panel.innerHTML =
-      '<p class="arcade-analytics-consent__title">Optional website statistics</p>' +
-      '<p class="arcade-analytics-consent__description">May we use Google Analytics to count page visits, general locations, and device categories? Google may set analytics cookies. No gameplay details or names are collected. You can say no and still play. <a href="' + privacyUrl + '">Privacy details</a>.</p>' +
-      '<div class="arcade-analytics-consent__buttons">' +
-        '<button type="button" class="arcade-analytics-consent__allow">Allow statistics</button>' +
-        '<button type="button" class="arcade-analytics-consent__decline">No thanks</button>' +
-      '</div>';
-    panel.querySelector(".arcade-analytics-consent__allow").addEventListener("click", function () { setConsent("allow"); });
-    panel.querySelector(".arcade-analytics-consent__decline").addEventListener("click", function () { setConsent("decline"); });
-    document.body.appendChild(panel);
-    return true;
-  }
-
-  // The public API can be used by the privacy page. If disabled, it stays inert.
+  // Only the Privacy page provides the On / Off controls. Never show a site-wide prompt.
   window.ArcadeAnalytics = {
     isEnabled: function () { return active; },
     getConsent: choice,
-    showChoices: showChoices,
     setConsent: setConsent
   };
 
-  if (!active) return; // Crucial: no CSS, consent UI, or Google network requests.
-
-  var sheet = document.createElement("link");
-  sheet.rel = "stylesheet";
-  sheet.href = new URL("consent.css", script.src).href;
-  document.head.appendChild(sheet);
+  if (!active) return; // No Google network requests or cookies while the site feature flag is off.
 
   function init() {
     if (choice() === "allow") loadGoogleTag();
-    else if (choice() === null) showChoices();
     dispatchChange();
   }
   if (document.readyState === "loading") {
