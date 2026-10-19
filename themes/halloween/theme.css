@@ -1,0 +1,139 @@
+/* Halloween homepage theme v2.0 — isolated from the preserved Pastel Rainbow theme.
+   The homepage loads this file via site-config.js; game pages are unaffected.
+   Activate by setting activeTheme: "halloween" in site-config.js.
+   Restore with activeTheme: "pastel-rainbow". */
+
+:root {
+  --text: #49365e;
+  --muted: #816d8e;
+  --card: #fffcf8ed;
+  --shadow: 0 17px 32px rgba(113, 78, 138, .14);
+  --page-background:
+    radial-gradient(ellipse at 10% 6%, rgba(160,117,206,.46) 0%, transparent 36%),
+    radial-gradient(ellipse at 91% 12%, rgba(183,123,201,.46) 0%, transparent 37%),
+    radial-gradient(ellipse at 13% 82%, rgba(130,99,188,.37) 0%, transparent 39%),
+    radial-gradient(ellipse at 87% 88%, rgba(243,172,124,.22) 0%, transparent 34%),
+    linear-gradient(145deg, #372158 0%, #573575 30%, #6c4c91 56%, #4a2e6e 82%, #312050 100%);
+  --hero-background:
+    radial-gradient(ellipse at 92% 25%, rgba(255,230,171,.27), transparent 27%),
+    linear-gradient(115deg, #7557a8 0%, #9770b3 39%, #cb8eb3 72%, #f0ae8a 100%);
+  --card-edge-background: linear-gradient(135deg, #ccacd9, #f1ba8e 55%, #a9badf);
+  --play-button-background: linear-gradient(115deg, #a876ca, #e7a16d);
+}
+
+body { position: relative; isolation: isolate; }
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    url("assets/web-top-left.svg"),
+    url("assets/web-top-right.svg"),
+    url("assets/bat.svg"),
+    url("assets/sparkles.svg"),
+    url("assets/sparkles.svg");
+  background-repeat: no-repeat;
+  background-position:
+    left -20px top -18px,
+    right -17px top -19px,
+    right 3% top 57%,
+    left 5% top 43%,
+    right 9% bottom 7%;
+  background-size: 165px 165px, 145px 145px, 114px 70px, 120px 94px, 95px 74px;
+  opacity: .74;
+}
+
+.wrap { position: relative; z-index: 1; }
+
+.hero {
+  border: 2px solid rgba(255,247,230,.9);
+  box-shadow: 0 20px 42px rgba(115,74,143,.23), inset 0 1px 0 #ffffff50;
+}
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 0;
+  opacity: 1;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero::before {
+  width: 106px;
+  height: 116px;
+  top: 20px;
+  right: 26px;
+  background-image: url("assets/ghost.svg");
+  filter: drop-shadow(0 6px 6px #5f41712e);
+}
+.hero::after {
+  width: 91px;
+  height: 92px;
+  left: auto;
+  right: 86px;
+  bottom: -14px;
+  background-image: url("assets/jack-o-lantern.svg");
+}
+.hero > * { position: relative; z-index: 1; }
+.hero .eyebrow { background: rgba(255,244,226,.78); color: #674a87; }
+.hero h1 { text-shadow: 0 3px 14px rgba(65,37,98,.27); }
+.hero p { color: #fff9f4; text-shadow: 0 1px 9px rgba(71,42,96,.18); }
+.pill {
+  background: rgba(255,247,233,.85);
+  color: #5f4872;
+  border-color: #fff4ec;
+  box-shadow: 0 2px 5px #6b417b16;
+}
+
+h2 { color: #fff0d6; text-shadow: 0 2px 12px #2e194a55; }
+h2::after {
+  content: "";
+  display: inline-block;
+  width: 41px;
+  height: 31px;
+  margin-left: 7px;
+  vertical-align: middle;
+  background: url("assets/bat.svg") center / contain no-repeat;
+}
+
+/* Card designs keep their original layout. No overlays on either game. */
+.card { border: 2px solid #ffffffdc; }
+.name { color: #654b77; }
+.desc { color: #6f6876; }
+.chip { border-color: #ead5ee; background: #fff8ee; color: #7b5780; }
+
+footer.compact-footer .footer-heading { color: #f6e5fd; }
+footer.compact-footer .footer-compact p { color: #eedff8; }
+footer.compact-footer .footer-compact a { color: #ffe3ad; }
+
+@media (max-width: 760px) {
+  .hero::before {
+    width: 67px;
+    height: 72px;
+    top: auto;
+    bottom: 9px;
+    right: 17px;
+    opacity: .93;
+  }
+  body::before {
+    background-size: 105px 105px, 90px 90px, 70px 50px, 80px 60px, 75px 60px;
+    opacity: .56;
+  }
+  h2 { text-shadow: 0 2px 7px #2d194b66; }
+  .hero::after {
+    display: block;
+    width: 55px;
+    height: 55px;
+    top: 8px;
+    right: 9px;
+    left: auto;
+    bottom: auto;
+  }
+}
