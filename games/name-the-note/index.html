@@ -44,7 +44,13 @@ function message(t,k=''){$('npxmsg').textContent=t;$('npxmsg').className='npx-ms
 function next(){clearTimeout(timer);locked=judged=false;q={...pitch(),v:val()};count++;$('npxnum').textContent=count;let a=$('npxletters');a.replaceChildren();for(let l of letters){let b=document.createElement('button');b.textContent=l;b.onclick=()=>answer(l);a.append(b)}$('npxreveal').disabled=false;$('npxnext').hidden=true;message('Tap a letter to answer');draw()}
 function restart(){clearTimeout(timer);count=total=correct=0;bag=[];last='';vcounts={};lastVal='';$('npxacc').textContent='—';next()}
 function grade(ok){if(judged)return;judged=true;total++;if(ok)correct++;$('npxacc').textContent=Math.round(100*correct/total)+'%'}
-function context(){try{if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();bus=ac.createGain();bus.gain.value=.48;bus.connect(ac.destination)}if(ac.state==='suspended')ac.resume();return ac}catch{return null}}
+function context(){try{if(!ac){
+// Treat practice sounds as media so supported iPhones can play in Silent Mode.
+// Unsupported browsers or a rejected session setting keep the existing audio path.
+try{
+  if('audioSession' in navigator) navigator.audioSession.type='playback';
+}catch{}
+ac=new(window.AudioContext||window.webkitAudioContext)();bus=ac.createGain();bus.gain.value=.48;bus.connect(ac.destination)}if(ac.state==='suspended')ac.resume();return ac}catch{return null}}
 function soft(i){let a=context();if(!a)return;let m=midi(i),f=440*Math.pow(2,(m-69)/12),t=a.currentTime;for(let h=1;h<=Math.min(7,Math.floor(9000/f));h++){let o=a.createOscillator(),g=a.createGain(),d=1.45/Math.pow(h,.44);o.type='sine';o.frequency.value=f*h*Math.sqrt((1+.000065*h*h)/(1+.000065));g.gain.setValueAtTime(.00001,t);g.gain.linearRampToValueAtTime(.17/Math.pow(h,1.6),t+.008);g.gain.exponentialRampToValueAtTime(.00001,t+d);o.connect(g);g.connect(bus);o.start(t);o.stop(t+d+.03)}}
 const roots=[];for(let o=1;o<=6;o++)for(let [k,n] of [['C',0],['Ds',3],['Fs',6],['A',9]])roots.push({m:12*(o+1)+n,file:k+o+'.mp3'});roots.push({m:21,file:'A0.mp3'},{m:96,file:'C7.mp3'});const cache=new Map(),loading=new Map(),nearest=m=>roots.reduce((a,b)=>Math.abs(a.m-m)<=Math.abs(b.m-m)?a:b,roots[0]);
 function sample(r){if(cache.has(r.file))return Promise.resolve(cache.get(r.file));if(loading.has(r.file))return loading.get(r.file);let a=context();if(!a)return Promise.resolve(null);let ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),5500);let p=fetch('https://tonejs.github.io/audio/salamander/'+r.file,{signal:ctrl.signal,mode:'cors'}).then(x=>{if(!x.ok)throw Error();return x.arrayBuffer()}).then(b=>a.decodeAudioData(b)).then(b=>(cache.set(r.file,b),b)).catch(()=>null).finally(()=>{clearTimeout(timeout);loading.delete(r.file)});loading.set(r.file,p);return p}
