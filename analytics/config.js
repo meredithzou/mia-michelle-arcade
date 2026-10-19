@@ -1,7 +1,8 @@
-/* Phase 1: intentionally OFF until privacy/compliance review and owner approval.
-   Enabling requires a separate reviewed one-line change. */
+// Cloudflare Web Analytics: basic aggregate page stats, enabled by default.
+// The token identifies this public website; it is NOT a secret API credential.
+// Set enabled: false if we ever want to stop the analytics beacon globally.
 window.ARCADE_ANALYTICS_CONFIG = Object.freeze({
-  enabled: false,
-  measurementId: "G-9FE0PH4LHC",
-  consentVersion: 1
+  provider: "cloudflare-web-analytics",
+  enabled: true,
+  siteToken: "1c7b00000c834cf19ed42b8256ac04ae"
 });
