@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Privacy &amp; Analytics | Mia and Michelle's Arcade</title>
+  <title>Privacy | Mia and Michelle's Arcade</title>
   <style>
     body { margin: 0; padding: 22px 16px 45px; background: #fbf8ff; color: #352b48; font: 16px/1.65 system-ui,-apple-system,sans-serif; }
     main { margin: auto; max-width: 660px; }
@@ -11,89 +11,26 @@
     h2 { font-size: 19px; margin-top: 24px; }
     a { color: #6945a5; }
     .box { background: white; border: 1px solid #e2d9ed; border-radius: 14px; padding: 16px; }
-    button { font: inherit; cursor: pointer; min-height: 44px; padding: 10px 18px; background: #7050a0; color: white; border: 0; border-radius: 10px; }
-    button:disabled { opacity: .55; cursor: not-allowed; }
     .hint { color: #625b6f; font-size: 14px; }
-/* Preview-approved inline On/Off control; same existing theme colors. */
-.analytics-setting { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
-.analytics-setting strong { font-size:16px; }
-.analytics-state { font-size:13px; font-weight:700; color:#7050a0; background:#f3ecfa; border-radius:100px; padding:4px 11px; }
-.analytics-toggle { display:flex; gap:8px; }
-.analytics-toggle button { min-width:110px; flex:1; border:1px solid #dccfed; }
-.analytics-toggle button[aria-pressed="false"] { color:#7050a0; background:#fff; }
-.analytics-toggle button[aria-pressed="true"] { color:white; background:#7050a0; }
-.analytics-toggle button:disabled { opacity:1; cursor:not-allowed; }
-.analytics-note { margin: 12px 0 0; font-size:13px; color:#625b6f; }
-@media(max-width:460px){.analytics-toggle button{min-width:0}}
   </style>
-  <script src="analytics/config.js"></script>
-  <script src="analytics/analytics.js" defer></script>
 </head>
 <body>
   <main>
     <p><a href="index.html">← Back to the arcade</a></p>
-    <h1>Privacy &amp; analytics</h1>
-    <p>Welcome to our little family arcade! We want everyone to enjoy the games without needing an account.</p>
+    <h1>Privacy</h1>
+    <p>Welcome to our little family arcade! Our games are free to play, and you don't need an account.</p>
 
-    <h2>Optional website statistics</h2>
-    <p>We'd love to understand how people use our arcade — which game pages are popular, how many visits we get, and general locations and device types.</p>
-    <p>If you choose to allow statistics, we use Google Analytics to help us improve the website. Google Analytics may use cookies and other identifiers.</p>
-    <p>We don't send players' names, email addresses, game answers, or individual gameplay details to Analytics. We don't use Analytics for advertising or personalized ads.</p>
-
-    <h2>Your choice</h2>
-    <p>Website statistics are off unless you choose to allow them. Either way, you can enjoy all our games.</p>
+    <h2>Simple website statistics</h2>
     <div class="box">
-      <div class="analytics-setting"><strong>Website statistics</strong><span class="analytics-state" id="state" role="status">Off</span></div>
-      <div class="analytics-toggle" role="group" aria-label="Website statistics">
-        <button type="button" id="btn-off" aria-pressed="true" disabled>Off · No thanks</button>
-        <button type="button" id="btn-on" aria-pressed="false" disabled>On · Allow</button>
-      </div>
-      <p class="analytics-note" id="note">Statistics are off. You can play every game without them.</p>
+      <p>We use <strong>Cloudflare Web Analytics</strong> to see which game pages are popular, general visitor locations and device types, and how our website performs. This helps us make the arcade better.</p>
+      <p>Cloudflare Web Analytics doesn't use tracking cookies or device fingerprinting. Your browser sends basic page and performance information to Cloudflare, but we don't track individual players or use these statistics for advertising.</p>
+      <p class="hint">We don't send player names, email addresses, game answers, or scores to this analytics service. <a href="https://developers.cloudflare.com/web-analytics/about/">Learn about Cloudflare Web Analytics</a>.</p>
     </div>
-    <p>You can change your choice anytime. Learn more about <a href="https://policies.google.com/technologies/partner-sites">how Google uses data from websites</a>.</p>
-    <p class="hint" id="children-note">Kids play here, too. We'll enable analytics only after reviewing the privacy requirements for children's use.</p>
-    <p>Questions? Email <a href="mailto:mingzou.cn@gmail.com">mingzou.cn@gmail.com</a>.</p>
+
+    <p>Questions about privacy? <a href="mailto:mingzou.cn@gmail.com">Email us</a>.</p>
   </main>
-  <script>
-    (function () {
-      var on = document.getElementById("btn-on");
-      var off = document.getElementById("btn-off");
-      var state = document.getElementById("state");
-      var note = document.getElementById("note");
-      var childrenNote = document.getElementById("children-note");
-
-      function render() {
-        var api = window.ArcadeAnalytics;
-        var enabled = !!(api && api.isEnabled());
-        var allowed = enabled && api.getConsent() === "allow";
-        on.disabled = off.disabled = !enabled;
-        childrenNote.textContent = enabled ?
-          "Kids play here, too. Statistics are optional, and the games work without them." :
-          "Kids play here, too. We'll enable analytics only after reviewing the privacy requirements for children's use.";
-        on.setAttribute("aria-pressed", String(allowed));
-        off.setAttribute("aria-pressed", String(!allowed));
-        state.textContent = allowed ? "On" : "Off";
-        note.textContent = !enabled ?
-          "Statistics are currently off. You can play every game without them." :
-          allowed ? "You have chosen to allow optional website statistics. You can turn them off anytime." :
-          "Statistics are off. You can play every game without them.";
-      }
-
-      on.addEventListener("click", function () {
-        if (window.ArcadeAnalytics && window.ArcadeAnalytics.isEnabled()) {
-          window.ArcadeAnalytics.setConsent("allow");
-          render();
-        }
-      });
-      off.addEventListener("click", function () {
-        if (window.ArcadeAnalytics && window.ArcadeAnalytics.isEnabled()) {
-          window.ArcadeAnalytics.setConsent("decline");
-          render();
-        }
-      });
-      window.addEventListener("arcade-analytics-consent-change", render);
-      render();
-    })();
-  </script>
+  <!-- Same basic, cookie-free page analytics used elsewhere in the arcade. -->
+  <script src="analytics/config.js"></script>
+  <script src="analytics/analytics.js"></script>
 </body>
 </html>
