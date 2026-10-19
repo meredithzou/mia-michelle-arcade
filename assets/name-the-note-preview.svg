@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="488" viewBox="0 0 780 488" role="img" aria-labelledby="title desc">
+<title id="title">Name the Note game preview</title><desc id="desc">Five-line treble staff with a music note and seven letter answer keys in a lavender game interface.</desc>
+<rect width="780" height="488" fill="#f7f4ff"/><rect x="18" y="18" width="744" height="452" rx="28" fill="#fff" stroke="#e8e0f7" stroke-width="2"/>
+<text x="42" y="56" font-family="Arial,sans-serif" font-size="14" letter-spacing="2" font-weight="700" fill="#875cc7">A LITTLE MUSIC PRACTICE</text>
+<text x="42" y="113" font-family="Arial,sans-serif" font-size="45" font-weight="800" fill="#292541">♫ Name the Note</text>
+<rect x="587" y="70" width="69" height="52" rx="12" fill="#f0eaff"/><text x="621" y="90" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" fill="#342365" font-weight="700">1</text><text x="621" y="108" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#65577d">QUESTION</text>
+<rect x="665" y="70" width="77" height="52" rx="12" fill="#f0eaff"/><text x="702" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#342365" font-weight="700">—</text><text x="702" y="108" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#65577d">ACCURACY</text>
+<rect x="34" y="141" width="712" height="210" rx="20" fill="#fdfcff" stroke="#ebe6f6" stroke-width="2"/>
+<rect x="621" y="154" width="105" height="28" rx="14" fill="#f1eaff"/><text x="673" y="173" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#6d50b6" font-weight="700">Treble clef</text>
+<g stroke="#635c77" stroke-width="2.4"><path d="M88 205H690M88 230H690M88 255H690M88 280H690M88 305H690"/></g>
+<text x="101" y="327" font-family="DejaVu Sans,serif" font-size="135" fill="#302b42">𝄞</text>
+<ellipse cx="435" cy="254" rx="17" ry="11" fill="#302b42" transform="rotate(-20 435 254)"/><path d="M450 251V185" stroke="#302b42" stroke-width="5" stroke-linecap="round"/>
+<text x="390" y="377" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#857c98" font-weight="700">Tap a letter to answer</text>
+<g font-family="Arial,sans-serif" font-weight="700" font-size="29" text-anchor="middle" fill="#292541">
+<rect x="34" y="394" width="91" height="59" rx="12" fill="#fff" stroke="#e5dff1" stroke-width="3"/><text x="79" y="431">C</text><rect x="136" y="394" width="91" height="59" rx="12" fill="#fff" stroke="#e5dff1" stroke-width="3"/><text x="181" y="431">D</text><rect x="238" y="394" width="91" height="59" rx="12" fill="#fff" stroke="#e5dff1" stroke-width="3"/><text x="283" y="431">E</text><rect x="340" y="394" width="91" height="59" rx="12" fill="#fff" stroke="#e5dff1" stroke-width="3"/><text x="385" y="431">F</text><rect x="442" y="394" width="91" height="59" rx="12" fill="#fff" stroke="#e5dff1" stroke-width="3"/><text x="487" y="431">G</text><rect x="544" y="394" width="91" height="59" rx="12" fill="#fff" stroke="#e5dff1" stroke-width="3"/><text x="589" y="431">A</text><rect x="646" y="394" width="91" height="59" rx="12" fill="#fff" stroke="#e5dff1" stroke-width="3"/><text x="691" y="431">B</text>
+</g>
+</svg>
