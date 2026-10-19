@@ -40,6 +40,7 @@
 <div class="cc-local" data-ui="local">专为家人同屏游戏设计 ♡</div>
 <div class="cc-overlay" data-ui="overlay" hidden><div class="cc-modal" data-ui="modal"></div></div>
 </div>
+<script src="../../shared/settings.js"></script>
 <script>
 (function(){
  'use strict';
@@ -53,10 +54,34 @@
   en:{title:'Chinese Checkers',rulesButton:'❔ Rules',settingsButton:'⚙️ Settings',newGameButton:'↻ Restart',turnLabel:'Current turn',player:'Player',color:['Red','Orange','Green','Blue','Purple','Pink'],faction:'',people:'players',long:'Long jumps',short:'Classic jumps',goal:'🏁 Reach the opposite triangle · All 10 pieces to win',local:'Made for family play on one iPad ♡',boardLabel:'Chinese Checkers board. Tap pieces and destinations.',piece:' piece',landing:'Legal landing',empty:'Empty space',startHints:'👆 Tap your piece, then choose a highlighted destination.',startNoHints:'👆 Tap your piece, then try a legal destination.',chainHints:'Yellow dots: keep jumping · Tap another color to end your turn.',chainNoHints:'Keep jumping if possible · Tap another color to end your turn.',moveHints:'✨ Yellow = jump · Green = adjacent step.',moveNoHints:'✨ Try an adjacent empty space or a legal jump.',settings:'⚙️ Game settings',preferences:'Preferences',sound:'🔊 Sound',soundSub:'Play sounds for steps and jumps',hints:'💡 Move hints',hintsSub:'Show green and yellow legal destinations',language:'🌐 Language',on:'On',off:'Off',newGame:'For the next game',players:'Number of players',jumpRule:'Jump rules',longDefault:'✨ Long jumps',classic:'🟢 Classic jumps',cancel:'Done',start:'New game →',settingsNote:'Sound, hints and language apply immediately. Player count and jump rules apply when you tap Restart above.',helpTitle:'📚 How to play',help:[['Goal','Move all 10 of your pieces into the opposite triangle.'],['One step','Tap your piece, then an adjacent empty space. The turn ends automatically.'],['Jump chains','Tap a legal jump destination. You may continue or stop after any hop. If no hops remain, the turn ends automatically.'],['Ending a turn','During a chain, tap your moving piece again or tap an opponent’s piece. Tapping the next player’s piece also selects it for them.'],['Move hints','When on, green and yellow destinations appear. When off, you must work out the moves yourself; the rules stay the same.'],['Long jumps','Jump in a straight line over the first piece with equal distances on each side and a clear path.'],['Players','2–6 people can play together on one screen.']],helpClose:'Back to game',winTitle:'🎉 You won!',wins:' wins!',winBody:'All 10 pieces reached the goal.',again:'Play again',change:'Settings'},
   es:{title:'Damas chinas',rulesButton:'❔ Reglas',settingsButton:'⚙️ Ajustes',newGameButton:'↻ Reiniciar',turnLabel:'Turno de',player:'Jugador',color:['Rojo','Naranja','Verde','Azul','Morado','Rosa'],faction:'',people:'jugadores',long:'Saltos largos',short:'Saltos clásicos',goal:'🏁 Llega al triángulo opuesto · Gana con las 10 fichas',local:'Para jugar en familia en un iPad ♡',boardLabel:'Tablero de damas chinas. Toca fichas y destinos.',piece:' ficha',landing:'Destino válido',empty:'Casilla vacía',startHints:'👆 Toca tu ficha y elige un destino marcado.',startNoHints:'👆 Toca tu ficha e intenta llegar a una casilla válida.',chainHints:'Amarillo: sigue saltando · Toca otro color para terminar.',chainNoHints:'Puedes seguir saltando · Toca otro color para terminar.',moveHints:'✨ Amarillo = salto · Verde = paso adyacente.',moveNoHints:'✨ Prueba una casilla contigua o un salto válido.',settings:'⚙️ Ajustes del juego',preferences:'Preferencias',sound:'🔊 Sonido',soundSub:'Reproducir sonidos al mover y saltar',hints:'💡 Pistas de movimiento',hintsSub:'Mostrar destinos válidos verdes y amarillos',language:'🌐 Idioma',on:'Sí',off:'No',newGame:'Para la próxima partida',players:'Número de jugadores',jumpRule:'Reglas de salto',longDefault:'✨ Saltos largos',classic:'🟢 Saltos clásicos',cancel:'Listo',start:'Nueva partida →',settingsNote:'Sonido, pistas e idioma cambian al instante. El número de jugadores y las reglas se aplican al tocar Reiniciar arriba.',helpTitle:'📚 Cómo jugar',help:[['Objetivo','Lleva tus 10 fichas al triángulo opuesto.'],['Un paso','Toca tu ficha y una casilla vacía contigua. El turno termina automáticamente.'],['Saltos seguidos','Elige un salto válido. Puedes seguir o detenerte tras cualquier salto. Si no hay más saltos, el turno termina solo.'],['Fin del turno','Durante los saltos, vuelve a tocar tu ficha o toca una ficha de otro color. Si es del siguiente jugador, también la seleccionas.'],['Pistas','Si están activadas, aparecen destinos verdes y amarillos. Si las desactivas, debes descubrir las jugadas; las reglas no cambian.'],['Saltos largos','Salta en línea recta sobre la primera ficha, a igual distancia por ambos lados y sin obstáculos.'],['Jugadores','Pueden jugar entre 2 y 6 personas en una misma pantalla.']],helpClose:'Volver al juego',winTitle:'🎉 ¡Ganaste!',wins:' gana!',winBody:'Las 10 fichas llegaron a la meta.',again:'Jugar otra vez',change:'Ajustes'}
  };
- let language='zh';
- try{const saved=localStorage.getItem('cc-v17-language');if(['zh','en','es'].includes(saved))language=saved;}catch(e){}
+ const ccStorage=window.ArcadeSettings.create({
+  key:'arcade.settings.chinese-checkers',version:1,
+  defaults:{language:'zh',sound:true,hints:true,playerCount:2,jumpRule:'long'},
+  normalize:(value,defaults)=>({
+   language:['zh','en','es'].includes(value.language)?value.language:defaults.language,
+   sound:typeof value.sound==='boolean'?value.sound:defaults.sound,
+   hints:typeof value.hints==='boolean'?value.hints:defaults.hints,
+   playerCount:Number.isInteger(value.playerCount)&&value.playerCount>=2&&value.playerCount<=6?value.playerCount:defaults.playerCount,
+   jumpRule:['long','short'].includes(value.jumpRule)?value.jumpRule:defaults.jumpRule
+  }),
+  migrateLegacy:(storage)=>{
+   // Read old v1.7 keys, leaving them intact for a safe migration.
+   const read=name=>storage.getItem('cc-v17-'+name);
+   const old={language:read('language'),sound:read('sound'),hints:read('hints'),
+              playerCount:read('player-count'),jumpRule:read('jump-rule')};
+   if(Object.values(old).every(value=>value===null))return null;
+   return {language:old.language,
+           sound:old.sound!=='off',hints:old.hints!=='off',
+           playerCount:old.playerCount===null?2:Number(old.playerCount),
+           jumpRule:old.jumpRule};
+  }
+ });
+ const ccPrefs=ccStorage.load();
+ let language=ccPrefs.language;
  const T=()=>TEXT[language];
- const savePref=(k,v)=>{try{localStorage.setItem('cc-v17-'+k,v);}catch(e){}};
+ const savePref=()=>ccStorage.save({
+  language,sound,hints,playerCount:cfgCount,jumpRule:cfgRule
+ });
 
  const TURN_ARMS={2:[0,3],3:[0,2,4],4:[0,1,3,4],5:[0,1,2,3,4],6:[0,1,2,3,4,5]};
  const DIRS=[[1,0],[0,1],[-1,1],[-1,0],[0,-1],[1,-1]];
@@ -70,8 +95,7 @@
  }
  const position=(q,r)=>[CX+(q+r/2)*SPACING,CY+r*SPACING*Math.sqrt(3)/2];
  let count=2,rule='long',players=[],turnIndex=0,occupied=new Map(),selected=null,chain=[],winner=null;
- let cfgCount=2,cfgRule='long',sound=true,hints=true,audioCtx=null;
- try{hints=localStorage.getItem('cc-v17-hints')!=='off';sound=localStorage.getItem('cc-v17-sound')!=='off';const savedCount=Number(localStorage.getItem('cc-v17-player-count'));const savedRule=localStorage.getItem('cc-v17-jump-rule');if(savedCount>=2&&savedCount<=6)cfgCount=savedCount;if(savedRule==='short'||savedRule==='long')cfgRule=savedRule;}catch(e){}
+ let cfgCount=ccPrefs.playerCount,cfgRule=ccPrefs.jumpRule,sound=ccPrefs.sound,hints=ccPrefs.hints,audioCtx=null;
  const current=()=>players[turnIndex],isOccupied=k=>occupied.has(k);
  const countArrived=arm=>camps[(arm+3)%6].filter(k=>occupied.get(k)===arm).length;
  function init(n=2,r='long'){
@@ -194,11 +218,11 @@
     '<div class="cc-section">'+t.language+'</div><div class="cc-languages">'+[['zh','中文'],['en','English'],['es','Español']].map(([code,name])=>'<button type="button" data-lang="'+code+'" class="'+(language===code?'cc-choice':'')+'" aria-pressed="'+(language===code)+'">'+name+'</button>').join('')+'</div>'+
     '<hr class="cc-sectionline"><div class="cc-section">'+t.newGame+'</div><strong>'+t.players+'</strong><div class="cc-grid">'+[2,3,4,5,6].map(n=>'<button type="button" data-n="'+n+'" class="'+(cfgCount===n?'cc-choice':'')+'">'+n+'</button>').join('')+'</div><strong>'+t.jumpRule+'</strong><div class="cc-rules"><button type="button" data-r="long" class="'+(cfgRule==='long'?'cc-choice':'')+'">'+t.longDefault+'</button><button type="button" data-r="short" class="'+(cfgRule==='short'?'cc-choice':'')+'">'+t.classic+'</button></div>'+
     '<div class="cc-modalactions"><button type="button" class="cc-primary" data-do="close">'+t.cancel+'</button></div>');
-   modal.querySelector('[data-opt="sound"]').onclick=()=>{sound=!sound;savePref('sound',sound?'on':'off');if(sound)playSound('step',0);renderSettings();};
-   modal.querySelector('[data-opt="hints"]').onclick=()=>{hints=!hints;savePref('hints',hints?'on':'off');render();renderSettings();};
-   modal.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{language=b.dataset.lang;savePref('language',language);render();renderSettings();});
-   modal.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{cfgCount=Number(b.dataset.n);savePref('player-count',String(cfgCount));renderSettings();});
-   modal.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{cfgRule=b.dataset.r;savePref('jump-rule',cfgRule);renderSettings();});
+   modal.querySelector('[data-opt="sound"]').onclick=()=>{sound=!sound;savePref();if(sound)playSound('step',0);renderSettings();};
+   modal.querySelector('[data-opt="hints"]').onclick=()=>{hints=!hints;savePref();render();renderSettings();};
+   modal.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{language=b.dataset.lang;savePref();render();renderSettings();});
+   modal.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{cfgCount=Number(b.dataset.n);savePref();renderSettings();});
+   modal.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{cfgRule=b.dataset.r;savePref();renderSettings();});
    modal.querySelector('[data-do="close"]').onclick=closeModal;
  }
  function help(){

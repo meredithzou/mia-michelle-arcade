@@ -17,6 +17,26 @@ This is a small non-commercial family website for two children, with a touch-fir
 - Each newly added game must get its own folder, assets, and a single card on the homepage with a useful screenshot and ONLY a player-count badge. Do not put deployment or Netlify instructions on the public homepage.
 - Preserve the title `Mia and Michelle's Arcade`, the header `Welcome to our Game Corner`, and the approved low-profile footer disclaimer unless the owner asks for a change.
 
+## Game settings persistence
+- Every game with user-adjustable Settings must save and restore those preferences
+  on the same browser and device, even when the game is opened directly.
+- Load `shared/settings.js` **before** the game's own script and use
+  `window.ArcadeSettings.create(...)`; do not write a new localStorage wrapper
+  for each game. The shared helper only handles storage, JSON records, errors
+  and version negotiation; individual games own settings definitions.
+- Each game must choose an independent namespaced key such as
+  `arcade.settings.<game-slug>`, explicit schema version, defaults, validation,
+  and any incompatible-version upgrades. Ignore unknown old fields and fall
+  back safely for missing, corrupt or invalid values.
+- Never allow blocked/full localStorage to stop gameplay. Do not store
+  gameplay history, audio assets, personal/player information or highscores
+  using this settings helper unless separately designed and approved.
+- Preserve pre-existing saved preferences when migrating a game's older keys;
+  do not delete legacy settings without an explicit reason and review.
+- Update `scripts/test_settings.cjs` for every settings schema change and run
+  both `node scripts/test_settings.cjs` and `python3 scripts/check_site.py`.
+- Games with no adjustable Settings do not need to use this helper.
+
 ## Working practices
 - Prefer small, reviewable changes rather than replacing entire games or redesigning the homepage.
 - Use a task branch and pull request for changes; the owner reviews before merging to `main`. Never publish automatically without approval.
