@@ -12,3 +12,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python3 scripts/check_site.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/test_settings.cjs
