@@ -14,50 +14,83 @@
     button { font: inherit; cursor: pointer; min-height: 44px; padding: 10px 18px; background: #7050a0; color: white; border: 0; border-radius: 10px; }
     button:disabled { opacity: .55; cursor: not-allowed; }
     .hint { color: #625b6f; font-size: 14px; }
+/* Preview-approved inline On/Off control; same existing theme colors. */
+.analytics-setting { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+.analytics-setting strong { font-size:16px; }
+.analytics-state { font-size:13px; font-weight:700; color:#7050a0; background:#f3ecfa; border-radius:100px; padding:4px 11px; }
+.analytics-toggle { display:flex; gap:8px; }
+.analytics-toggle button { min-width:110px; flex:1; border:1px solid #dccfed; }
+.analytics-toggle button[aria-pressed="false"] { color:#7050a0; background:#fff; }
+.analytics-toggle button[aria-pressed="true"] { color:white; background:#7050a0; }
+.analytics-toggle button:disabled { opacity:1; cursor:not-allowed; }
+.analytics-note { margin: 12px 0 0; font-size:13px; color:#625b6f; }
+@media(max-width:460px){.analytics-toggle button{min-width:0}}
   </style>
   <script src="analytics/config.js"></script>
+  <script>window.ARCADE_PRIVACY_PAGE = true;</script>
   <script src="analytics/analytics.js" defer></script>
 </head>
 <body>
   <main>
     <p><a href="index.html">← Back to the arcade</a></p>
     <h1>Privacy &amp; analytics</h1>
-    <p>Mia and Michelle's Arcade is a small family game website. The games are available whether or not you choose to allow optional website statistics.</p>
-    <h2>Current status</h2>
-    <div class="box">
-      <p id="analytics-status" role="status">Analytics is currently disabled.</p>
-      <button id="analytics-change" type="button" disabled>Change analytics choice</button>
-      <p class="hint">Analytics is off by default. Enabling it requires a separate website update and privacy review.</p>
-    </div>
-    <h2>What optional statistics would involve</h2>
-    <p>If site analytics is enabled in the future, we plan to use Google Analytics 4 to understand aggregate page visits, popular game pages, broad geographic regions, and device categories. GA4 may use first-party cookies and pseudonymous identifiers when a visitor opts in. These are not guaranteed to be anonymous.</p>
-    <p>We do not intend to send players' names, contact details, game answers, or individual gameplay events. We do not connect Google Ads or enable advertising personalization. Detailed game activity is not part of this phase.</p>
+    <p>Welcome to our little family arcade! We want everyone to enjoy the games without needing an account.</p>
+
+    <h2>Optional website statistics</h2>
+    <p>We'd love to understand how people use our arcade — which game pages are popular, how many visits we get, and general locations and device types.</p>
+    <p>If you choose to allow statistics, we use Google Analytics to help us improve the website. Google Analytics may use cookies and other identifiers.</p>
+    <p>We don't send players' names, email addresses, game answers, or individual gameplay details to Analytics. We don't use Analytics for advertising or personalized ads.</p>
+
     <h2>Your choice</h2>
-    <p>Analytics will not load before you opt in. You can decline without losing access to any game. If enabled later, your choice will be saved in this browser, and you can change it on this page. Withdrawing consent stops future analytics and attempts to clear GA4 cookies on this website; it does not retroactively erase previously collected reports.</p>
-    <h2>Privacy and children's use</h2>
-    <p>Children may play these games. Website statistics remain disabled until the site owner has reviewed applicable child-privacy obligations and the suitability of the analytics service. A website choice button is not a substitute for verifiable parental consent where the law requires it.</p>
-    <h2>Contact</h2>
-    <p>Questions about privacy? Email <a href="mailto:mingzou.cn@gmail.com">mingzou.cn@gmail.com</a>.</p>
+    <p>Website statistics are off unless you choose to allow them. Either way, you can enjoy all our games.</p>
+    <div class="box">
+      <div class="analytics-setting"><strong>Website statistics</strong><span class="analytics-state" id="state" role="status">Off</span></div>
+      <div class="analytics-toggle" role="group" aria-label="Website statistics">
+        <button type="button" id="btn-off" aria-pressed="true" disabled>Off · No thanks</button>
+        <button type="button" id="btn-on" aria-pressed="false" disabled>On · Allow</button>
+      </div>
+      <p class="analytics-note" id="note">Statistics are off. You can play every game without them.</p>
+    </div>
+    <p>You can change your choice anytime. Learn more about <a href="https://policies.google.com/technologies/partner-sites">how Google uses data from websites</a>.</p>
+    <p class="hint">Kids play here, too. We'll enable analytics only after reviewing the privacy requirements for children's use.</p>
+    <p>Questions? Email <a href="mailto:mingzou.cn@gmail.com">mingzou.cn@gmail.com</a>.</p>
+  
   </main>
   <script>
     (function () {
-      var status = document.getElementById("analytics-status");
-      var btn = document.getElementById("analytics-change");
-      function update() {
+      var on = document.getElementById("btn-on");
+      var off = document.getElementById("btn-off");
+      var state = document.getElementById("state");
+      var note = document.getElementById("note");
+
+      function render() {
         var api = window.ArcadeAnalytics;
         var enabled = !!(api && api.isEnabled());
-        var preference = api && api.getConsent();
-        status.textContent = !enabled ? "Analytics is currently disabled. No Google Analytics tag is loaded." :
-          preference === "allow" ? "You have allowed optional website statistics in this browser." :
-          preference === "decline" ? "You have declined optional website statistics in this browser." :
-          "No analytics choice has been saved. Tracking is off.";
-        btn.disabled = !enabled;
+        var allowed = enabled && api.getConsent() === "allow";
+        on.disabled = off.disabled = !enabled;
+        on.setAttribute("aria-pressed", String(allowed));
+        off.setAttribute("aria-pressed", String(!allowed));
+        state.textContent = allowed ? "On" : "Off";
+        note.textContent = !enabled ?
+          "Statistics are currently off. You can play every game without them." :
+          allowed ? "You have chosen to allow optional website statistics. You can turn them off anytime." :
+          "Statistics are off. You can play every game without them.";
       }
-      btn.addEventListener("click", function () {
-        if (window.ArcadeAnalytics) window.ArcadeAnalytics.showChoices();
+
+      on.addEventListener("click", function () {
+        if (window.ArcadeAnalytics && window.ArcadeAnalytics.isEnabled()) {
+          window.ArcadeAnalytics.setConsent("allow");
+          render();
+        }
       });
-      window.addEventListener("arcade-analytics-consent-change", update);
-      update();
+      off.addEventListener("click", function () {
+        if (window.ArcadeAnalytics && window.ArcadeAnalytics.isEnabled()) {
+          window.ArcadeAnalytics.setConsent("decline");
+          render();
+        }
+      });
+      window.addEventListener("arcade-analytics-consent-change", render);
+      render();
     })();
   </script>
 </body>
