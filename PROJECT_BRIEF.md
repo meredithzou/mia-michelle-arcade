@@ -1,7 +1,7 @@
 # Project brief — Mia and Michelle's Arcade
 
 ## Purpose
-Family-made mini games for Mia and Michelle to play on an iPad and occasionally share with known friends. This is a long-lived collection: many more games and themed homepages may be added over time. No advertising, logins, or collection of children's personal information. Optional website analytics are now approved for staged development, but collection remains disabled until a separate privacy review and explicit activation.
+Family-made mini games for Mia and Michelle to play on an iPad and occasionally share with known friends. This is a long-lived collection: many more games and themed homepages may be added over time. No advertising, logins, or collection of children's personal information. The arcade uses Cloudflare Web Analytics for basic aggregate pageviews and performance, without individual player tracking. Any future game-level analytics require separate privacy review.
 
 ## Approved design, October 2026
 - Public site title: **Mia and Michelle's Arcade**.
