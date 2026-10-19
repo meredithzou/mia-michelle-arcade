@@ -45,3 +45,14 @@
       .thumb{padding:10px 10px 0}
     }
   
+/* Compact footer v4: two lines on iPad/desktop; readable wrapping on phones. */
+footer.compact-footer { padding:17px 3px 5px; }
+footer.compact-footer .footer-heading { color:#7a9091; font-size:11px; font-weight:750; letter-spacing:.1px; }
+footer.compact-footer .footer-compact { max-width:none; width:100%; margin:6px auto 0; text-align:center; }
+footer.compact-footer .footer-compact p { margin:3px auto 0; color:#88999a; font-weight:400; font-size:9.2px; line-height:1.45; }
+footer.compact-footer .footer-compact a { color:#718d92; text-decoration:underline; text-underline-offset:2px; }
+@media (max-width:620px) {
+  footer.compact-footer { padding:16px 3px 6px; }
+  footer.compact-footer .footer-compact { margin-top:6px; }
+  footer.compact-footer .footer-compact p { font-size:9.8px; line-height:1.5; margin-top:4px; }
+}
