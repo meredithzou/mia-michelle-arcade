@@ -80,13 +80,67 @@ function message(t,k=''){$('npxmsg').textContent=t;$('npxmsg').className='npx-ms
 function next(){clearTimeout(timer);locked=judged=false;q={...pitch(),v:val()};let a=$('npxletters');a.replaceChildren();for(let l of letters){let b=document.createElement('button');b.textContent=l;b.onclick=()=>answer(l);a.append(b)}$('npxreveal').disabled=false;$('npxnext').hidden=true;message('Tap a letter to answer');draw()}
 function restart(){clearTimeout(timer);total=correct=0;bag=[];last='';vcounts={};lastVal='';$('npxnum').textContent='0';$('npxacc').textContent='—';next()}
 function grade(ok){if(judged)return;judged=true;total++;$('npxnum').textContent=total;if(ok)correct++;$('npxacc').textContent=Math.round(100*correct/total)+'%'}
+// Recovery is event-driven. Normal note playback only tests a cached flag.
+let audioNeedsResume=false,audioResumePending=null,audioGestureArmed=false,audioRequest=0;
+function stopPracticeSounds(){for(const stop of activeSounds)stop();activeSounds.clear()}
+function armAudioGesture(armed){
+ if(armed===audioGestureArmed)return;
+ audioGestureArmed=armed;
+ if(armed)root.addEventListener('click',resumeOnAudioGesture,true);
+ else root.removeEventListener('click',resumeOnAudioGesture,true);
+}
+function audioStateChanged(){
+ if(!ac)return;
+ audioNeedsResume=ac.state==='suspended'||ac.state==='interrupted';
+ armAudioGesture(audioNeedsResume);
+ if(ac.state==='interrupted'){audioRequest++;stopPracticeSounds()}
+}
+function resumeAudio(gesture=false){
+ if(!ac||!cfg.sound||document.hidden||!audioNeedsResume)return null;
+ // A foreground attempt may stay pending until user activation. Allow one
+ // gesture-backed attempt to supersede it; further clicks share that attempt.
+ if(audioResumePending&&(!gesture||audioResumePending.gesture))return audioResumePending.promise;
+ try{
+  // Invoke resume synchronously inside the click when a user gesture is needed.
+  const attempt={gesture};
+  attempt.promise=Promise.resolve(ac.resume()).catch(()=>{}).then(()=>{
+   if(audioResumePending===attempt)audioResumePending=null;
+   audioStateChanged();
+  });
+  audioResumePending=attempt;return attempt.promise;
+ }catch{audioStateChanged();return null}
+}
+function resumeOnAudioGesture(){resumeAudio(true)}
+function restorePageAudio(){if(ac){audioStateChanged();resumeAudio()}}
+document.addEventListener('visibilitychange',()=>{
+ if(document.hidden){audioRequest++;stopPracticeSounds()}
+ else restorePageAudio();
+});
+window.addEventListener('pageshow',restorePageAudio);
 function context(){try{if(!ac){
-// Treat practice sounds as media so supported iPhones can play in Silent Mode.
-// Unsupported browsers or a rejected session setting keep the existing audio path.
-try{
-  if('audioSession' in navigator) navigator.audioSession.type='playback';
-}catch{}
-ac=new(window.AudioContext||window.webkitAudioContext)();bus=ac.createGain();bus.gain.value=cfg.sound?.48:0;bus.connect(ac.destination)}if(ac.state==='suspended')ac.resume();return ac}catch{return null}}
+ // Treat practice sounds as media so supported iPhones can play in Silent Mode.
+ try{if('audioSession' in navigator)navigator.audioSession.type='playback'}catch{}
+ ac=new(window.AudioContext||window.webkitAudioContext)();
+ bus=ac.createGain();bus.gain.value=cfg.sound?.48:0;bus.connect(ac.destination);
+ ac.onstatechange=audioStateChanged;audioStateChanged();
+}return ac}catch{return null}}
+function withAudio(action){
+ if(!cfg.sound||document.hidden)return;
+ const a=context();if(!a)return;
+ const ticket=++audioRequest;
+ if(!audioNeedsResume){action(a);return}
+ const question=q,requested=Date.now();
+ const pending=resumeAudio(true);
+ if(pending)pending.then(()=>{
+  // Never replay a previous question or an old sound after a long interruption.
+  if(ticket===audioRequest&&question===q&&cfg.sound&&!document.hidden&&
+     !audioNeedsResume&&Date.now()-requested<1000)action(a);
+ });
+}
+function trackPracticeSound(source){
+ const stop=()=>{try{source.stop()}catch{}};
+ activeSounds.add(stop);source.onended=()=>activeSounds.delete(stop);
+}
 const PIANO_SOURCE={layer:'v8',version:'1.0.5',baseUrl:'https://cdn.jsdelivr.net/npm/@audio-samples/piano-mp3-velocity8@1.0.5/audio/'};
 function pianoURL(r){return PIANO_SOURCE.baseUrl+encodeURIComponent(r.file.replace(/^Ds/,'D#').replace(/^Fs/,'F#').replace(/\.mp3$/,'v8.mp3'))}
 const roots=[];for(let o=1;o<=6;o++)for(let [k,n] of [['C',0],['Ds',3],['Fs',6],['A',9]])roots.push({m:12*(o+1)+n,file:k+o+'.mp3'});roots.push({m:21,file:'A0.mp3'},{m:96,file:'C7.mp3'});const cache=new Map(),loading=new Map(),nearest=m=>roots.reduce((a,b)=>Math.abs(a.m-m)<=Math.abs(b.m-m)?a:b,roots[0]);
@@ -105,16 +159,16 @@ function sample(r){
  .finally(()=>{clearTimeout(timeout);loading.delete(r.file);renderPianoState()});
  loading.set(r.file,p);return p;
 }
-function recorded(i,r,b){let a=context();if(!a)return;let s=a.createBufferSource(),g=a.createGain(),t=a.currentTime;s.buffer=b;s.playbackRate.value=Math.pow(2,(midi(i)-r.m)/12);g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(.5,t+.015);g.gain.exponentialRampToValueAtTime(.001,t+2);s.connect(g);g.connect(bus);s.start(t);s.stop(t+2.05);const stop=()=>{try{s.stop()}catch{}};activeSounds.add(stop);s.onended=()=>activeSounds.delete(stop)}
+function recorded(i,r,b){withAudio(a=>{let s=a.createBufferSource(),g=a.createGain(),t=a.currentTime;s.buffer=b;s.playbackRate.value=Math.pow(2,(midi(i)-r.m)/12);g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(.5,t+.015);g.gain.exponentialRampToValueAtTime(.001,t+2);s.connect(g);g.connect(bus);s.start(t);s.stop(t+2.05);trackPracticeSound(s)})}
 function play(i){if(!cfg.sound)return;let r=nearest(midi(i)),b=cache.get(r.file);if(b)recorded(i,r,b);else{sample(r);renderPianoState()}}
-function wrong(){if(!cfg.sound)return;let a=context();if(!a)return;let t=a.currentTime;for(let [d,hz] of [[0,247],[.12,196]]){let o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=hz;g.gain.setValueAtTime(.00001,t+d);g.gain.linearRampToValueAtTime(.055,t+d+.015);g.gain.exponentialRampToValueAtTime(.00001,t+d+.18);o.connect(g);g.connect(bus);o.start(t+d);o.stop(t+d+.19)}}
+function wrong(){withAudio(a=>{let t=a.currentTime;for(let [d,hz] of [[0,247],[.12,196]]){let o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=hz;g.gain.setValueAtTime(.00001,t+d);g.gain.linearRampToValueAtTime(.055,t+d+.015);g.gain.exponentialRampToValueAtTime(.00001,t+d+.18);o.connect(g);g.connect(bus);o.start(t+d);o.stop(t+d+.19);trackPracticeSound(o)}})}
 function answer(l){if(locked)return;let ok=l===letters[q.i%7];grade(ok);let all=[...$('npxletters').children],b=all.find(x=>x.textContent===l);if(!ok){b.classList.add('bad');message('Not quite. Try again!','bad');wrong();return}locked=true;b.classList.add('good');all.forEach(x=>x.disabled=true);message('✓ Correct!','good');play(q.i);$('npxreveal').disabled=true;$('npxnext').hidden=false;timer=setTimeout(next,1150)}
 $('npxreveal').onclick=()=>{if(locked)return;grade(false);locked=true;for(let b of $('npxletters').children){b.disabled=true;if(b.textContent===letters[q.i%7])b.classList.add('show')}message('Answer: '+name(q.i));play(q.i);$('npxreveal').disabled=true;$('npxnext').hidden=false};$('npxnext').onclick=next;$('npxrestart').onclick=restart;
 function mute(){let b=$('npxmute');$('npxwaves').setAttribute('d',cfg.sound?'M16 9q4 3 0 6m2.5-9q6 6 0 12':'');b.setAttribute('aria-label',cfg.sound?'Mute sound':'Unmute sound')}
 const activeSounds=new Set();
 function setSound(enabled){
- cfg.sound=enabled;if(draft)draft.sound=enabled;
- if(!enabled){for(const stop of activeSounds)stop();activeSounds.clear()}
+ audioRequest++;cfg.sound=enabled;if(draft)draft.sound=enabled;
+ if(!enabled)stopPracticeSounds();else resumeAudio(true);
  if(bus)bus.gain.value=enabled?.48:0;
  mute();if(!$('npxshade').hidden)settings();preparePiano(cfg);
 }
