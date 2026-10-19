@@ -27,7 +27,6 @@
 @media(max-width:460px){.analytics-toggle button{min-width:0}}
   </style>
   <script src="analytics/config.js"></script>
-  <script>window.ARCADE_PRIVACY_PAGE = true;</script>
   <script src="analytics/analytics.js" defer></script>
 </head>
 <body>
@@ -52,9 +51,8 @@
       <p class="analytics-note" id="note">Statistics are off. You can play every game without them.</p>
     </div>
     <p>You can change your choice anytime. Learn more about <a href="https://policies.google.com/technologies/partner-sites">how Google uses data from websites</a>.</p>
-    <p class="hint">Kids play here, too. We'll enable analytics only after reviewing the privacy requirements for children's use.</p>
+    <p class="hint" id="children-note">Kids play here, too. We'll enable analytics only after reviewing the privacy requirements for children's use.</p>
     <p>Questions? Email <a href="mailto:mingzou.cn@gmail.com">mingzou.cn@gmail.com</a>.</p>
-  
   </main>
   <script>
     (function () {
@@ -62,12 +60,16 @@
       var off = document.getElementById("btn-off");
       var state = document.getElementById("state");
       var note = document.getElementById("note");
+      var childrenNote = document.getElementById("children-note");
 
       function render() {
         var api = window.ArcadeAnalytics;
         var enabled = !!(api && api.isEnabled());
         var allowed = enabled && api.getConsent() === "allow";
         on.disabled = off.disabled = !enabled;
+        childrenNote.textContent = enabled ?
+          "Kids play here, too. Statistics are optional, and the games work without them." :
+          "Kids play here, too. We'll enable analytics only after reviewing the privacy requirements for children's use.";
         on.setAttribute("aria-pressed", String(allowed));
         off.setAttribute("aria-pressed", String(!allowed));
         state.textContent = allowed ? "On" : "Off";
