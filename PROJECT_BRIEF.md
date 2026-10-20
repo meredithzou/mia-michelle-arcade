@@ -29,9 +29,9 @@ Family-made mini games for Mia and Michelle to play on an iPad and occasionally 
 
 ## Delivery workflow
 1. Discuss and approve a game idea or a theme design in ChatGPT (voice-friendly).
-2. Codex reads this repo and `AGENTS.md`, makes a branch/PR for the requested work.
+2. Read this repo and `AGENTS.md`, develop new games locally, and show a playable inline preview in Chat. Iterate with Ming before GitHub submission.
 3. Validate automated site checks and game interactions; provide screenshots when UI changes.
-4. Owner reviews; only after approval merge to `main`.
+4. Only when Ming explicitly requests a PR, push the reviewed work and create it. Owner reviews; only after approval merge to `main`.
 5. GitHub Pages deploys updated `main` from repository root.
 
 ## Next increments (after first GitHub Pages launch)

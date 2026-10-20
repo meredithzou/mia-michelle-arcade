@@ -10,7 +10,8 @@ const vm = require("node:vm");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const shared = read("shared/settings.js");
-const note = read("games/name-the-note/index.html");
+const noteHTML = read("games/name-the-note/index.html");
+const note = noteHTML + "\n" + read("games/name-the-note/game.js");
 const checkers = read("games/chinese-checkers/index.html");
 
 function fixture(initial = {}, flags = {}) {
@@ -169,7 +170,7 @@ test("Chinese Checkers: saved new preferences win over older legacy values", () 
 });
 
 test("Integration: scripts load before game code; apply, mute, and preference actions persist", () => {
-  assert.ok(note.indexOf('src="../../shared/settings.js"') < note.indexOf("(()=>{const root="));
+  assert.ok(noteHTML.indexOf('src="../../shared/settings.js"') < noteHTML.indexOf('src="game.js"'));
   assert.ok(checkers.indexOf('src="../../shared/settings.js"') < checkers.indexOf("(function(){"));
   assert.ok(note.includes("let cfg=practiceSettings.load()"));
   assert.ok(note.includes("practiceSettings.save(cfg)"));

@@ -1,6 +1,6 @@
 // Run with: node scripts/test_name_the_note_audio.cjs
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
-const html=fs.readFileSync(path.join(__dirname,'../games/name-the-note/index.html'),'utf8');
+const html=fs.readFileSync(path.join(__dirname,'../shared/music/audio.js'),'utf8');
 const code=html.slice(html.indexOf('// Recovery is event-driven.'),html.indexOf('const PIANO_SOURCE='));
 const recorded=html.slice(html.indexOf('function recorded('),html.indexOf('\nfunction play('));
 class Events{
@@ -23,6 +23,7 @@ function setup(initial='running'){
  }
  window.AudioContext=Audio;
  const ctx={root,document,window,navigator:{},cfg:{sound:true},q:{},ac:null,bus:null,activeSounds:new Set(),Promise,Math,midi:()=>60,Date:{now:()=>now}};
+ ctx.isEnabled=()=>ctx.cfg.sound;ctx.getQuestion=()=>ctx.q;
  vm.createContext(ctx);vm.runInContext(code+recorded,ctx);
  return {ctx,root,document,window,contexts,requests,sources,change(next){ctx.ac.status=next;ctx.ac.onstatechange()},tick(){now+=1100},get reads(){return reads}};
 }
@@ -57,7 +58,7 @@ function returnToGame(e){e.document.hidden=false;e.document.fire('visibilitychan
  e.ctx.cfg.sound=true;e.ctx.resumeAudio(true);assert.equal(e.contexts.length,2);
  // bfcache return renews once, and decoded AudioBuffers remain reusable.
  e=setup();e.ctx.context();e.window.fire('pageshow',{persisted:true});const buffer={decoded:true};
- e.root.fire('click');e.ctx.recorded(28,{m:60},buffer);e.requests.at(-1).finish();await flush();
+ e.root.fire('click');e.ctx.recorded(60,{m:60},buffer);e.requests.at(-1).finish();await flush();
  assert.equal(e.sources.length,1);assert.equal(e.sources[0].buffer,buffer);assert.equal(e.sources[0].context,e.ctx.ac);assert(e.sources[0].started);
  // Initial suspension merges requests, and canceled/obsolete sounds never play.
  e=setup('suspended');played=0;e.ctx.withAudio(()=>played++);e.ctx.withAudio(()=>played++);assert.equal(e.requests.length,1);e.requests[0].finish();await flush();assert.equal(played,1);

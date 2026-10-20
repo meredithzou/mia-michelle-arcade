@@ -14,7 +14,7 @@ This is a small non-commercial family website for two children, with a touch-fir
 - No keyboard is required. Primary input works by tapping and on iPad in landscape and portrait.
 - Chinese Checkers is local multiplayer for 2–6 human players (NO AI). Two-player mode uses opposite camps. Long-jump (symmetric-distance) is an option/default; after each hop in a chain the player may stop immediately, even if other jumps are available. Retain playable sound effects and a mute toggle.
 - Chicken Jockey Dash is a simple touch-friendly jump-and-dodge runner. Keep it distinct from other games.
-- Each newly added game must get its own folder, assets, and a single card on the homepage with a useful screenshot and ONLY a player-count badge. Do not put deployment or Netlify instructions on the public homepage.
+- Each newly added game must get its own folder. Add its homepage card/assets only when Ming asks to expose it there; new games may remain accessible by direct URL during review. A homepage card uses a useful screenshot and ONLY a player-count badge. Do not put deployment or Netlify instructions on the public homepage.
 - Preserve the title `Mia and Michelle's Arcade`, the header `Welcome to our Game Corner`, and the approved low-profile footer disclaimer unless the owner asks for a change.
 
 ## Game settings persistence
@@ -39,7 +39,7 @@ This is a small non-commercial family website for two children, with a touch-fir
 
 ## Working practices
 - Prefer small, reviewable changes rather than replacing entire games or redesigning the homepage.
-- Use a task branch and pull request for changes; the owner reviews before merging to `main`. Never publish automatically without approval.
+- For every new Arcade game, develop locally and show a playable inline preview in Chat first. Iterate there until Ming is satisfied. Do not push, create a PR (including Draft), merge, or deploy until Ming explicitly requests that step. Use a task branch/PR only after that request; Ming reviews before merging to `main`. Never publish automatically.
 - After code changes, run `python3 scripts/check_site.py` and perform functional/touch checks appropriate to the changed game. Report what was actually tested and what was not.
 - If a new theme or screenshot is created, compare a screenshot at iPad and phone widths. Protect the saved pastel-rainbow theme.
 - Avoid adding frameworks, build systems, analytics, logins, third-party APIs, advertising, or data collection without explicit need and owner consent.

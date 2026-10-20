@@ -8,6 +8,12 @@ home=(root/"index.html").read_text() if (root/"index.html").exists() else ""
 for link in re.findall(r'(?:href|src)=["\']([^"\']+)["\']',home):
     if link.startswith(("http:","https:","mailto:","#","data:")):continue
     if not (root/link.split("#")[0].split("?")[0]).is_file():errors.append(f"Broken homepage link: {link}")
+# Validate each independent game even when it has no homepage card yet.
+for page in (root/"games").glob("*/index.html"):
+    for link in re.findall(r'(?:href|src)=["\']([^"\']+)["\']',page.read_text()):
+        if link.startswith(("http:","https:","mailto:","#","data:")):continue
+        if not (page.parent/link.split("#")[0].split("?")[0]).is_file():
+            errors.append(f"Broken game link in {page.relative_to(root)}: {link}")
 for s in ("Mia and Michelle","Chicken Jockey Dash","Chinese Checkers","Pick a game","Made with ChatGPT"):
     if s not in home:errors.append(f"Missing homepage text: {s}")
 if errors:
