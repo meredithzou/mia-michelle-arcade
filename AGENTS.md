@@ -1,21 +1,30 @@
 # Mia and Michelle's Arcade — repository instructions
 
-This is a small non-commercial family website for two children, with a touch-first game library. Keep modifications simple, maintainable, and friendly to iPad Safari.
+This is a small family website for two children, with a touch-first game library. Keep modifications simple, maintainable, and friendly to iPad Safari.
 
 ## Sources of truth
 - The deployed website is the static source tree in this GitHub repository, served by GitHub Pages from `main` at `/`.
 - The landing page is `index.html`. Each game is independent under `games/<slug>/index.html`.
-- Existing games: `games/chicken-jockey-dash/` and `games/chinese-checkers/`.
+- Current games, names, stable identities and paths are maintained in `docs/GAMES.md`; do not duplicate an inventory here.
 - Screenshots go in `assets/`. Shared layout CSS is in `styles/base.css`.
 - The **current approved home theme** is `themes/pastel-rainbow/theme.css`. Preserve it unchanged when making future seasonal themes; add `themes/halloween/`, `themes/christmas/`, etc. instead. Activate themes using `site-config.js`.
-- Read `PROJECT_BRIEF.md` for product decisions and rollout expectations.
+- Read `docs/README.md` and `docs/PROJECT.md` for shared project state, product decisions and rollout expectations.
+
+## Cross-thread shared state
+- Before project-status discussion or implementation, read the latest default-branch `docs/README.md`, `docs/GAMES.md`, `docs/IDEAS.md`, and relevant decisions in `docs/DECISIONS.md`. Check relevant open PRs. If unavailable, explicitly mark freshness unverified.
+- Use stable IDs and current registry names; never invent or reassign existing G-numbers. Historical aliases do not create new games.
+- Record explicit new user decisions with date/source. Keep accepted decisions, unimplemented features, merged code and verified deployment distinct.
+- Update affected wiki records in the same PR as code. Decision-only changes can use a documentation PR within the authorized task. Never claim a shared update was saved without a commit/PR.
+- Immediately before submitting/updating a PR, reread current main and overlapping work. Preserve unrelated changes and newer decisions. Resolve real conflicts before overwriting; never force-push over another thread.
+- An open PR is a pending proposal, not main. Do not use a static PR table as a substitute for checking GitHub.
+- Ordinary ChatGPT threads do not automatically load these rules or receive notifications. See `docs/CHATGPT_PROJECT_INSTRUCTIONS.md` for the Project-level bootstrap.
 
 ## Game expectations
 - No keyboard is required. Primary input works by tapping and on iPad in landscape and portrait.
 - Chinese Checkers is local multiplayer for 2–6 human players (NO AI). Two-player mode uses opposite camps. Long-jump (symmetric-distance) is an option/default; after each hop in a chain the player may stop immediately, even if other jumps are available. Retain playable sound effects and a mute toggle.
 - Chicken Jockey Dash is a simple touch-friendly jump-and-dodge runner. Keep it distinct from other games.
 - Each newly added game must get its own folder. Add its homepage card/assets only when Ming asks to expose it there; new games may remain accessible by direct URL during review. A homepage card uses a useful screenshot and ONLY a player-count badge. Do not put deployment or Netlify instructions on the public homepage.
-- Preserve the title `Mia and Michelle's Arcade`, the header `Welcome to our Game Corner`, and the approved low-profile footer disclaimer unless the owner asks for a change.
+- Preserve the title `Mia and Michelle's Arcade`, the header `Welcome to our Game Corner`, and the current compact family-project/contact/privacy footer unless the owner asks for a change.
 
 ## Game settings persistence
 - Every game with user-adjustable Settings must save and restore those preferences

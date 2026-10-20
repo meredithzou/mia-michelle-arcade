@@ -1,6 +1,10 @@
 # 🎮 Mia and Michelle's Arcade
 
-A small, non-commercial family project created with love for play and learning. Two touch-friendly games: **Chicken Jockey Dash** and **Chinese Checkers**.
+A small family project created with love for play and learning, with touch-friendly games for iPad.
+
+## Shared project wiki
+
+Start at the [Arcade Wiki](docs/README.md). See the [game registry](docs/GAMES.md) for current names, paths and status, and the [ideas backlog](docs/IDEAS.md) for future work. Read [AGENTS.md](AGENTS.md) before making changes.
 
 ## Website structure
 
@@ -26,4 +30,4 @@ Keep `themes/pastel-rainbow/` unchanged. When ready, add e.g. `themes/halloween/
 
 Use the `main` branch and `/(root)` as the Pages publishing source in repository Settings → Pages.
 
-**Copyright note:** This project is meant for non-commercial family fun and learning. Non-commercial status does not replace permission to use third-party intellectual property. The Chicken Jockey game references Minecraft-associated character concepts; consider replacing that content with original characters before sharing publicly.
+**Copyright note:** This project is made for family fun and learning. Third-party intellectual property still requires appropriate permission. The Chicken Jockey game references Minecraft-associated character concepts; consider replacing that content with original characters before sharing publicly.
