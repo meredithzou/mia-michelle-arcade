@@ -210,3 +210,31 @@ test("Play That Note: migrate renamed preferences without losing the legacy reco
   equal(fixture({[legacyKey]:raw},{failWrite:true}).api.create(playSchema).load(),chosen);
 });
 console.log("Settings tests passed");
+
+
+const pitchSchema=schemaFromHTML(read("games/do-i-have-absolute-pitch/game.js"),"const init={range:","let cfg=practiceSettings.load()");
+test("Listening game: selected-note preferences persist independently and validate each range",()=>{
+ const f=fixture(),s=f.api.create(pitchSchema),defaults=JSON.parse(JSON.stringify(pitchSchema.defaults));
+ equal(s.load(),defaults);
+ const chosen={...defaults,range:"lower",hints:false,selectedByRange:{...defaults.selectedByRange,lower:[36,41,59]}};
+ s.save(chosen);equal(f.api.create(pitchSchema).load(),chosen);
+ equal(f.api.create(playSchema).load(),{...defaultNote,accidentals:"mixed"});
+ s.save({...chosen,selectedByRange:{lower:[36,36,60,61,-1,"40",NaN],middle:[],upper:[72]}});
+ equal(s.load().selectedByRange,{lower:[36,60],middle:[],upper:[72]});
+ for(const flags of [{failRead:true},{failWrite:true}])equal(fixture({},flags).api.create(pitchSchema).load(),defaults);
+});
+test("Listening game: both earlier schemas migrate range, hints, and white-key choices",()=>{
+ for(const version of [1,2]){
+  const f=fixture({[pitchSchema.key]:JSON.stringify({version,settings:{range:"upper",notes:"white",sound:false,hints:false}})});
+  const saved=f.api.create(pitchSchema).load();
+  assert.equal(saved.range,"upper");assert.equal(saved.hints,version===1);
+  equal(saved.selectedByRange.upper,[60,62,64,65,67,69,71,72,74,76,77,79,81,83,84]);
+  assert.equal(JSON.parse(f.items.get(pitchSchema.key)).version,3);
+ }
+});
+
+test("Listening game: stored empty active pool recovers safely",()=>{
+ const f=fixture(),s=f.api.create(pitchSchema);s.save({range:"lower",selectedByRange:{lower:[],middle:[],upper:[72]}});
+ equal(s.load().selectedByRange.lower,Array.from({length:25},(_,i)=>36+i));
+ equal(s.load().selectedByRange.middle,[]);
+});
