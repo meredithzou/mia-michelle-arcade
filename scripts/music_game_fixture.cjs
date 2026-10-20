@@ -9,7 +9,7 @@ class Element{
  removeEventListener(k){delete this.listeners[k]}
  querySelectorAll(tag){return this.children.flatMap(x=>[...(x.tagName===tag?[x]:[]),...x.querySelectorAll(tag)])}
 }
-function fixture(game='name-the-note'){
+function fixture(game='name-that-note'){
  const html=read(`games/${game}/index.html`),ids={};for(const [,id] of html.matchAll(/id="([^"]+)"/g))ids[id]=new Element();
  ids.npx.querySelector=s=>ids[s.slice(1)];ids.npxshade.hidden=true;
  const document={hidden:false,getElementById:id=>ids[id],createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),addEventListener(){}};

@@ -10,8 +10,8 @@ const vm = require("node:vm");
 const root = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const shared = read("shared/settings.js");
-const noteHTML = read("games/name-the-note/index.html");
-const note = noteHTML + "\n" + read("games/name-the-note/game.js");
+const noteHTML = read("games/name-that-note/index.html");
+const note = noteHTML + "\n" + read("games/name-that-note/game.js");
 const checkers = read("games/chinese-checkers/index.html");
 
 function fixture(initial = {}, flags = {}) {
@@ -72,7 +72,7 @@ test("Default settings are isolated per game", () => {
   assert.notEqual(noteSchema.key, ccSchema.key);
 });
 
-test("Name the Note: save and restore every setting including sound", () => {
+test("Name That Note!: save and restore every setting including sound", () => {
   const f = fixture();
   const settings = f.api.create(noteSchema);
   const chosen = {
@@ -84,7 +84,7 @@ test("Name the Note: save and restore every setting including sound", () => {
   assert.equal(JSON.parse(f.items.get(noteSchema.key)).version, 1);
 });
 
-test("Name the Note: unsupported, missing or inconsistent fields recover safely", () => {
+test("Name That Note!: unsupported, missing or inconsistent fields recover safely", () => {
   const f = fixture();
   const settings = f.api.create(noteSchema);
   assert.equal(settings.save({

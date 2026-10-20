@@ -1,4 +1,4 @@
-// Run with: node scripts/test_name_the_note_audio.cjs
+// Run with: node scripts/test_name_that_note_audio.cjs
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const html=fs.readFileSync(path.join(__dirname,'../shared/music/audio.js'),'utf8');
 const code=html.slice(html.indexOf('// Recovery is event-driven.'),html.indexOf('const PIANO_SOURCE='));

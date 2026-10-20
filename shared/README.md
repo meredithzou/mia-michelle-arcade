@@ -52,7 +52,7 @@ settingsStore.save(settings); // after confirmed setting change
 
 ## Current integrations
 
-- **Name the Note:** clef, treble/bass ranges, note durations, sound On/Off.
+- **Name That Note!:** clef, treble/bass ranges, note durations, sound On/Off.
   Apply saves all settings; sound changes are applied and saved immediately.
 - **Chinese Checkers:** language, sound, move hints, player count, jump rule.
   Migrates the five `cc-v17-*` keys automatically, leaving them untouched.
@@ -101,7 +101,7 @@ No build step, framework, shared game superclass, or bundled inline recordings
 are added. Existing settings keys/schema and the homepage remain unchanged.
 
 Run `node scripts/test_music_modules.cjs` and
-`node scripts/test_name_the_note_audio.cjs` alongside the settings/site checks.
+`node scripts/test_name_that_note_audio.cjs` alongside the settings/site checks.
 The module regression test checks SVG geometry against a digest generated from
-pre-refactor main, the actual Name the Note handlers, and the public piano API.
+pre-refactor main, the actual Name That Note! handlers, and the public piano API.
 These checks do not replace an actual iPad Safari playtest.
