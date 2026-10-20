@@ -101,7 +101,7 @@ function next(){clearTimeout(timer);locked=judged=false;q={...pitch(),v:val()};l
 function restart(){clearTimeout(timer);total=correct=0;bag=[];last='';vcounts={};lastVal='';$('npxnum').textContent='0';$('npxacc').textContent='—';next()}
 function grade(ok){if(judged)return;judged=true;total++;$('npxnum').textContent=total;if(ok)correct++;$('npxacc').textContent=Math.round(100*correct/total)+'%'}
 // Recovery is event-driven. Normal note playback only tests a cached flag.
-let audioNeedsResume=false,audioResumePending=null,audioGestureArmed=false,audioRequest=0;
+let audioNeedsResume=false,audioNeedsFreshContext=false,audioResumePending=null,audioGestureArmed=false,audioRequest=0;
 function stopPracticeSounds(){for(const stop of activeSounds)stop();activeSounds.clear()}
 function armAudioGesture(armed){
  if(armed===audioGestureArmed)return;
@@ -112,18 +112,25 @@ function armAudioGesture(armed){
 function audioStateChanged(){
  if(!ac)return;
  audioNeedsResume=ac.state==='suspended'||ac.state==='interrupted';
- armAudioGesture(audioNeedsResume);
+ if(ac.state==='closed')audioNeedsFreshContext=true;
+ armAudioGesture(audioNeedsResume||audioNeedsFreshContext);
  if(ac.state==='interrupted'){audioRequest++;stopPracticeSounds()}
 }
 function resumeAudio(gesture=false){
- if(!ac||!cfg.sound||document.hidden||!audioNeedsResume)return null;
+ if(!ac||!cfg.sound||document.hidden)return null;
+ if(audioNeedsFreshContext){
+  if(!gesture)return null;
+  if(!context(true))return null;
+ }
+ if(!audioNeedsResume)return null;
  // A foreground attempt may stay pending until user activation. Allow one
  // gesture-backed attempt to supersede it; further clicks share that attempt.
  if(audioResumePending&&(!gesture||audioResumePending.gesture))return audioResumePending.promise;
  try{
   // Invoke resume synchronously inside the click when a user gesture is needed.
-  const attempt={gesture};
-  attempt.promise=Promise.resolve(ac.resume()).catch(()=>{}).then(()=>{
+  const current=ac,attempt={gesture};
+  attempt.promise=Promise.resolve(current.resume()).catch(()=>{}).then(()=>{
+   if(ac!==current)return;
    if(audioResumePending===attempt)audioResumePending=null;
    audioStateChanged();
   });
@@ -132,28 +139,47 @@ function resumeAudio(gesture=false){
 }
 function resumeOnAudioGesture(){resumeAudio(true)}
 function restorePageAudio(){if(ac){audioStateChanged();resumeAudio()}}
+function leavePageAudio(){
+ audioRequest++;stopPracticeSounds();
+ // On iOS a backgrounded context can remain stuck even while reporting running.
+ // Retire it once, in the next foreground user gesture; keep decoded samples.
+ if(ac){audioNeedsFreshContext=true;armAudioGesture(true)}
+}
 document.addEventListener('visibilitychange',()=>{
- if(document.hidden){audioRequest++;stopPracticeSounds()}
- else restorePageAudio();
+ if(document.hidden)leavePageAudio();else restorePageAudio();
 });
-window.addEventListener('pageshow',restorePageAudio);
-function context(){try{if(!ac){
+window.addEventListener('pagehide',leavePageAudio);
+window.addEventListener('pageshow',event=>{
+ if(event.persisted&&ac){audioNeedsFreshContext=true;armAudioGesture(true)}
+ restorePageAudio();
+});
+function retireAudioContext(){
+ const previous=ac;
+ previous.onstatechange=null;audioRequest++;stopPracticeSounds();
+ try{bus.disconnect()}catch{}
+ ac=null;bus=null;audioResumePending=null;
+ // Do not await close: user activation must reach the new context synchronously.
+ try{Promise.resolve(previous.close()).catch(()=>{})}catch{}
+}
+function context(gesture=false){try{
+ if(ac&&gesture&&audioNeedsFreshContext)retireAudioContext();
+ if(!ac){
  // Treat practice sounds as media so supported iPhones can play in Silent Mode.
  try{if('audioSession' in navigator)navigator.audioSession.type='playback'}catch{}
  ac=new(window.AudioContext||window.webkitAudioContext)();
  bus=ac.createGain();bus.gain.value=cfg.sound?.48:0;bus.connect(ac.destination);
- ac.onstatechange=audioStateChanged;audioStateChanged();
+ audioNeedsFreshContext=false;ac.onstatechange=audioStateChanged;audioStateChanged();
 }return ac}catch{return null}}
 function withAudio(action){
  if(!cfg.sound||document.hidden)return;
- const a=context();if(!a)return;
+ const a=context(true);if(!a)return;
  const ticket=++audioRequest;
  if(!audioNeedsResume){action(a);return}
  const question=q,requested=Date.now();
  const pending=resumeAudio(true);
  if(pending)pending.then(()=>{
   // Never replay a previous question or an old sound after a long interruption.
-  if(ticket===audioRequest&&question===q&&cfg.sound&&!document.hidden&&
+  if(a===ac&&ticket===audioRequest&&question===q&&cfg.sound&&!document.hidden&&
      !audioNeedsResume&&Date.now()-requested<1000)action(a);
  });
 }
