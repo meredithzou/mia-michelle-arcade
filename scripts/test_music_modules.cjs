@@ -26,7 +26,7 @@ assert.equal(digest,'1fc45f05f64a31bdb60fabbbb7d9652b2d15275faae4453bece474a5a78
  class Audio{
   state='running';currentTime=0;destination={};
   createGain(){return {gain:{setValueAtTime(){},linearRampToValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){},disconnect(){}}}
-  createBufferSource(){const x={playbackRate:{},connect(){},start(){this.started=true},stop(){}};sources.push(x);return x}
+  createBufferSource(){const x={playbackRate:{},connect(){},start(){this.started=true},stop(){this.stopped=true}};sources.push(x);return x}
  }
  class Decoder{decodeAudioData(b){decoded++;return Promise.resolve({bytes:b})}}
  const document={hidden:false,addEventListener(){}},window={AudioContext:Audio,OfflineAudioContext:Decoder,addEventListener(){}};
@@ -36,6 +36,7 @@ assert.equal(digest,'1fc45f05f64a31bdb60fabbbb7d9652b2d15275faae4453bece474a5a78
  a.prepare([60,61,62,63]);a.prepare([60,61,62,63]);for(let i=0;i<20;i++)await Promise.resolve();
  assert.equal(requests,2);assert.equal(decoded,2);assert.equal(a.readiness([60,61,62,63]).state,'ready');
  a.play(61);assert.equal(sources.length,1);assert.equal(sources[0].playbackRate.value,Math.pow(2,1/12));assert.equal(sources[0].started,true);
- enabled=false;a.setEnabled(false);a.play(61);a.prepare([84]);assert.equal(sources.length,1);assert.equal(requests,2);
+ a.stop();assert.equal(sources[0].stopped,true);a.play(60);assert.equal(sources.length,2);assert.equal(sources[1].started,true);
+ enabled=false;a.setEnabled(false);a.play(61);a.prepare([84]);assert.equal(sources.length,2);assert.equal(requests,2);
  console.log('Music modules passed: original SVG geometry, four clef modes, answer/reveal scoring, sample deduplication, MIDI playback and mute.');
 })().catch(e=>{console.error(e);process.exitCode=1});

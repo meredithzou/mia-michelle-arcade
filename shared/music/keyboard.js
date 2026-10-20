@@ -7,7 +7,7 @@ function keyName(m){
 const isBlack=m=>[1,3,6,8,10].includes(m%12);
 function create({container,onAnswer}){
  let currentLow,currentHigh;
- function reset(){for(const b of container.children){b.disabled=false;b.classList.remove('bad');b.classList.remove('good');b.classList.remove('show')}}
+ function reset(){for(const b of container.children){b.disabled=false;b.classList.remove('bad');b.classList.remove('good');b.classList.remove('show');b.classList.remove('low');b.classList.remove('high')}}
  function render(low,high){
   if(low===currentLow&&high===currentHigh){reset();return}
   currentLow=low;currentHigh=high;container.replaceChildren();
@@ -20,7 +20,7 @@ function create({container,onAnswer}){
    b.onclick=()=>onAnswer(m);container.append(b);
   }
  }
- function mark(m,state){const b=[...container.children].find(b=>Number(b.dataset.midi)===m);if(b){b.classList.remove('bad');b.classList.add(state)}}
+ function mark(m,state){const b=[...container.children].find(b=>Number(b.dataset.midi)===m);if(b){for(const c of ['bad','good','show','low','high'])b.classList.remove(c);b.classList.add(state)}}
  function lock(m,state){mark(m,state);for(const b of container.children)b.disabled=true}
  return Object.freeze({render,mark,lock,name:keyName});
 }
