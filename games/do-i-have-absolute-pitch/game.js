@@ -50,20 +50,28 @@ function playPitch(){
   pending=true;message(status.state==='error'?'Piano unavailable. Open Settings to retry loading.':'Loading this pitch…');
   audio.prepare(keyboardPitches(),q.m);return;
  }
- audio.play(q.m);heard=true;$('pitchlabel').textContent='Replay pitch';
- $('pitchplay').setAttribute('aria-label','Replay the same mystery pitch');
+ const question=q;
+ audio.play(q.m,()=>{
+  if(q!==question)return;
+  q.played=true;pitchButton();
+ });
+ heard=true;
  if(!locked)message('Tap the matching piano key');
 }
+function pitchButton(){
+ $('pitchlabel').textContent=q.played?'Replay Pitch':'Play Pitch';
+ $('pitchplay').setAttribute('aria-label',q.played?'Replay the same mystery pitch':'Play the mystery pitch');
+}
 function next(){
- clearTimeout(timer);stop();locked=judged=heard=false;attempts.clear();lastAttempt=null;q={m:pitch()};
+ clearTimeout(timer);stop();locked=judged=heard=false;attempts.clear();lastAttempt=null;q={m:pitch(),played:false};
  const [lo,hi]=bounds();keys.render(lo,hi);
  $('npxkeyhint').textContent=keys.name(lo)+' – '+keys.name(hi)+' · Match the octave · C4 = middle C';
- $('npxreveal').disabled=false;$('npxnext').hidden=true;$('pitchlabel').textContent='Play pitch';
+ $('npxreveal').disabled=false;$('npxnext').hidden=true;pitchButton();
  $('pitchhint').textContent='Listen, then tap the matching piano key';
  message(started?'Listen to the new pitch':'Tap Play pitch to begin');
  if(started)playPitch();
 }
-function restart(){clearTimeout(timer);total=correct=0;bag=[];last=null;$('npxnum').textContent='0';$('npxacc').textContent='—';next()}
+function restart(){clearTimeout(timer);started=false;total=correct=0;bag=[];last=null;$('npxnum').textContent='0';$('npxacc').textContent='—';next()}
 function grade(ok){if(judged)return;judged=true;total++;if(ok)correct++;$('npxnum').textContent=total;$('npxacc').textContent=Math.round(100*correct/total)+'%'}
 function canAnswer(){
  if(locked||!$('npxshade').hidden)return false;

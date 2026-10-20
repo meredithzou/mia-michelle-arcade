@@ -1,26 +1,35 @@
 // Exercise the real listening game and shared keyboard; audio is controlled deterministically.
 const assert=require('node:assert/strict');
 const {fixture}=require('./music_game_fixture.cjs');
-let ready=true,plays=[],stops=0;
+let ready=true,plays=[],stops=0,completions=[];
 const {ctx,ids,game:g}=fixture('do-i-have-absolute-pitch',{audio:()=>({
- play:m=>plays.push(m),stop:()=>stops++,setEnabled(){},prepare(){},retry(){},
+ play:(m,onEnded)=>{plays.push(m);if(onEnded)completions.push(onEnded)},stop:()=>stops++,setEnabled(){},prepare(){},retry(){},
  readiness:ps=>({done:ready?ps.length:0,total:ps.length,state:ready?'ready':'loading'})
 })});
 const key=m=>ids.npxletters.children.find(x=>Number(x.dataset.midi)===m);
 assert.equal(ids.npxletters.children.length,25);
 assert.equal(plays.length,0,'First question waits for a user gesture');
+assert.equal(ids.pitchlabel.textContent,'Play Pitch');
+assert.equal(ids.pitchplay.attributes['aria-label'],'Play the mystery pitch');
 key(g.q.m).onclick();assert.equal(ids.npxnum.textContent,'0','Unheard question cannot be scored');
-g.playPitch();const target=g.q.m;g.playPitch();assert.deepEqual(plays,[target,target]);
+g.playPitch();const target=g.q.m;
+assert.equal(ids.pitchlabel.textContent,'Play Pitch','First playback keeps Play until completion');
+completions.at(-1)();assert.equal(ids.pitchlabel.textContent,'Replay Pitch');
+g.playPitch();assert.deepEqual(plays,[target,target]);
 assert.equal(g.q.m,target,'Replay preserves question');
 const wrong=target>=60?target-12:target+12;
 key(wrong).onclick();assert.equal(ids.npxacc.textContent,'0%');
 assert.equal(plays.at(-1),wrong,'Wrong answer plays the pressed key, not the target');
 key(target).onclick();assert.equal(plays.at(-1),target,'Correct answer also plays the pressed key');assert.equal(g.locked,true);assert.equal(ids.npxacc.textContent,'0%');
+const staleCompletion=completions.at(-1);
 g.next();assert.equal(plays.at(-1),g.q.m,'Following question automatically plays');
+assert.equal(ids.pitchlabel.textContent,'Play Pitch');staleCompletion();
+assert.equal(ids.pitchlabel.textContent,'Play Pitch','Previous question cannot change new label');
+completions.at(-1)();assert.equal(ids.pitchlabel.textContent,'Replay Pitch');
 key(g.q.m).onclick();assert.equal(ids.npxacc.textContent,'50%');
 g.next();ids.npxreveal.onclick();assert.equal(g.locked,true);assert.ok(key(g.q.m).className.includes('show'));
 const count=ids.npxnum.textContent;g.playPitch();assert.equal(ids.npxnum.textContent,count);
-ready=false;g.next();key(g.q.m).onclick();assert.equal(ids.npxnum.textContent,count,'Loading question cannot be answered');
+ready=false;g.next();assert.equal(ids.pitchlabel.textContent,'Play Pitch');key(g.q.m).onclick();assert.equal(ids.npxnum.textContent,count,'Loading question cannot be answered');
 ready=true;g.renderPianoState();assert.equal(plays.at(-1),g.q.m,'Load completion plays only the current question');
 ids.npxsettings.onclick();const n=plays.length;g.playPitch();key(g.q.m).onclick();assert.equal(plays.length,n);assert.equal(ids.npxnum.textContent,count);
 ids.npxclose.onclick();
@@ -82,3 +91,10 @@ ids.npxapply.onclick();assert.equal(ids.npxshade.hidden,false);assert.deepEqual(
 assert.equal(ids.pitchselectionstatus.attributes.role,'alert');
 pick(37).onclick();ids.npxapply.onclick();assert.equal(ids.npxshade.hidden,true);assert.deepEqual(Array.from(g.candidates()),[37]);
 console.log('Selection shortcuts passed: All, White Only, Black Only, None, empty Save blocked and corrected.');
+
+const beforeRestart=plays.length;ids.npxrestart.onclick();
+assert.equal(plays.length,beforeRestart,'Restart waits for the first Play click');
+assert.equal(ids.pitchlabel.textContent,'Play Pitch');
+g.playPitch();completions.at(-1)();assert.equal(ids.pitchlabel.textContent,'Replay Pitch');
+ids.npxsettings.onclick();ids.npxapply.onclick();assert.equal(ids.pitchlabel.textContent,'Play Pitch','Save & Play starts a fresh unplayed question');
+console.log('Play label regression passed: first play, completion, replay, new question, restart and settings reset.');

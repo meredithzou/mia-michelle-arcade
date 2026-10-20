@@ -35,8 +35,13 @@ assert.equal(digest,'1fc45f05f64a31bdb60fabbbb7d9652b2d15275faae4453bece474a5a78
  const a=window.ArcadeMusicAudio.create({root:{addEventListener(){},removeEventListener(){}},isEnabled:()=>enabled,getQuestion:()=>null});
  a.prepare([60,61,62,63]);a.prepare([60,61,62,63]);for(let i=0;i<20;i++)await Promise.resolve();
  assert.equal(requests,2);assert.equal(decoded,2);assert.equal(a.readiness([60,61,62,63]).state,'ready');
- a.play(61);assert.equal(sources.length,1);assert.equal(sources[0].playbackRate.value,Math.pow(2,1/12));assert.equal(sources[0].started,true);
- a.stop();assert.equal(sources[0].stopped,true);a.play(60);assert.equal(sources.length,2);assert.equal(sources[1].started,true);
- enabled=false;a.setEnabled(false);a.play(61);a.prepare([84]);assert.equal(sources.length,2);assert.equal(requests,2);
+ let ended=0;
+ a.play(61,()=>ended++);assert.equal(sources.length,1);assert.equal(sources[0].playbackRate.value,Math.pow(2,1/12));assert.equal(sources[0].started,true);
+ assert.equal(ended,0);a.stop();assert.equal(sources[0].stopped,true);sources[0].onended();assert.equal(ended,0,'Stopped notes do not signal completed playback');
+ a.play(60,()=>ended++);assert.equal(sources.length,2);assert.equal(sources[1].started,true);
+ sources[1].onended();assert.equal(ended,1,'Natural completion notifies the game');
+ a.play(61,()=>ended++);
+ enabled=false;a.setEnabled(false);a.play(61);a.prepare([84]);assert.equal(sources.length,3);assert.equal(requests,2);
+ sources[2].onended();assert.equal(ended,1,'Muted notes do not signal completed playback');
  console.log('Music modules passed: original SVG geometry, four clef modes, answer/reveal scoring, sample deduplication, MIDI playback and mute.');
 })().catch(e=>{console.error(e);process.exitCode=1});

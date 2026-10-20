@@ -1,7 +1,9 @@
 # Do I Have Absolute Pitch?
 
 Hear one piano pitch, then tap its exact key, including the octave. Start the
-first sound with Play pitch; subsequent questions play automatically. Replay
+first sound with Play Pitch; subsequent questions play automatically. The button
+becomes Replay Pitch only after the current target finishes playing. Restart
+and saved settings reset it to Play Pitch and wait for a tap. Replay
 keeps the same question. Each answer key plays its own pitch, including wrong
 answers. Rapid taps stop the previous sound before playing the next.
 
