@@ -18,4 +18,4 @@ jobs:
       - run: node scripts/test_settings.cjs
       - run: node scripts/test_name_that_note_audio.cjs
       - run: node scripts/test_music_modules.cjs
-      - run: node scripts/test_find_that_note.cjs
+      - run: node scripts/test_play_that_note.cjs

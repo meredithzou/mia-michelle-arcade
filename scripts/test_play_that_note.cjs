@@ -1,8 +1,8 @@
-// Run with node scripts/test_find_that_note.cjs. Tests the real game script using a small DOM fixture.
+// Run with node scripts/test_play_that_note.cjs. Tests the real game script using a small DOM fixture.
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const {fixture}=require('./music_game_fixture.cjs');
-const {ctx,ids,game:g}=fixture('find-that-note');
+const {ctx,ids,game:g}=fixture('play-that-note');
 assert.equal(ids.npxletters.children.length,25);assert.equal(ids.npxletters.children.filter(x=>x.className==='piano-black').length,10);
 assert.equal(ids.npxletters.children.filter(x=>x.className==='piano-white').length,15);
 const music=ctx.window.ArcadeMusicPitch;
@@ -39,4 +39,4 @@ ids.npxsettings.onclick();const before=ids.npxnum.textContent;find(g.q.m).onclic
 assert.equal(g.locked,false);assert.equal(ids.npxnum.textContent,before);ids.npxclose.onclick();
 assert.equal(ctx.w,undefined,'note-value icons must not create a global variable');
 
-console.log('Find That Note tests passed: all range combinations, 25 keys, accidentals, enharmonics, exact octave, scoring, reveal, clef change, and original game startup.');
+console.log('Play That Note tests passed: all range combinations, 25 keys, accidentals, enharmonics, exact octave, scoring, reveal, clef change, and original game startup.');

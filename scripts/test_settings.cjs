@@ -57,7 +57,7 @@ function test(title, action) {
 }
 
 const noteSchema = schemaFromHTML(note, "const init={mode:", "let cfg=practiceSettings.load()");
-const findSchema = schemaFromHTML(read("games/find-that-note/game.js"), "const init={mode:", "let cfg=practiceSettings.load()");
+const playSchema = schemaFromHTML(read("games/play-that-note/game.js"), "const init={mode:", "let cfg=practiceSettings.load()");
 const ccSchema = schemaFromHTML(checkers, "const ccStorage=window.ArcadeSettings.create({", "const ccPrefs=ccStorage.load()");
 const defaultNote = {
   mode: "treble", trebleMin: 28, trebleMax: 40,
@@ -182,15 +182,31 @@ test("Integration: scripts load before game code; apply, mute, and preference ac
   assert.ok(!read("games/chicken-jockey-dash/index.html").includes('src="../../shared/settings.js"'));
 });
 
-test("Find That Note: independent preferences, bounded ranges and accidental validation", () => {
-  const f=fixture(), store=f.api.create(findSchema);
+test("Play That Note: independent preferences, bounded ranges and accidental validation", () => {
+  const f=fixture(), store=f.api.create(playSchema);
   equal(store.load(), {...defaultNote, accidentals:"mixed"});
-  assert.notEqual(findSchema.key,noteSchema.key);
+  assert.notEqual(playSchema.key,noteSchema.key);
   store.save({mode:"bass",trebleMin:28,trebleMax:42,bassMin:14,bassMax:28,values:["half"],sound:false,accidentals:"flat"});
   equal(store.load(),{mode:"bass",trebleMin:28,trebleMax:42,bassMin:14,bassMax:28,values:["half"],sound:false,accidentals:"flat"});
   equal(f.api.create(noteSchema).load(),defaultNote);
   store.save({mode:"grand",trebleMin:21,trebleMax:46,bassMin:35,bassMax:10,values:[],accidentals:"double-sharp"});
   equal(store.load(),{...defaultNote,accidentals:"mixed"});
-  for(const flags of [{failRead:true},{failWrite:true}])equal(fixture({},flags).api.create(findSchema).load(),{...defaultNote,accidentals:"mixed"});
+  for(const flags of [{failRead:true},{failWrite:true}])equal(fixture({},flags).api.create(playSchema).load(),{...defaultNote,accidentals:"mixed"});
+});
+test("Play That Note: migrate renamed preferences without losing the legacy record", () => {
+  const legacyKey="arcade.settings.find-that-note";
+  const chosen={...defaultNote,mode:"bass",sound:false,accidentals:"flat"};
+  const raw=JSON.stringify({version:1,settings:chosen});
+  const f=fixture({[legacyKey]:raw});
+  equal(f.api.create(playSchema).load(),chosen);
+  equal(JSON.parse(f.items.get(playSchema.key)).settings,chosen);
+  assert.equal(f.items.get(legacyKey),raw);
+  const current={...chosen,sound:true};
+  f.api.create(playSchema).save(current);
+  equal(f.api.create(playSchema).load(),current);
+  for(const value of ['broken',JSON.stringify({version:99,settings:chosen})]){
+    equal(fixture({[legacyKey]:value}).api.create(playSchema).load(),{...defaultNote,accidentals:"mixed"});
+  }
+  equal(fixture({[legacyKey]:raw},{failWrite:true}).api.create(playSchema).load(),chosen);
 });
 console.log("Settings tests passed");

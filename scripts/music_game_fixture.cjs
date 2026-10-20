@@ -17,7 +17,7 @@ function fixture(game='name-that-note'){
  vm.createContext(ctx);
  for(const [,src] of html.matchAll(/<script src="([^"]+)"><\/script>/g)){if(src.includes('analytics/'))continue;const file=path.posix.normalize(`games/${game}/${src}`);if(src!=='game.js')vm.runInContext(read(file),ctx);}
  let code=read(`games/${game}/game.js`);
- code=code.replace('})();',`window.test={get q(){return q},get cfg(){return cfg},get locked(){return locked},next,restart,${game==='find-that-note'?'candidates,bounds,keyboard,':''} };})();`);
+ code=code.replace('})();',`window.test={get q(){return q},get cfg(){return cfg},get locked(){return locked},next,restart,${game==='play-that-note'?'candidates,bounds,keyboard,':''} };})();`);
  vm.runInContext(code,ctx);return {ctx,ids,game:window.test};
 }
 

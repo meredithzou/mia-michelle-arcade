@@ -2,7 +2,13 @@
 const {name,midi}=window.ArcadeMusicPitch;
 const init={mode:'treble',trebleMin:28,trebleMax:40,bassMin:16,bassMax:28,values:['quarter'],sound:true,accidentals:'mixed'};
 const practiceSettings=window.ArcadeSettings.create({
- key:'arcade.settings.find-that-note',version:1,defaults:init,
+ key:'arcade.settings.play-that-note',version:1,defaults:init,
+ migrateLegacy:storage=>{
+  const raw=storage.getItem('arcade.settings.find-that-note');
+  if(raw===null)return null;
+  const record=JSON.parse(raw);
+  return record&&record.version===1?record.settings:null;
+ },
  normalize:(value,defaults)=>{
   const result={...defaults,values:[...defaults.values]};
   if(['treble','bass'].includes(value.mode))result.mode=value.mode;
@@ -23,7 +29,7 @@ const practiceSettings=window.ArcadeSettings.create({
 });
 let cfg=practiceSettings.load(),draft,q,total=0,correct=0,judged=false,locked=false,bag=[],last='',vcounts={},lastVal='',timer;
 const audio=window.ArcadeMusicAudio.create({root,isEnabled:()=>cfg.sound,getQuestion:()=>q,onStateChange:()=>renderPianoState()});
-const keys=window.FindThatNoteKeyboard.create({container:$('npxletters'),onAnswer:answer});
+const keys=window.PlayThatNoteKeyboard.create({container:$('npxletters'),onAnswer:answer});
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function draw(){
  const score=$('npxscore'),c=q.clef,staffY=78,base=c==='treble'?30:18;

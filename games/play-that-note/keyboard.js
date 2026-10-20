@@ -24,5 +24,5 @@ function create({container,onAnswer}){
  function lock(m,state){mark(m,state);for(const b of container.children)b.disabled=true}
  return Object.freeze({render,mark,lock,name:keyName});
 }
-window.FindThatNoteKeyboard=Object.freeze({create});
+window.PlayThatNoteKeyboard=Object.freeze({create});
 })();

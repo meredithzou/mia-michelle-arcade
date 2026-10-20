@@ -1,4 +1,4 @@
-# Find That Note!
+# Play That Note!
 
 Single-note staff-to-piano practice. A correct answer matches the exact MIDI pitch,
 including its octave and accidental. No chords or physical keyboard are required.
@@ -23,7 +23,9 @@ including its octave and accidental. No chords or physical keyboard are required
 Notation reference: [Open Music Theory — Half Steps, Whole Steps, and Accidentals](https://viva.pressbooks.pub/openmusictheory/chapter/half-and-whole-steps/).
 Accidentals appear immediately left of the notehead, aligned to its staff position.
 The game is available from its own homepage card and directly at
-`games/find-that-note/`. The card uses a browser capture of the running game.
+`games/play-that-note/`. The card uses a browser capture of the running game.
+The previous game URL redirects here. Preferences migrate once from the previous
+storage key to `arcade.settings.play-that-note`; the legacy record is retained.
 
 `game.js` owns the question pool, rules, score and settings. `keyboard.js` owns
 key layout/feedback and reports MIDI pitches. Shared `music/audio.js` owns the
@@ -37,7 +39,7 @@ Validation:
 ```sh
 python3 scripts/check_site.py
 node scripts/test_settings.cjs
-node scripts/test_find_that_note.cjs
+node scripts/test_play_that_note.cjs
 node scripts/test_name_that_note_audio.cjs
 node scripts/test_music_modules.cjs
 ```
