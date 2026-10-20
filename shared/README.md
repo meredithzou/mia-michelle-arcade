@@ -105,3 +105,23 @@ Run `node scripts/test_music_modules.cjs` and
 The module regression test checks SVG geometry against a digest generated from
 pre-refactor main, the actual Name That Note! handlers, and the public piano API.
 These checks do not replace an actual iPad Safari playtest.
+
+## Shared music appearance and keyboard
+
+Name That Note! and Play That Note! load `music/practice.css`, including their
+Settings appearance and icon-only gear controls. Keyboard-specific layout uses
+`.npx-keyboard-game` so the letter game's four-clef picker and staff sizing keep
+their existing layout.
+
+Use `class="npx-icon-button"` plus an accessible `aria-label` for a toolbar icon.
+The shared `--music-action-size` sets both Restart height and square icon button
+width/height: 40px, 34px below 650px, and 32px below 400px. Default is white with
+purple artwork; toggles with `aria-pressed="true"` use pale purple with darker
+purple artwork. Restart retains its label and color. Optically smaller artwork
+can use `npx-icon-roomy` on its SVG.
+
+`music/keyboard.js` owns piano key layout and feedback. Its existing global
+`PlayThatNoteKeyboard` remains compatible. Games own MIDI question/answer rules;
+additional feedback classes are cleared before each mark and question reset.
+`audio.stop()` cancels pending playback and stops active notes, allowing callers
+to avoid overlapping sound while reusing decoded recordings.

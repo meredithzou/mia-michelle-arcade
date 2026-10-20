@@ -27,8 +27,9 @@ The game is available from its own homepage card and directly at
 The previous game URL redirects here. Preferences migrate once from the previous
 storage key to `arcade.settings.play-that-note`; the legacy record is retained.
 
-`game.js` owns the question pool, rules, score and settings. `keyboard.js` owns
-key layout/feedback and reports MIDI pitches. Shared `music/audio.js` owns the
+`game.js` owns the question pool, rules, score and settings. `shared/music/keyboard.js` owns
+key layout/feedback and reports MIDI pitches. `shared/music/practice.css` supplies
+the common music practice layout. Shared `music/audio.js` owns the
 piano engine, including the latest background return/context recovery from main.
 The shipped game streams the original recordings; inline-demo excerpts are not
 committed to this game. Bravura accidental outlines retain their OFL notice in

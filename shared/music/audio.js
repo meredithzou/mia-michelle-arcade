@@ -133,7 +133,8 @@ function setEnabled(enabled){
  audioRequest++;if(!enabled)stopPracticeSounds();else resumeAudio(true);
  if(bus)bus.gain.value=enabled?.48:0;
 }
-return Object.freeze({play,wrong,samplesFor,readiness,prepare,retry,setEnabled});
+function stop(){audioRequest++;stopPracticeSounds()}
+return Object.freeze({stop,play,wrong,samplesFor,readiness,prepare,retry,setEnabled});
 }
 window.ArcadeMusicAudio=Object.freeze({create});
 })();
