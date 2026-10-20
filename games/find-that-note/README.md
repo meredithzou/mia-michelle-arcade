@@ -22,8 +22,8 @@ including its octave and accidental. No chords or physical keyboard are required
 
 Notation reference: [Open Music Theory — Half Steps, Whole Steps, and Accidentals](https://viva.pressbooks.pub/openmusictheory/chapter/half-and-whole-steps/).
 Accidentals appear immediately left of the notehead, aligned to its staff position.
-The game is intentionally absent from the homepage in this change.
-After merge, open `games/find-that-note/` directly.
+The game is available from its own homepage card and directly at
+`games/find-that-note/`. The card uses a browser capture of the running game.
 
 `game.js` owns the question pool, rules, score and settings. `keyboard.js` owns
 key layout/feedback and reports MIDI pitches. Shared `music/audio.js` owns the
@@ -42,6 +42,9 @@ node scripts/test_name_the_note_audio.cjs
 node scripts/test_music_modules.cjs
 ```
 
-The DOM fixture tests actual game handlers and notation, but does not test CSS
-layout, browser touch hit testing, audible output, or real iPad Safari recovery.
-Those require a browser/device playtest before merging.
+The DOM fixture tests actual game handlers and notation. A Chromium browser
+review also checked real key hit targets, Settings, source-recording decoding,
+homepage entry links and screenshots at phone, iPad portrait and landscape
+widths. Audio requests in that review used a local mirror of the original
+recordings; it did not validate live-CDN delivery or audible speaker output.
+Real iPad Safari audio recovery still needs a device playtest.

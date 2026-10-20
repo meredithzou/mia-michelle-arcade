@@ -1,4 +1,4 @@
-(()=>{const root=document.getElementById('npx');if(root.dataset.ready)return;root.dataset.ready='1';const $=id=>root.querySelector('#'+id),NS='http://www.w3.org/2000/svg',letters=window.ArcadeMusicPitch.letters;const {CL,H,el,lines,clef,note,accidental}=window.ArcadeMusicNotation;
+(()=>{'use strict';const root=document.getElementById('npx');if(root.dataset.ready)return;root.dataset.ready='1';const $=id=>root.querySelector('#'+id),NS='http://www.w3.org/2000/svg',letters=window.ArcadeMusicPitch.letters;const {CL,H,el,lines,clef,note,accidental}=window.ArcadeMusicNotation;
 const {name,midi}=window.ArcadeMusicPitch;
 const init={mode:'treble',trebleMin:28,trebleMax:40,bassMin:16,bassMax:28,values:['quarter'],sound:true,accidentals:'mixed'};
 const practiceSettings=window.ArcadeSettings.create({
@@ -25,7 +25,16 @@ let cfg=practiceSettings.load(),draft,q,total=0,correct=0,judged=false,locked=fa
 const audio=window.ArcadeMusicAudio.create({root,isEnabled:()=>cfg.sound,getQuestion:()=>q,onStateChange:()=>renderPianoState()});
 const keys=window.FindThatNoteKeyboard.create({container:$('npxletters'),onAnswer:answer});
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
-function draw(){let s=$('npxscore');s.replaceChildren();let grand=cfg.mode==='grand',parts=grand?[['treble',49],['bass',210]]:cfg.mode==='both'?[['treble',78],['bass',78]]:[[q.clef,78]],low=0,high=grand?345:255;for(let [c,y] of parts)for(let i of [cfg[c+'Min'],cfg[c+'Max']]){let cy=y+80-(i-(c==='treble'?30:18))*10;low=Math.min(low,cy-90);high=Math.max(high,cy+90)}s.setAttribute('viewBox',`0 ${low} 640 ${high-low}`);if(grand){lines(s,49);lines(s,210);clef(s,'treble',49);clef(s,'bass',210);el('line',{x1:72,x2:72,y1:49,y2:290,stroke:'#a496ba','stroke-width':2},s);note(s,q.clef,q.clef==='treble'?49:210,q.i,q.v)}else{lines(s,78);clef(s,q.clef,78);note(s,q.clef,78,q.i,q.v);accidental(s,q.clef,78,q.i,q.a)}$('npxclefname').textContent=grand?'Grand Staff':q.clef==='treble'?'Treble clef':'Bass clef'}
+function draw(){
+ const score=$('npxscore'),c=q.clef,staffY=78,base=c==='treble'?30:18;
+ score.replaceChildren();let low=0,high=255;
+ for(const i of [cfg[c+'Min'],cfg[c+'Max']]){
+  const cy=staffY+80-(i-base)*10;low=Math.min(low,cy-90);high=Math.max(high,cy+90);
+ }
+ score.setAttribute('viewBox',`0 ${low} 640 ${high-low}`);
+ lines(score,staffY);clef(score,c,staffY);note(score,c,staffY,q.i,q.v);accidental(score,c,staffY,q.i,q.a);
+ $('npxclefname').textContent=c==='treble'?'Treble clef':'Bass clef';
+}
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=rnd(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
 // A stable two-octave keyboard for the entire session, never shifted per question.
 function bounds(c=cfg){return c.mode==='bass'?[36,60]:[60,84]}
@@ -69,7 +78,7 @@ function setSound(enabled){
 }
 $('npxmute').onclick=()=>setSound(!cfg.sound);
 function modeIcon(mode){let s=document.createElementNS(NS,'svg');s.setAttribute('viewBox','0 0 156 130');function mini(c,x,y,w=116,step=10){for(let i=0;i<5;i++)el('line',{x1:x,x2:x+w,y1:y+i*step,y2:y+i*step,stroke:'#958da6','stroke-width':1.6},s);let z=(c==='treble'?.0045:.00575)*step;el('path',{d:CL[c],fill:'currentColor',transform:`translate(${x+6} ${y+(c==='treble'?4.45:4.7)*step}) scale(${z} ${-z})`},s)}if(mode==='treble')mini('treble',18,40,121,11);else if(mode==='bass')mini('bass',18,40,121,11);else if(mode==='both'){mini('treble',2,43,70,10);mini('bass',82,43,70,10)}else{mini('treble',20,13,116,10);mini('bass',20,81,116,10);el('line',{x1:17,x2:17,y1:13,y2:121,stroke:'#9e90b5','stroke-width':1.5},s)}return s}
-function valueIcon(v){let s=document.createElementNS(NS,'svg');s.setAttribute('viewBox','0 0 52 65'),w=v==='whole';el('path',{d:H[v],fill:'currentColor','fill-rule':'evenodd',transform:w?'translate(26 33) scale(.073 -.073) translate(-257 -134)':'translate(26 55) scale(.05 -.05) translate(-198.5 0)'},s);return s}
+function valueIcon(v){let s=document.createElementNS(NS,'svg');s.setAttribute('viewBox','0 0 52 65');const w=v==='whole';el('path',{d:H[v],fill:'currentColor','fill-rule':'evenodd',transform:w?'translate(26 33) scale(.073 -.073) translate(-257 -134)':'translate(26 55) scale(.05 -.05) translate(-198.5 0)'},s);return s}
 function range(c){let low=c==='treble'?28:14,high=c==='treble'?42:28,box=document.createElement('div');box.className='npx-range';let title=document.createElement('strong');title.textContent=(c==='treble'?'Treble':'Bass')+' range';title.style.color=c==='treble'?'#7352cc':'#258b91';box.append(title);let area=document.createElement('div'),left=document.createElement('div'),right=document.createElement('div'),s=document.createElementNS(NS,'svg');area.className='npx-rangeview';left.className='npx-steps';right.className='npx-steps high';s.setAttribute('viewBox','0 0 500 286');area.append(left,s,right);box.append(area);let labels=document.createElement('div'),a=document.createElement('span'),b=document.createElement('span');labels.className='npx-labels';labels.append(a,b);box.append(labels);let btns={};for(let [end,place] of [['Min',left],['Max',right]]){btns[end]=[];for(let [d,arrow] of [[1,'▲'],[-1,'▼']]){let bt=document.createElement('button');bt.textContent=arrow;bt.setAttribute('aria-label',`Move ${end==='Min'?'lowest':'highest'} ${d>0?'up':'down'}`);bt.onclick=()=>{let n=draft[c+end]+d;if(n<low||n>high||end==='Min'&&n>draft[c+'Max']||end==='Max'&&n<draft[c+'Min'])return;draft[c+end]=n;refresh()};place.append(bt);btns[end].push(bt)}}function refresh(){let mn=draft[c+'Min'],mx=draft[c+'Max'];a.textContent='LOWEST '+name(mn);b.textContent='HIGHEST '+name(mx);btns.Min[0].disabled=mn>=mx;btns.Min[1].disabled=mn<=low;btns.Max[0].disabled=mx>=high;btns.Max[1].disabled=mx<=mn;s.replaceChildren();lines(s,98,65,440);clef(s,c,98,75);note(s,c,98,mn,'whole',210,'#258b91',.1);note(s,c,98,mx,'whole',354,'#7352cc',.1)}refresh();return box}
 function settings(){
  const acc=$('npxaccidentals');acc.replaceChildren();

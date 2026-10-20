@@ -30,4 +30,13 @@ assert.ok(seenBlack&&seenWhite&&seenSharp&&seenFlat);
 ids.npxsettings.onclick();const bass=ids.npxclefs.children[1];bass.onclick();ids.npxapply.onclick();assert.equal(g.cfg.mode,'bass');assert.equal(Number(ids.npxletters.children[0].dataset.midi),36);
 // Regression: the original game still starts, draws a staff, and offers C–B.
 const original=fixture('name-the-note');assert.equal(original.ids.npxletters.children.length,7);assert.ok(original.ids.npxscore.children.length>5);
+
+
+// Reuse keys across questions; Settings must block answer input.
+g.next();const buttons=[...ids.npxletters.children];g.next();
+assert.ok(buttons.every((b,i)=>b===ids.npxletters.children[i]));
+ids.npxsettings.onclick();const before=ids.npxnum.textContent;find(g.q.m).onclick();
+assert.equal(g.locked,false);assert.equal(ids.npxnum.textContent,before);ids.npxclose.onclick();
+assert.equal(ctx.w,undefined,'note-value icons must not create a global variable');
+
 console.log('Find That Note tests passed: all range combinations, 25 keys, accidentals, enharmonics, exact octave, scoring, reveal, clef change, and original game startup.');
