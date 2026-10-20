@@ -110,3 +110,18 @@ Do I Have Absolute Pitch? shares `music/keyboard.js` and
 `music/practice.css` with Play That Note! The existing keyboard global remains
 `PlayThatNoteKeyboard` for compatibility. `audio.stop()` cancels pending playback
 and stops active notes, allowing replay and Settings to avoid overlapping sound.
+
+## Shared music appearance
+
+All three music games load `music/practice.css`: Name That Note!, Play That Note!,
+and Do I Have Absolute Pitch?. It owns the common layout, Settings dialog, and
+music toolbar. Keyboard-specific layout rules use `.npx-keyboard-game` so the
+letter game's four-clef picker and staff sizing retain their existing layout.
+
+Use `class="npx-icon-button"` for a toolbar icon action and provide an accessible
+`aria-label`. The shared `--music-action-size` sets both Restart height and icon
+button width/height: 40px, 34px below 650px, and 32px below 400px. Default is white
+with purple artwork; toggle buttons with `aria-pressed="true"` use pale purple
+with darker purple artwork. Restart remains labeled with its existing color.
+For optically smaller artwork, add `npx-icon-roomy` to its SVG (the lightbulb
+uses this). New icon actions inherit the same shared appearance automatically.

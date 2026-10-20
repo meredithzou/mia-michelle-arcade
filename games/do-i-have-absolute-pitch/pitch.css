@@ -15,16 +15,6 @@
 .npx-keyboard button.low{background:#b8e8e6;border-color:#258b91;color:#155e63}
 .npx-keyboard button.high{background:#dfcff8;border-color:#8754ce;color:#603593}
 .npx-msg.low{color:#258b91}.npx-msg.high{color:#8754ce}
-#pitchhints{display:flex;align-items:center;white-space:nowrap}
-#pitchhints svg{width:24px;height:24px;flex:none}
-#pitchhints[data-state="on"]{background:#eee6ff;color:#7352cc}
-#pitchhints[data-state="off"]{background:white;color:#6245b8}
-
-/* Height comes from the same responsive rule as Restart: 40 / 34 / 32px. */
-.npx-actions #pitchhints,.npx-actions #npxsettings{width:auto;min-width:0;aspect-ratio:1;flex:none;padding:0;justify-content:center}
-@media(max-width:650px){#pitchhints svg{width:18px;height:18px}}
-@media(max-width:400px){#pitchhints svg{width:16px;height:16px}}
-
 .pitch-selection-actions{display:flex;gap:8px;flex-wrap:wrap}
 .pitch-selection-actions button{background:#f4effb;color:#655b7e;border:0;border-radius:9px;padding:10px 14px;min-height:44px}
 #pitchselectionstatus{font-size:12px;color:#78698d;min-height:32px;margin:12px 0 4px}
