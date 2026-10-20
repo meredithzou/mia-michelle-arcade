@@ -1,6 +1,6 @@
 // Run with: node scripts/test_name_the_note_audio.cjs
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
-const html=fs.readFileSync(path.join(__dirname,'../games/name-the-note/index.html'),'utf8');
+const html=fs.readFileSync(path.join(__dirname,'../games',process.argv[2]||'name-the-note','index.html'),'utf8');
 const code=html.slice(html.indexOf('// Recovery is event-driven.'),html.indexOf('const PIANO_SOURCE='));
 class Events{
  constructor(){this.listeners=new Map()}

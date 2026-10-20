@@ -56,6 +56,7 @@ function test(title, action) {
 }
 
 const noteSchema = schemaFromHTML(note, "const init={mode:", "let cfg=practiceSettings.load()");
+const findSchema = schemaFromHTML(read("games/find-that-note/index.html"), "const init={mode:", "let cfg=practiceSettings.load()");
 const ccSchema = schemaFromHTML(checkers, "const ccStorage=window.ArcadeSettings.create({", "const ccPrefs=ccStorage.load()");
 const defaultNote = {
   mode: "treble", trebleMin: 28, trebleMax: 40,
@@ -180,4 +181,15 @@ test("Integration: scripts load before game code; apply, mute, and preference ac
   assert.ok(!read("games/chicken-jockey-dash/index.html").includes('src="../../shared/settings.js"'));
 });
 
+test("Find That Note: independent preferences, bounded ranges and accidental validation", () => {
+  const f=fixture(), store=f.api.create(findSchema);
+  equal(store.load(), {...defaultNote, accidentals:"mixed"});
+  assert.notEqual(findSchema.key,noteSchema.key);
+  store.save({mode:"bass",trebleMin:28,trebleMax:42,bassMin:14,bassMax:28,values:["half"],sound:false,accidentals:"flat"});
+  equal(store.load(),{mode:"bass",trebleMin:28,trebleMax:42,bassMin:14,bassMax:28,values:["half"],sound:false,accidentals:"flat"});
+  equal(f.api.create(noteSchema).load(),defaultNote);
+  store.save({mode:"grand",trebleMin:21,trebleMax:46,bassMin:35,bassMax:10,values:[],accidentals:"double-sharp"});
+  equal(store.load(),{...defaultNote,accidentals:"mixed"});
+  for(const flags of [{failRead:true},{failWrite:true}])equal(fixture({},flags).api.create(findSchema).load(),{...defaultNote,accidentals:"mixed"});
+});
 console.log("Settings tests passed");

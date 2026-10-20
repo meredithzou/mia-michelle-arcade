@@ -16,3 +16,6 @@ jobs:
         with:
           node-version: '22'
       - run: node scripts/test_settings.cjs
+      - run: node scripts/test_find_that_note.cjs
+      - run: node scripts/test_name_the_note_audio.cjs
+      - run: node scripts/test_name_the_note_audio.cjs find-that-note

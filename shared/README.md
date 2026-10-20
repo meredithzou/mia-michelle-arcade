@@ -69,3 +69,14 @@ python3 scripts/check_site.py
 ```
 
 GitHub Actions also runs these checks for every PR.
+
+## Shared music notation
+
+`music-notation.js` owns the SVG clefs, noteheads, ledger lines, staff rendering,
+natural pitch names/MIDI conversion, and accidental paths used by both music games.
+It contains no game state, storage, audio context, or question selection.
+The original rendering functions are extracted unchanged from Name the Note.
+
+Find That Note uses its own `arcade.settings.find-that-note` key for clef, bounded
+note ranges, durations, accidental selection, and sound; Name the Note preferences
+remain independent.
