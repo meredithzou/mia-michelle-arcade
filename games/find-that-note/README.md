@@ -38,7 +38,7 @@ Validation:
 python3 scripts/check_site.py
 node scripts/test_settings.cjs
 node scripts/test_find_that_note.cjs
-node scripts/test_name_the_note_audio.cjs
+node scripts/test_name_that_note_audio.cjs
 node scripts/test_music_modules.cjs
 ```
 

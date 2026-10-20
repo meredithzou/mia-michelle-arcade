@@ -101,7 +101,7 @@ No build step, framework, shared game superclass, or bundled inline recordings
 are added. Existing settings keys/schema and the homepage remain unchanged.
 
 Run `node scripts/test_music_modules.cjs` and
-`node scripts/test_name_the_note_audio.cjs` alongside the settings/site checks.
+`node scripts/test_name_that_note_audio.cjs` alongside the settings/site checks.
 The module regression test checks SVG geometry against a digest generated from
 pre-refactor main, the actual Name That Note! handlers, and the public piano API.
 These checks do not replace an actual iPad Safari playtest.

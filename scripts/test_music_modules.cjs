@@ -1,7 +1,7 @@
 // Regression checks for the shared modules and the real Name That Note! handlers.
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
 const {fixture}=require('./music_game_fixture.cjs');
-const {ctx,ids,game:g}=fixture('name-the-note'),music=ctx.window.ArcadeMusicPitch;
+const {ctx,ids,game:g}=fixture('name-that-note'),music=ctx.window.ArcadeMusicPitch;
 const button=l=>ids.npxletters.children.find(b=>b.textContent===l);
 assert.equal(ids.npxletters.children.length,7);
 const answer=music.letters[g.q.i%7],wrong=music.letters[(g.q.i+1)%7];button(wrong).onclick();button(answer).onclick();

@@ -29,7 +29,7 @@ for(let n=0;n<80;n++){g.next();const q=g.q,b=find(q.m);assert.ok(b);seenBlack||=
 assert.ok(seenBlack&&seenWhite&&seenSharp&&seenFlat);
 ids.npxsettings.onclick();const bass=ids.npxclefs.children[1];bass.onclick();ids.npxapply.onclick();assert.equal(g.cfg.mode,'bass');assert.equal(Number(ids.npxletters.children[0].dataset.midi),36);
 // Regression: the original game still starts, draws a staff, and offers C–B.
-const original=fixture('name-the-note');assert.equal(original.ids.npxletters.children.length,7);assert.ok(original.ids.npxscore.children.length>5);
+const original=fixture('name-that-note');assert.equal(original.ids.npxletters.children.length,7);assert.ok(original.ids.npxscore.children.length>5);
 
 
 // Reuse keys across questions; Settings must block answer input.

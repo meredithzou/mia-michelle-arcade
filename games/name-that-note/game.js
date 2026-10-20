@@ -1,6 +1,7 @@
 (()=>{const root=document.getElementById('npx');if(root.dataset.ready)return;root.dataset.ready='1';const $=id=>root.querySelector('#'+id),NS='http://www.w3.org/2000/svg',letters=window.ArcadeMusicPitch.letters;const {CL,H,el,lines,clef,note}=window.ArcadeMusicNotation;
 const {name,midi}=window.ArcadeMusicPitch;
 const init={mode:'treble',trebleMin:28,trebleMax:40,bassMin:16,bassMax:28,values:['quarter'],sound:true};
+// Keep the original storage key so renaming the game preserves saved preferences.
 const practiceSettings=window.ArcadeSettings.create({
  key:'arcade.settings.name-the-note',version:1,defaults:init,
  normalize:(value,defaults)=>{
