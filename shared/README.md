@@ -105,3 +105,8 @@ Run `node scripts/test_music_modules.cjs` and
 The module regression test checks SVG geometry against a digest generated from
 pre-refactor main, the actual Name That Note! handlers, and the public piano API.
 These checks do not replace an actual iPad Safari playtest.
+
+Do I Have Absolute Pitch? shares `music/keyboard.js` and
+`music/practice.css` with Play That Note! The existing keyboard global remains
+`PlayThatNoteKeyboard` for compatibility. `audio.stop()` cancels pending playback
+and stops active notes, allowing replay and Settings to avoid overlapping sound.
