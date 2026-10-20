@@ -1,0 +1,163 @@
+// Listening-to-keyboard practice. Audio, keyboard rendering, styling and storage are shared.
+(()=>{'use strict';
+const root=document.getElementById('npx');if(root.dataset.ready)return;root.dataset.ready='1';
+const $=id=>root.querySelector('#'+id);
+const init={range:'middle',hints:true,selectedByRange:{
+ lower:Array.from({length:25},(_,i)=>36+i),middle:Array.from({length:25},(_,i)=>48+i),upper:Array.from({length:25},(_,i)=>60+i)
+}};
+const practiceSettings=window.ArcadeSettings.create({
+ key:'arcade.settings.do-i-have-absolute-pitch',version:3,defaults:init,
+ upgrade:(version,value)=>{
+  if(![1,2].includes(version))return null;
+  const selectedByRange={};
+  for(const [range,lo] of [['lower',36],['middle',48],['upper',60]])selectedByRange[range]=Array.from({length:25},(_,i)=>lo+i).filter(m=>value.notes!=='white'||![1,3,6,8,10].includes(m%12));
+  return {...value,hints:version===1?true:value.hints,selectedByRange};
+ },
+ normalize:(value,defaults)=>{
+  const selectedByRange={};
+  for(const [range,lo] of [['lower',36],['middle',48],['upper',60]]){
+   const saved=value.selectedByRange?.[range];
+   const notes=Array.isArray(saved)?[...new Set(saved.filter(m=>Number.isInteger(m)&&m>=lo&&m<=lo+24))].sort((a,b)=>a-b):[];
+   selectedByRange[range]=Array.isArray(saved)?notes:[...defaults.selectedByRange[range]];
+  }
+  const range=['middle','upper','lower'].includes(value.range)?value.range:defaults.range;
+  if(!selectedByRange[range].length)selectedByRange[range]=[...defaults.selectedByRange[range]];
+  return {range,
+   hints:typeof value.hints==='boolean'?value.hints:defaults.hints,selectedByRange};
+ }
+});
+let cfg=practiceSettings.load(),draft,q,bag=[],last=null,total=0,correct=0,judged=false,locked=false,heard=false,started=false,pending=false,timer,lastAttempt=null;
+const attempts=new Set();
+const audio=window.ArcadeMusicAudio.create({root,isEnabled:()=>true,getQuestion:()=>q,onStateChange:renderPianoState});
+const keys=window.PlayThatNoteKeyboard.create({container:$('npxletters'),onAnswer:answer});
+function bounds(c=cfg){return c.range==='lower'?[36,60]:c.range==='upper'?[60,84]:[48,72]}
+function candidates(c=cfg){return [...c.selectedByRange[c.range]]}
+function keyboardPitches(c=cfg){const [lo,hi]=bounds(c);return Array.from({length:hi-lo+1},(_,i)=>lo+i)}
+function copySettings(c){return {...c,selectedByRange:Object.fromEntries(Object.entries(c.selectedByRange).map(([range,notes])=>[range,[...notes]]))}}
+function pitch(){
+ if(!bag.length){bag=candidates();for(let i=bag.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]]}
+  if(bag.at(-1)===last){const j=bag.findIndex(m=>m!==last);if(j>=0)[bag[j],bag[bag.length-1]]=[bag.at(-1),bag[j]]}
+ }
+ last=bag.pop();return last;
+}
+function message(text,kind=''){$('npxmsg').textContent=text;$('npxmsg').className='npx-msg '+kind}
+function stop(){pending=false;audio.stop()}
+function playPitch(){
+ if(!$('npxshade').hidden)return;
+ started=true;stop();
+ const status=audio.readiness([q.m]);
+ if(status.state!=='ready'){
+  pending=true;message(status.state==='error'?'Piano unavailable. Open Settings to retry loading.':'Loading this pitch…');
+  audio.prepare(keyboardPitches(),q.m);return;
+ }
+ audio.play(q.m);heard=true;$('pitchlabel').textContent='Replay pitch';
+ $('pitchplay').setAttribute('aria-label','Replay the same mystery pitch');
+ if(!locked)message('Tap the matching piano key');
+}
+function next(){
+ clearTimeout(timer);stop();locked=judged=heard=false;attempts.clear();lastAttempt=null;q={m:pitch()};
+ const [lo,hi]=bounds();keys.render(lo,hi);
+ $('npxkeyhint').textContent=keys.name(lo)+' – '+keys.name(hi)+' · Match the octave · C4 = middle C';
+ $('npxreveal').disabled=false;$('npxnext').hidden=true;$('pitchlabel').textContent='Play pitch';
+ $('pitchhint').textContent='Listen, then tap the matching piano key';
+ message(started?'Listen to the new pitch':'Tap Play pitch to begin');
+ if(started)playPitch();
+}
+function restart(){clearTimeout(timer);total=correct=0;bag=[];last=null;$('npxnum').textContent='0';$('npxacc').textContent='—';next()}
+function grade(ok){if(judged)return;judged=true;total++;if(ok)correct++;$('npxnum').textContent=total;$('npxacc').textContent=Math.round(100*correct/total)+'%'}
+function canAnswer(){
+ if(locked||!$('npxshade').hidden)return false;
+ if(!heard){message('Play the pitch before answering.');return false}return true;
+}
+function answer(m){
+ if(!canAnswer())return;
+ stop();audio.play(m);
+ const ok=m===q.m;grade(ok);
+ if(!ok){attempts.add(m);lastAttempt=m;showHint(m);return}
+ locked=true;keys.lock(m,'good');message('✓ '+keys.name(q.m)+' — correct!','good');
+ $('npxreveal').disabled=true;$('npxnext').hidden=false;timer=setTimeout(next,1600);
+}
+$('pitchplay').onclick=playPitch;
+$('npxreveal').onclick=()=>{
+ if(!canAnswer())return;grade(false);locked=true;keys.lock(q.m,'show');
+ message('Answer: '+keys.name(q.m));$('npxreveal').disabled=true;$('npxnext').hidden=false;playPitch();
+};
+$('npxnext').onclick=next;$('npxrestart').onclick=restart;
+function showHint(m){
+ const kind=cfg.hints?(m<q.m?'low':'high'):'bad';
+ keys.mark(m,kind);
+ message(kind==='low'?'Too low — try a higher key.':kind==='high'?'Too high — try a lower key.':'Not quite. Listen again and try another key.',kind);
+}
+function hintControl(){
+ const b=$('pitchhints');b.setAttribute('aria-pressed',String(cfg.hints));
+ b.setAttribute('aria-label',cfg.hints?'Turn hints off':'Turn hints on');
+ b.dataset.state=cfg.hints?'on':'off';
+}
+$('pitchhints').onclick=()=>{
+ cfg.hints=!cfg.hints;if(draft)draft.hints=cfg.hints;
+ practiceSettings.save(cfg);hintControl();
+ if(!locked&&lastAttempt!==null){for(const m of attempts)keys.mark(m,cfg.hints?(m<q.m?'low':'high'):'bad');showHint(lastAttempt)}
+};
+function choices(id,items,field){
+ const container=$(id);container.replaceChildren();
+ for(const [value,label] of items){const b=document.createElement('button');b.textContent=label;
+ b.className=draft[field]===value?'active':'';b.setAttribute('aria-pressed',String(draft[field]===value));
+ b.onclick=()=>{draft[field]=value;settings()};container.append(b)}
+}
+function settings(){
+ choices('pitchranges',[['lower','C2–C4'],['middle','C3–C5'],['upper','C4–C6']],'range');
+ renderSelection();renderPianoState();
+}
+// Same touch keyboard renderer as the answer keyboard; selection is draft-only.
+const selectionKeys=window.PlayThatNoteKeyboard.create({container:$('pitchselection'),onAnswer:toggleNote});
+function renderSelection(){
+ const [lo,hi]=bounds(draft);selectionKeys.render(lo,hi);
+ const selected=draft.selectedByRange[draft.range];
+ for(const b of $('pitchselection').children){
+  const on=selected.includes(Number(b.dataset.midi));
+  if(on)b.classList.add('selected');else b.classList.remove('selected');
+  b.setAttribute('aria-pressed',String(on));
+ }
+ $('pitchselectionstatus').setAttribute('role','status');
+ $('pitchselectionstatus').classList.remove('pitch-selection-error');
+ $('pitchselectionstatus').textContent=selected.length+' notes selected · Tap keys to include or exclude them';
+}
+function toggleNote(m){
+ const notes=draft.selectedByRange[draft.range];
+ if(notes.includes(m)){
+  draft.selectedByRange[draft.range]=notes.filter(n=>n!==m);
+ }else draft.selectedByRange[draft.range]=[...notes,m].sort((a,b)=>a-b);
+ renderSelection();
+}
+$('pitchselectall').onclick=()=>{draft.selectedByRange[draft.range]=keyboardPitches(draft);renderSelection()};
+$('pitchselectwhite').onclick=()=>{draft.selectedByRange[draft.range]=keyboardPitches(draft).filter(m=>![1,3,6,8,10].includes(m%12));renderSelection()};
+$('pitchselectblack').onclick=()=>{draft.selectedByRange[draft.range]=keyboardPitches(draft).filter(m=>[1,3,6,8,10].includes(m%12));renderSelection()};
+$('pitchselectnone').onclick=()=>{draft.selectedByRange[draft.range]=[];renderSelection()};
+function closeSettings(){ $('npxshade').hidden=true;pending=false;$('npxsettings').focus?.() }
+$('npxsettings').onclick=()=>{clearTimeout(timer);stop();draft=copySettings(cfg);$('npxshade').hidden=false;settings();$('npxclose').focus?.()};
+$('npxclose').onclick=closeSettings;
+$('npxreset').onclick=()=>{draft=copySettings(init);settings()};
+$('npxapply').onclick=()=>{
+ if(!draft.selectedByRange[draft.range].length){
+  const status=$('pitchselectionstatus');status.setAttribute('role','alert');status.classList.add('pitch-selection-error');
+  status.textContent='Please select at least one note before saving.';return;
+ }
+ stop();cfg=copySettings(draft);practiceSettings.save(cfg);closeSettings();hintControl();restart();preparePiano()};
+$('npxretry').onclick=()=>{audio.retry(keyboardPitches());message('Retrying piano sounds…')};
+function renderPianoState(){
+ const status=audio.readiness(keyboardPitches()),state=status.state;
+ $('npxpianoState').dataset.state=state;
+ $('npxpianoState').textContent=state==='ready'?'Piano sounds are ready':state==='error'?'Piano unavailable':'Loading piano sounds…';
+ $('npxloaddetail').textContent=$('npxpianoState').textContent;
+ $('npxloadcount').textContent=status.done+'/'+status.total;
+ $('npxloadprogress').max=status.total;$('npxloadprogress').value=status.done;
+ $('npxloadhint').textContent=state==='error'?'Check your connection, then retry loading.':state==='ready'?'Ready to listen.':'Piano recordings are loading. Answers unlock after you play the pitch.';
+ $('npxretry').hidden=state!=='error';
+ if(pending&&q&&$('npxshade').hidden&&audio.readiness([q.m]).state==='ready')playPitch();
+}
+function preparePiano(){audio.prepare(keyboardPitches(),q.m)}
+// Pause pending automatic playback when the app goes into the background.
+document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeout(timer);stop()}});
+root.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('npxshade').hidden)closeSettings()});
+hintControl();restart();renderPianoState();preparePiano();
+})();
