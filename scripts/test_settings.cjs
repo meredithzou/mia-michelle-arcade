@@ -72,7 +72,7 @@ test("Default settings are isolated per game", () => {
   assert.notEqual(noteSchema.key, ccSchema.key);
 });
 
-test("Name the Note: save and restore every setting including sound", () => {
+test("Name That Note!: save and restore every setting including sound", () => {
   const f = fixture();
   const settings = f.api.create(noteSchema);
   const chosen = {
@@ -84,7 +84,7 @@ test("Name the Note: save and restore every setting including sound", () => {
   assert.equal(JSON.parse(f.items.get(noteSchema.key)).version, 1);
 });
 
-test("Name the Note: unsupported, missing or inconsistent fields recover safely", () => {
+test("Name That Note!: unsupported, missing or inconsistent fields recover safely", () => {
   const f = fixture();
   const settings = f.api.create(noteSchema);
   assert.equal(settings.save({

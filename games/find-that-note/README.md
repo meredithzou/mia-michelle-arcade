@@ -18,7 +18,7 @@ including its octave and accidental. No chords or physical keyboard are required
   visiting the homepage. Other music-game preferences are never changed.
 - Staff, range diagrams, noteheads and clefs use `shared/music/notation.js`.
   The piano loading, sample credit, mute, and event-driven interruption recovery
-  follow Name the Note's implementation; samples need external network access.
+  follow Name That Note!'s implementation; samples need external network access.
 
 Notation reference: [Open Music Theory — Half Steps, Whole Steps, and Accidentals](https://viva.pressbooks.pub/openmusictheory/chapter/half-and-whole-steps/).
 Accidentals appear immediately left of the notehead, aligned to its staff position.

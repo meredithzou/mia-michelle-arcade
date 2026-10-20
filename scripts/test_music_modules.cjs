@@ -1,4 +1,4 @@
-// Regression checks for the shared modules and the real Name the Note handlers.
+// Regression checks for the shared modules and the real Name That Note! handlers.
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
 const {fixture}=require('./music_game_fixture.cjs');
 const {ctx,ids,game:g}=fixture('name-the-note'),music=ctx.window.ArcadeMusicPitch;
