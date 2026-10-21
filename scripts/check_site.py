@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Static quality contract for Arcade pages and independently shipped games."""
 from html.parser import HTMLParser
+import re
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 import sys
@@ -127,6 +128,132 @@ def check_game(path, page):
     check_analytics(path, page)
 
 
+
+class CardParser(HTMLParser):
+    """Extract published homepage cards without depending on CSS."""
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.cards = []
+        self.current = None
+        self.field = None
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        classes = a.get("class", "").split()
+        if tag == "article" and "card" in classes:
+            self.current = {"name": "", "desc": "", "players": "", "links": [], "images": []}
+            return
+        if self.current is None:
+            return
+        if tag == "a" and a.get("href"):
+            self.current["links"].append(a["href"])
+        elif tag == "img":
+            self.current["images"].append({"src": a.get("src", ""), "alt": a.get("alt", "")})
+        elif tag == "div" and "name" in classes:
+            self.field = "name"
+        elif tag == "div" and "desc" in classes:
+            self.field = "desc"
+        elif tag == "span" and "chip" in classes:
+            self.field = "players"
+
+    def handle_data(self, data):
+        if self.current is not None and self.field:
+            self.current[self.field] += data
+
+    def handle_endtag(self, tag):
+        if self.current is None:
+            return
+        if (tag == "div" and self.field in ("name", "desc")) or (
+            tag == "span" and self.field == "players"
+        ):
+            self.field = None
+        if tag == "article":
+            self.cards.append(self.current)
+            self.current = None
+            self.field = None
+
+
+def normalized_name(name):
+    """Ignore decorative emoji and punctuation, not actual game words."""
+    return re.sub(r"[^a-z0-9]+", "", name.casefold())
+
+
+def check_catalog(home_source, game_pages, published_pages):
+    """Keep homepage cards, README game list, and stated counts in sync."""
+    cards_parser = CardParser()
+    cards_parser.feed(home_source)
+    cards_parser.close()
+    cards = cards_parser.cards
+    available = {p.parent.name for p in game_pages if p.parent.name not in REDIRECTS}
+    cards_by_slug = {}
+
+    if not cards:
+        ERRORS.append("Homepage has no game cards")
+    for i, card in enumerate(cards, start=1):
+        links = [x for x in card["links"] if x.startswith("games/") and x.endswith("/index.html")]
+        slugs = {x.split("/")[1] for x in links}
+        if len(slugs) != 1:
+            ERRORS.append(f"Homepage card #{i}: expected one consistent game destination")
+            continue
+        slug = next(iter(slugs))
+        if slug in cards_by_slug:
+            ERRORS.append(f"Homepage: duplicate card for {slug}")
+        cards_by_slug[slug] = card
+        if slug not in available:
+            ERRORS.append(f"Homepage card #{i}: unknown game {slug}")
+            continue
+        if not card["name"].strip() or not card["desc"].strip():
+            ERRORS.append(f"Homepage card #{i} ({slug}): missing name or description")
+        if not re.fullmatch(r"\d+ Player|\d+[–-]\d+ Players", card["players"].strip()):
+            ERRORS.append(f"Homepage card #{i} ({slug}): missing/invalid player-count badge")
+        if not card["images"] or not card["images"][0]["src"].startswith("assets/") or not card["images"][0]["alt"].strip():
+            ERRORS.append(f"Homepage card #{i} ({slug}): missing preview image or alt text")
+
+        game_title = published_pages[slug].title.strip()
+        game_name = re.split(r"\s+(?:\||·|—)\s+", game_title, maxsplit=1)[0]
+        if normalized_name(card["name"]) != normalized_name(game_name):
+            ERRORS.append(f"Homepage card #{i} ({slug}): name differs from game title '{game_name}'")
+
+    readme_path = ROOT / "README.md"
+    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    entries = re.findall(r"^\|\s*\[([^\]]+)\]\(games/([a-z0-9-]+)/\)\s*\|", readme, re.MULTILINE)
+    listed = {}
+    for name, slug in entries:
+        if slug in listed:
+            ERRORS.append(f"README: duplicate game entry {slug}")
+        listed[slug] = name
+        if slug in cards_by_slug and normalized_name(name) != normalized_name(cards_by_slug[slug]["name"]):
+            ERRORS.append(f"README: name for {slug} differs from homepage card")
+    if set(listed) != set(cards_by_slug):
+        ERRORS.append(
+            f"README/homepage published games differ: "
+            f"README={sorted(listed)}, homepage={sorted(cards_by_slug)}"
+        )
+
+    count_words = {word: i for i, word in enumerate(
+        ("zero", "one", "two", "three", "four", "five", "six",
+         "seven", "eight", "nine", "ten")
+    )}
+    pattern = re.compile(
+        r"\b(?P<count>\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten)"
+        r"\s+(?:[A-Za-z-]+\s+){0,2}games?\b", re.IGNORECASE
+    )
+    for relative in ("index.html", "README.md", "analytics/README.md"):
+        path = ROOT / relative
+        if not path.is_file():
+            continue
+        content = path.read_text(encoding="utf-8")
+        for match in pattern.finditer(content):
+            token = match.group("count").lower()
+            stated = int(token) if token.isdecimal() else count_words[token]
+            if stated != len(cards_by_slug):
+                ERRORS.append(
+                    f"{relative}: stale game-count claim '{match.group(0)}' "
+                    f"(homepage currently lists {len(cards_by_slug)} games)"
+                )
+    return len(cards_by_slug)
+
+
 def main():
     home_path = ROOT / "index.html"
     if home_path.is_file():
@@ -148,6 +275,7 @@ def main():
     game_root = ROOT / "games"
     game_pages = sorted(game_root.glob("*/index.html")) if game_root.is_dir() else []
     playable = 0
+    published_pages = {}
     if not game_pages:
         ERRORS.append("No game entry pages found in games/*/index.html")
 
@@ -164,6 +292,7 @@ def main():
             ERRORS.append(f"{path.relative_to(ROOT)}: unregistered redirect; add it to REDIRECTS")
             continue
         playable += 1
+        published_pages[slug] = page
         check_game(path, page)
 
     for slug, target in REDIRECTS.items():
@@ -181,10 +310,12 @@ def main():
             if slug in REDIRECTS:
                 ERRORS.append(f"Homepage links to legacy redirect instead of current game: {href}")
 
+    published = check_catalog(home_path.read_text(encoding="utf-8") if home_path.is_file() else "", game_pages, published_pages)
+
     if ERRORS:
         print("\n".join(ERRORS))
         return 1
-    print(f"Site checks passed: {playable} games, return links, analytics, titles, viewport, and local assets")
+    print(f"Site checks passed: {playable} playable games, {published} published cards, catalog consistency, analytics, navigation, and local assets")
     return 0
 
 
