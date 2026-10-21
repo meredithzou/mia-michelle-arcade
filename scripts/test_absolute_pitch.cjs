@@ -1,3 +1,10 @@
+/**
+ * Do I Have Absolute Pitch? listening-game regression tests.
+ * Runs the real game with a deterministic audio stub to check Play/Replay,
+ * answer scoring, hints, custom note pools, and question transitions.
+ * No sound is emitted; real iPad playback still needs manual testing.
+ * Run: node scripts/test_absolute_pitch.cjs
+ */
 // Exercise the real listening game and shared keyboard; audio is controlled deterministically.
 const assert=require('node:assert/strict');
 const {fixture}=require('./music_game_fixture.cjs');
