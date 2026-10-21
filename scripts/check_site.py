@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
-"""Static Arcade quality gate: every playable game follows shared site rules."""
+"""Static quality contract for Arcade pages and independently shipped games."""
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urlsplit, unquote
+from urllib.parse import unquote, urlsplit
+import posixpath
 import sys
 
-root = Path(__file__).resolve().parent.parent
-games_dir = root / "games"
+ROOT = Path(__file__).resolve().parent.parent
+ERRORS = []
 
-# Compatibility-only URLs: these redirect to renamed games, not playable pages.
-redirects = {
+# Compatibility URLs are redirects, not playable games. Their targets must exist.
+REDIRECTS = {
     "name-the-note": "name-that-note",
     "find-that-note": "play-that-note",
 }
-required = (
+REQUIRED = (
     "index.html",
     "privacy.html",
     "README.md",
@@ -25,145 +26,168 @@ required = (
     "shared/settings.js",
     "shared/music/audio.js",
 )
-errors = [f"Missing {path}" for path in required if not (root / path).is_file()]
+for path in REQUIRED:
+    if not (ROOT / path).is_file():
+        ERRORS.append(f"Missing required file: {path}")
 
 
-class PageInspector(HTMLParser):
-    """Inspect real HTML tags, rather than matching strings inside JavaScript."""
+class Page(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.links = []
         self.scripts = []
         self.anchors = []
-        self.viewport = False
         self.title = ""
-        self.in_title = False
+        self.viewport = False
+        self.redirect = False
+        self._anchor = None
+        self._in_title = False
 
     def handle_starttag(self, tag, attrs):
-        attributes = dict(attrs)
-        if tag == "title":
-            self.in_title = True
-        if tag == "meta" and attributes.get("name", "").lower() == "viewport":
-            self.viewport = bool(attributes.get("content", "").strip())
+        a = dict(attrs)
         if tag == "a":
-            self.anchors.append(attributes)
-        if tag == "script" and attributes.get("src"):
-            self.scripts.append(attributes["src"])
-        if tag in ("a", "img", "link", "script", "source"):
-            for name in ("href", "src"):
-                if attributes.get(name):
-                    self.links.append(attributes[name])
-
-    def handle_endtag(self, tag):
+            self._anchor = {"href": a.get("href", ""), "label": a.get("aria-label", ""), "text": ""}
         if tag == "title":
-            self.in_title = False
+            self._in_title = True
+        if tag == "meta":
+            if a.get("name", "").lower() == "viewport" and a.get("content"):
+                self.viewport = True
+            if a.get("http-equiv", "").lower() == "refresh":
+                self.redirect = True
+        if tag == "script" and a.get("src"):
+            self.scripts.append(a["src"])
+        if tag in ("a", "link", "script", "img", "source"):
+            for attribute in ("href", "src", "srcset"):
+                if a.get(attribute):
+                    if attribute == "srcset":
+                        for item in a[attribute].split(","):
+                            self.links.append(item.strip().split()[0])
+                    else:
+                        self.links.append(a[attribute])
 
     def handle_data(self, data):
-        if self.in_title:
+        if self._anchor is not None:
+            self._anchor["text"] += data
+        if self._in_title:
             self.title += data
 
-
-def inspect(page):
-    parser = PageInspector()
-    parser.feed(page.read_text(encoding="utf-8"))
-    return parser
-
-
-def local_path(page, link):
-    url = urlsplit(link)
-    if url.scheme or url.netloc or link.startswith(("#", "//")):
-        return None
-    path = unquote(url.path)
-    if not path:
-        return None
-    return (page.parent / path).resolve()
+    def handle_endtag(self, tag):
+        if tag == "a" and self._anchor is not None:
+            self.anchors.append(self._anchor)
+            self._anchor = None
+        if tag == "title":
+            self._in_title = False
 
 
-def check_local_links(page, info):
-    for link in info.links:
-        target = local_path(page, link)
-        if target is not None and not target.is_file():
-            errors.append(f"{page.relative_to(root)}: broken local resource/link: {link}")
+def parse(path):
+    page = Page()
+    try:
+        page.feed(path.read_text(encoding="utf-8"))
+        page.close()
+    except (UnicodeError, ValueError) as exc:
+        ERRORS.append(f"Cannot parse {path.relative_to(ROOT)}: {exc}")
+    return page
 
 
-def check_analytics(page, info):
-    expected = (
-        "analytics/config.js" if page.parent == root else "../../analytics/config.js",
-        "analytics/analytics.js" if page.parent == root else "../../analytics/analytics.js",
-    )
-    for script in expected:
-        if info.scripts.count(script) != 1:
-            errors.append(f"{page.relative_to(root)}: expected exactly one {script}")
-    if all(script in info.scripts for script in expected):
-        if info.scripts.index(expected[0]) > info.scripts.index(expected[1]):
-            errors.append(f"{page.relative_to(root)}: analytics config must load before analytics loader")
+def check_links(path, page):
+    for link in page.links:
+        parts = urlsplit(link)
+        if parts.scheme or parts.netloc or link.startswith(("#", "//")):
+            continue
+        local = unquote(parts.path)
+        if not local:
+            continue
+        # Resolve relative URLs within the repository, without escaping its root.
+        target = (path.parent / local).resolve()
+        if not target.is_relative_to(ROOT.resolve()) or not target.is_file():
+            ERRORS.append(f"Broken local link in {path.relative_to(ROOT)}: {link}")
 
 
-pages = {}
-for page in (root / "index.html", root / "privacy.html"):
-    if page.is_file():
-        pages[page] = inspect(page)
+def check_analytics(path, page):
+    prefix = "" if path.parent == ROOT else "../../"
+    expected = (prefix + "analytics/config.js", prefix + "analytics/analytics.js")
+    for asset in expected:
+        if page.scripts.count(asset) != 1:
+            ERRORS.append(f"{path.relative_to(ROOT)}: expected exactly one script {asset}")
+    if all(asset in page.scripts for asset in expected):
+        if page.scripts.index(expected[0]) > page.scripts.index(expected[1]):
+            ERRORS.append(f"{path.relative_to(ROOT)}: analytics config must load before analytics.js")
 
-if not games_dir.is_dir():
-    errors.append("Missing games/ directory")
-    game_pages = []
-else:
-    game_pages = sorted(games_dir.glob("*/index.html"))
-    for page in game_pages:
-        pages[page] = inspect(page)
 
-for page, info in pages.items():
-    check_local_links(page, info)
+def check_game(path, page):
+    name = path.relative_to(ROOT)
+    if not page.title.strip():
+        ERRORS.append(f"{name}: missing nonempty <title>")
+    if not page.viewport:
+        ERRORS.append(f"{name}: missing mobile viewport meta tag")
+    home = [a for a in page.anchors if a["href"] == "../../index.html"]
+    if not home:
+        ERRORS.append(f"{name}: missing return-to-Arcade link (../../index.html)")
+    elif not any(a["label"].strip() or a["text"].strip() for a in home):
+        ERRORS.append(f"{name}: return-to-Arcade link needs visible text or aria-label")
+    check_analytics(path, page)
 
-home = root / "index.html"
-if home in pages:
-    if not pages[home].title.strip():
-        errors.append("index.html: missing page title")
-    if not pages[home].viewport:
-        errors.append("index.html: missing mobile viewport")
-    check_analytics(home, pages[home])
-    home_source = home.read_text(encoding="utf-8")
-    for text in ("Mia and Michelle", "Pick a game", "Made with ChatGPT"):
-        if text not in home_source:
-            errors.append(f"index.html: missing homepage text: {text}")
 
-privacy = root / "privacy.html"
-if privacy in pages:
-    check_analytics(privacy, pages[privacy])
+def main():
+    home_path = ROOT / "index.html"
+    if home_path.is_file():
+        home = parse(home_path)
+        check_links(home_path, home)
+        check_analytics(home_path, home)
+        for phrase in ("Mia and Michelle", "Pick a game", "Made with ChatGPT"):
+            if phrase not in home_path.read_text(encoding="utf-8"):
+                ERRORS.append(f"Homepage missing: {phrase}")
+    else:
+        home = Page()
 
-playable = []
-for page in game_pages:
-    slug = page.parent.name
-    info = pages[page]
-    if slug in redirects:
-        target = f"../{redirects[slug]}/index.html"
-        if target not in info.links:
-            errors.append(f"{page.relative_to(root)}: redirect needs a fallback link to {target}")
-        continue
+    privacy_path = ROOT / "privacy.html"
+    if privacy_path.is_file():
+        privacy = parse(privacy_path)
+        check_links(privacy_path, privacy)
+        check_analytics(privacy_path, privacy)
 
-    playable.append(page)
-    label = str(page.relative_to(root))
-    if not info.title.strip():
-        errors.append(f"{label}: missing non-empty <title>")
-    if not info.viewport:
-        errors.append(f"{label}: missing <meta name='viewport'>")
-    if not any(
-        local_path(page, anchor.get("href", "")) == home.resolve()
-        for anchor in info.anchors
-    ):
-        errors.append(f"{label}: missing clickable <a> link back to Arcade homepage")
-    check_analytics(page, info)
+    game_root = ROOT / "games"
+    game_pages = sorted(game_root.glob("*/index.html")) if game_root.is_dir() else []
+    playable = 0
+    if not game_pages:
+        ERRORS.append("No game entry pages found in games/*/index.html")
 
-# Every game folder should have an index; otherwise it is silently omitted.
-if games_dir.is_dir():
-    for folder in sorted(p for p in games_dir.iterdir() if p.is_dir()):
-        if not (folder / "index.html").is_file():
-            errors.append(f"games/{folder.name}: missing index.html")
+    for path in game_pages:
+        slug = path.parent.name
+        page = parse(path)
+        check_links(path, page)
+        if slug in REDIRECTS:
+            target = f"../{REDIRECTS[slug]}/index.html"
+            if not page.redirect or target not in page.links:
+                ERRORS.append(f"{path.relative_to(ROOT)}: invalid compatibility redirect to {target}")
+            continue
+        if page.redirect:
+            ERRORS.append(f"{path.relative_to(ROOT)}: unregistered redirect; add it to REDIRECTS")
+            continue
+        playable += 1
+        check_game(path, page)
 
-if not playable:
-    errors.append("No playable games discovered")
+    for slug, target in REDIRECTS.items():
+        if not (game_root / slug / "index.html").is_file():
+            ERRORS.append(f"Missing compatibility redirect: games/{slug}/index.html")
+        if not (game_root / target / "index.html").is_file():
+            ERRORS.append(f"Missing redirect destination: games/{target}/index.html")
 
-if errors:
-    print("\n".join(errors))
-    sys.exit(1)
-print(f"Site quality gate passed ({len(playable)} playable games, {len(redirects)} legacy redirects, links, return navigation, analytics, titles, viewport)")
+    # Cards must link to real game entry points. Games may intentionally remain
+    # unlisted during development, so we don't require a card for every game.
+    for anchor in home.anchors:
+        href = anchor["href"]
+        if href.startswith("games/") and href.endswith("/index.html"):
+            slug = href.split("/")[1]
+            if slug in REDIRECTS:
+                ERRORS.append(f"Homepage links to legacy redirect instead of current game: {href}")
+
+    if ERRORS:
+        print("\n".join(ERRORS))
+        return 1
+    print(f"Site checks passed: {playable} games, return links, analytics, titles, viewport, and local assets")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
