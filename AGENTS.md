@@ -12,6 +12,7 @@ This is a small non-commercial family website for two children, with a touch-fir
 
 ## Game expectations
 - No keyboard is required. Primary input works by tapping and on iPad in landscape and portrait.
+- All game feedback, hints, instructions, win/lose messages, and congratulations should use player-neutral language (e.g. “You did it!”), not address a child or game creator by name. These games are shared with friends and other players; arcade and creator branding is fine.
 - Chinese Checkers is local multiplayer for 2–6 human players (NO AI). Two-player mode uses opposite camps. Long-jump (symmetric-distance) is an option/default; after each hop in a chain the player may stop immediately, even if other jumps are available. Retain playable sound effects and a mute toggle.
 - Chicken Jockey Dash is a simple touch-friendly jump-and-dodge runner. Keep it distinct from other games.
 - Each newly added game must get its own folder. Add its homepage card/assets only when Ming asks to expose it there; new games may remain accessible by direct URL during review. A homepage card uses a useful screenshot and ONLY a player-count badge. Do not put deployment or Netlify instructions on the public homepage.
