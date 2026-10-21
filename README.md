@@ -10,6 +10,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 | --- | --- |
 | [Chicken Jockey Dash](games/chicken-jockey-dash/) | Tap to jump over obstacles in a side-scrolling runner. |
 | [Chinese Checkers](games/chinese-checkers/) | Play local, same-screen Chinese Checkers with 2–6 people. |
+| [Five in a Row (Gomoku)](games/gomoku/) | Play same-screen 五子棋 with two people, undo moves, and connect five to win. |
 | [Name That Note!](games/name-that-note/) | Identify notes shown on a musical staff. |
 | [Play That Note!](games/play-that-note/) | Find the displayed note on a piano keyboard. |
 | [Do I Have Absolute Pitch?](games/do-i-have-absolute-pitch/) | Hear a pitch and choose the matching piano key. |
