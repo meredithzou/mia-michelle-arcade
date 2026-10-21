@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#fff8fc" />
+<title>Spotted! 🔍 · Mia and Michelle's Arcade</title>
+<style>
+  :root { --ink:#33314d; --purple:#8562bc; --pink:#f05b9b; --soft:#fef5fb; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:radial-gradient(circle at 8% 8%, #ffe7f0, transparent 28%),radial-gradient(circle at 93% 20%, #dfedff, transparent 32%),linear-gradient(145deg,#fffafc,#f8f7ff); font-family: ui-rounded, 'Arial Rounded MT Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color:var(--ink); }
+  .back-link { display:inline-block; margin:14px 0 0 18px; font-size:13px; font-weight:800; color:#765795; text-decoration:none; padding:8px 12px; border:1px solid #e7d9f1; background:#ffffffb8; border-radius:999px; }
+  .back-link:focus-visible { outline:3px solid #956ed1; outline-offset:3px; }
+  .app { width:min(100%,1050px); margin:auto; min-height:620px; padding:27px 22px 35px; text-align:center; position:relative; overflow:hidden; }
+  .eyebrow { font-size:12px; font-weight:800; letter-spacing:3px; color:#9073b3; margin:0 0 4px; }
+  h1 { margin:0; font-size:clamp(32px,5vw,52px); line-height:1.12; font-weight:950; letter-spacing:-1px; color:#543976; }
+  .lead { font-size:clamp(14px,2vw,18px); margin:12px auto 16px; font-weight:600; color:#67607d; }
+  .scorebar { display:flex; justify-content:center; align-items:center; gap:12px; margin:0 auto 14px; flex-wrap:wrap; }
+  .score-pill { background:white; border:2px solid #f1dce9; box-shadow:0 3px 9px #b27baf12; border-radius:999px; padding:9px 17px; font-size:15px; font-weight:800; }
+  #score { color:#db3982; font-size:19px; }
+  .progress { display:flex; align-items:center; gap:3px; min-height:30px; }
+  .star { font-size:21px; filter:grayscale(1); opacity:.25; transform:scale(.9); transition:transform .25s,opacity .25s,filter .25s; }
+  .star.earned { opacity:1; filter:none; transform:scale(1.04); }
+  .playarea { max-width:890px; margin:auto; }
+  .card-labels { display:grid; grid-template-columns:1fr 1fr; gap:24px; color:#8b79a2; font-size:13px; font-weight:850; letter-spacing:2px; margin-bottom:11px; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:center; justify-items:center; }
+  .card { width:min(100%,385px); aspect-ratio:1; border-radius:50%; position:relative; box-shadow:0 11px 25px #8564a02b, inset 0 0 0 7px #ffffffb8; transition:transform .23s; border:6px solid white; }
+  .card:first-child { background:radial-gradient(circle at 42% 28%, #fff, #fff6fb 73%, #ffe1ef); outline:4px solid #ffc1d8; }
+  .card:last-child { background:radial-gradient(circle at 42% 28%, #fff, #f5faff 73%, #dbeaff); outline:4px solid #c7dcff; }
+  .symbol { -webkit-appearance:none; appearance:none; background:transparent; border:0; padding:0; display:flex; justify-content:center; align-items:center; width:23%; height:23%; position:absolute; left:var(--x); top:var(--y); transform:translate(-50%,-50%); cursor:pointer; border-radius:100%; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+  .symbol .emoji { display:block; line-height:1; font-size:clamp(36px,4.5vw,60px); transform:rotate(var(--rotate)) scale(var(--scale)); transition:filter .14s,transform .18s; user-select:none; -webkit-user-select:none; }
+  .symbol:hover { background:#ffe5f27a; }
+  .symbol:focus-visible { outline:3px solid #ae57df; outline-offset:2px; }
+  .symbol:active .emoji { transform:rotate(var(--rotate)) scale(.83); }
+  .symbol.found { background:#a7ee9b90; box-shadow:0 0 0 4px #83dc9e; z-index:3; }
+  .symbol.found .emoji { filter:drop-shadow(0 4px 3px #37c19c66); }
+  .symbol.hint { background:#fff3b4; animation:ping 1.05s ease-in-out 2; }
+  .symbol.oops { animation:wiggle .35s ease-out; }
+  @keyframes ping { 0%,100% {box-shadow:0 0 0 0 #f3bf5b66} 50% {box-shadow:0 0 0 9px #f3bf5b44} }
+  @keyframes wiggle { 0%,100% {transform:translate(-50%,-50%)} 25% {transform:translate(calc(-50% - 5px),-50%)} 75% {transform:translate(calc(-50% + 5px),-50%)} }
+  .message { min-height:58px; display:flex; align-items:center; justify-content:center; font-size:clamp(16px,2.5vw,22px); font-weight:850; color:#795899; padding:10px; }
+  .message.success { color:#258661; }
+  .controls { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+  .control { border:0; border-radius:999px; font-weight:850; padding:13px 21px; font-size:15px; font-family:inherit; cursor:pointer; touch-action:manipulation; box-shadow:0 3px 8px #9988ba1d; }
+  .hint-btn { background:#fff0c8; color:#705329; }
+  .reset-btn { background:white; color:#785d9c; border:2px solid #e7def2; }
+  .control:focus-visible { outline:3px solid #9166dc; outline-offset:3px; }
+  .footer-note { color:#a39aaf; font-size:12px; margin:22px 0 0; }
+  .overlay { position:absolute; inset:0; z-index:20; background:#fff9ffed; display:none; align-items:center; justify-content:center; padding:25px; }
+  .overlay.show { display:flex; }
+  .winner { background:white; border:4px solid #ffd0e4; border-radius:26px; max-width:450px; width:100%; padding:35px 25px; box-shadow:0 15px 60px #b598bc36; }
+  .winner .big { font-size:76px; }
+  .winner h2 { font-size:34px; margin:14px 0 6px; color:#62428c; }
+  .winner p { font-size:19px; line-height:1.45; color:#695e7b; }
+  .again-btn { background:#db55a0; color:white; font-size:18px; padding:14px 29px; }
+  @media (max-width:630px) {
+    .app { padding:22px 15px 35px; }
+    .lead { margin-bottom:13px; }
+    .scorebar { gap:7px; }
+    .progress { gap:1px; }
+    .star { font-size:17px; }
+    .cards { grid-template-columns:1fr; gap:23px; }
+    .card { width:min(70vw,290px); }
+    .card-labels { display:none; }
+    .card::before { position:absolute; z-index:5; font-size:11px; font-weight:900; color:#a182ae; top:-20px; left:50%; transform:translateX(-50%); white-space:nowrap; }
+    .card:first-child::before { content:'CARD 1'; }
+    .card:last-child::before { content:'CARD 2'; }
+    .card .symbol .emoji { font-size:clamp(32px,9vw,52px); }
+    .message { min-height:48px; }
+  }
+  @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }
+</style>
+</head>
+<body>
+<a class="back-link" href="../../index.html">← Mia and Michelle’s Arcade</a>
+<main class="app">
+  <p class="eyebrow">✨ MIA'S GAME LAB ✨</p>
+  <h1>Spotted! 🔍</h1>
+  <p class="lead">Find the ONE picture that's on both cards. Tap it!</p>
+  <div class="scorebar">
+    <div class="score-pill">⭐ Matches: <span id="score">0</span> / 10</div>
+    <div class="progress" id="progress" aria-label="Progress toward 10 matches"></div>
+  </div>
+  <section class="playarea" aria-label="Spotted picture cards">
+    <div class="card-labels"><span>CARD 1</span><span>CARD 2</span></div>
+    <div class="cards">
+      <div class="card" id="card1" aria-label="First card"></div>
+      <div class="card" id="card2" aria-label="Second card"></div>
+    </div>
+  </section>
+  <div class="message" id="message" role="status" aria-live="polite">Ready, set... SPOTTED! 🌈</div>
+  <div class="controls">
+    <button class="control hint-btn" type="button" id="hint">💡 Hint</button>
+    <button class="control reset-btn" type="button" id="reset">↻ Start Over</button>
+  </div>
+  <p class="footer-note">Every pair has exactly one matching picture. Made for family fun 💖</p>
+  <div class="overlay" id="win" aria-label="You won">
+    <div class="winner">
+      <div class="big">🏆🌈</div>
+      <h2>SUPER SPOTTER!</h2>
+      <p>You found all <strong>10 matches!</strong><br>You're amazing, Mia! ⭐</p>
+      <button class="control again-btn" id="again" type="button">🎉 Play Again!</button>
+    </div>
+  </div>
+</main>
+<script>
+(function(){
+  'use strict';
+  const pictures = [
+    ['🍎','apple'],['🍌','banana'],['🍓','strawberry'],['🍇','grapes'],['🍉','watermelon'],
+    ['🍒','cherries'],['🥕','carrot'],['🍕','pizza'],['🍩','donut'],['🧁','cupcake'],
+    ['🦄','unicorn'],['🐱','cat'],['🐶','dog'],['🐸','frog'],['🐼','panda'],
+    ['🦋','butterfly'],['🐙','octopus'],['🐢','turtle'],['🦖','dinosaur'],['🐝','bee'],
+    ['🌈','rainbow'],['⭐','star'],['🌙','moon'],['☀️','sun'],['⚡','lightning'],
+    ['🚀','rocket'],['🎈','balloon'],['🎸','guitar'],['🎮','game controller'],['⚽','soccer ball'],['👑','crown']
+  ];
+  // Construct a projective-plane deck of order 5 (31 cards, 6 symbols each).
+  // Any two different cards share EXACTLY ONE symbol.
+  const deck = [];
+  for(let m=0;m<5;m++) for(let b=0;b<5;b++) {
+    const card=[];
+    for(let x=0;x<5;x++) card.push(((m*x+b)%5)*5+x);
+    card.push(25+m);
+    deck.push(card);
+  }
+  for(let x=0;x<5;x++) {
+    const card=[];
+    for(let y=0;y<5;y++) card.push(y*5+x);
+    card.push(30);
+    deck.push(card);
+  }
+  deck.push([25,26,27,28,29,30]);
+  const locations = [[27,27],[70,27],[18,53],[81,53],[36,77],[64,77]];
+  const byId=id=>document.getElementById(id);
+  const cards=[byId('card1'),byId('card2')];
+  let score=0, common=-1, previousCommon=-1, busy=false, oldPair='', roundTimer=null;
+  const shuffle = arr => {const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;};
+  function msg(s,good){byId('message').textContent=s;byId('message').classList.toggle('success',!!good);}
+  function showProgress(){
+    byId('score').textContent=score;
+    byId('progress').innerHTML='';
+    for(let i=0;i<10;i++) {const s=document.createElement('span');s.className='star'+(i<score?' earned':'');s.textContent='⭐';byId('progress').appendChild(s);}
+  }
+  function makeCard(container,symbols){
+    container.replaceChildren();
+    const slots=shuffle(locations);
+    shuffle(symbols).forEach((id,i)=>{
+      const b=document.createElement('button');
+      b.type='button';b.className='symbol';
+      b.setAttribute('aria-label',pictures[id][1]);
+      b.dataset.picture=String(id);
+      b.style.setProperty('--x',slots[i][0]+'%');
+      b.style.setProperty('--y',slots[i][1]+'%');
+      const e=document.createElement('span');e.className='emoji';e.textContent=pictures[id][0];e.setAttribute('aria-hidden','true');
+      e.style.setProperty('--rotate',(Math.floor(Math.random()*7)-3)*12+'deg');
+      e.style.setProperty('--scale',(0.88+Math.random()*.23).toFixed(2));
+      b.appendChild(e);
+      b.addEventListener('click',()=>choose(b,id));
+      container.appendChild(b);
+    });
+  }
+  function nextRound(){
+    let a,b,key,shared;
+    do {
+      a=Math.floor(Math.random()*deck.length);b=Math.floor(Math.random()*deck.length);
+      key=[a,b].sort((x,y)=>x-y).join('-');
+      shared=deck[a].find(v=>deck[b].includes(v));
+    } while(a===b||key===oldPair||shared===previousCommon);
+    oldPair=key; common=shared;
+    makeCard(cards[0],deck[a]);makeCard(cards[1],deck[b]);
+    busy=false;
+  }
+  function choose(button,id){
+    if(busy)return;
+    if(id!==common){
+      msg('Oops! Try another picture! 💗',false);
+      button.classList.remove('oops'); void button.offsetWidth; button.classList.add('oops');
+      return;
+    }
+    busy=true;
+    cards.forEach(c=>c.querySelectorAll('.symbol').forEach(b=>{if(Number(b.dataset.picture)===id)b.classList.add('found');}));
+    score++;
+    showProgress();
+    msg('YAY! You found the '+pictures[id][1]+'! 🎉',true);
+    previousCommon=id;
+    roundTimer=setTimeout(()=>{
+      roundTimer=null;
+      if(score>=10){byId('win').classList.add('show'); return;}
+      nextRound();msg('Find the matching picture! 🔍',false);
+    },850);
+  }
+  byId('hint').addEventListener('click',()=>{
+    if(busy)return;
+    cards.forEach(c=>c.querySelectorAll('.symbol').forEach(b=>{
+      if(Number(b.dataset.picture)===common){b.classList.remove('hint');void b.offsetWidth;b.classList.add('hint');}
+    }));
+    msg('Look for the sparkling pictures! ✨',false);
+  });
+  function restart(){if(roundTimer!==null){clearTimeout(roundTimer);roundTimer=null;}score=0;common=-1;previousCommon=-1;oldPair='';busy=false;byId('win').classList.remove('show');showProgress();nextRound();msg('Ready, set... SPOTTED! 🌈',false);}
+  byId('reset').addEventListener('click',restart);
+  byId('again').addEventListener('click',restart);
+  restart();
+})();
+</script>
+</body>
+</html>
