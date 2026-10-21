@@ -26,8 +26,9 @@ const practiceSettings=window.ArcadeSettings.create({
    hints:typeof value.hints==='boolean'?value.hints:defaults.hints,selectedByRange};
  }
 });
-let cfg=practiceSettings.load(),draft,q,bag=[],last=null,total=0,correct=0,judged=false,locked=false,heard=false,started=false,pending=false,timer,lastAttempt=null;
+let cfg=practiceSettings.load(),draft,q,bag=[],last=null,total=0,correct=0,judged=false,locked=false,heard=false,started=false,pending=false,timer,lastAttempt=null,motionTimer,playback=0;
 const attempts=new Set();
+const motion=createMotion();
 const audio=window.ArcadeMusicAudio.create({root,isEnabled:()=>true,getQuestion:()=>q,onStateChange:renderPianoState});
 const keys=window.PlayThatNoteKeyboard.create({container:$('npxletters'),onAnswer:answer});
 function bounds(c=cfg){return c.range==='lower'?[36,60]:c.range==='upper'?[60,84]:[48,72]}
@@ -41,7 +42,44 @@ function pitch(){
  last=bag.pop();return last;
 }
 function message(text,kind=''){$('npxmsg').textContent=text;$('npxmsg').className='npx-msg '+kind}
-function stop(){pending=false;audio.stop()}
+// Decorative only: the same motion for every pitch, with no analyser or pitch clues.
+let motionAnimations=[];
+function createMotion(){
+ const paper=$('pitchplay').parentElement;if(!paper)return null;
+ const ripple=document.createElement('div');ripple.className='pitch-ripple';ripple.setAttribute('aria-hidden','true');
+ let shape='';
+ for(let x=0;x<=200;x+=2){const u=x/200,y=48-25*Math.sin(4*Math.PI*u)*Math.sin(Math.PI*u)**2;shape+=(x?'L':'M')+x+','+y.toFixed(3)}
+ const fronts=[-1,1].map(direction=>{
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'),path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  svg.setAttribute('class','pitch-wave-front');svg.setAttribute('viewBox','0 0 200 96');path.setAttribute('d',shape);
+  // Both outgoing fronts keep the same sine orientation.
+  svg.append(path);ripple.append(svg);return {element:svg,direction};
+ });
+ paper.prepend(ripple);return {paper,ripple,fronts};
+}
+function endMotion(){
+ clearTimeout(motionTimer);root.dataset.pitchPlaying='false';
+ for(const animation of motionAnimations)animation.cancel();motionAnimations=[];
+}
+function startMotion(){
+ root.dataset.pitchPlaying='true';
+ // Let the visual tail finish after the piano's decay, rather than cutting it off.
+ motionTimer=setTimeout(endMotion,2450);
+ if(!motion||typeof motion.ripple.animate!=='function'||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
+ const half=motion.paper.clientWidth/2,origin=$('pitchplay').offsetWidth/2-32,options={duration:2450,easing:'linear',fill:'both'},ticket=playback;
+ for(const {element,direction} of motion.fronts){
+  const start=direction*origin-100,end=direction*(half+110)-100;
+  motionAnimations.push(element.animate([
+   {transform:'translate3d('+start+'px,0,0) scaleY(1)',offset:0},
+   {transform:'translate3d('+(start+(end-start)*.42)+'px,0,0) scaleY(.55)',offset:.42},
+   {transform:'translate3d('+(start+(end-start)*.8)+'px,0,0) scaleY(.14)',offset:.8},
+   {transform:'translate3d('+end+'px,0,0) scaleY(0)',offset:1}
+  ],options));
+ }
+ const fade=motion.ripple.animate([{opacity:0,offset:0},{opacity:.72,offset:.04},{opacity:.52,offset:.35},{opacity:.2,offset:.7},{opacity:0,offset:1}],options);
+ motionAnimations.push(fade);fade.finished.then(()=>{if(ticket===playback)endMotion()}).catch(()=>{});
+}
+function stop(){pending=false;playback++;endMotion();audio.stop()}
 function playPitch(){
  if(!$('npxshade').hidden)return;
  started=true;stop();
@@ -50,9 +88,10 @@ function playPitch(){
   pending=true;message(status.state==='error'?'Piano unavailable. Open Settings to retry loading.':'Loading this pitch…');
   audio.prepare(keyboardPitches(),q.m);return;
  }
- const question=q;
+ const question=q,ticket=playback;
+ startMotion();
  audio.play(q.m,()=>{
-  if(q!==question)return;
+  if(q!==question||ticket!==playback)return;
   q.played=true;pitchButton();
  });
  heard=true;
