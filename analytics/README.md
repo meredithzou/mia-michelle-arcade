@@ -1,51 +1,33 @@
-# Arcade website analytics (Cloudflare Web Analytics)
+# Website statistics — Cloudflare Web Analytics
 
-Mia and Michelle's Arcade uses **Cloudflare Web Analytics** for basic,
-aggregate website usage and performance data. It is **on by default**, without
-a visitor prompt, using Cloudflare's cookie-free, non-fingerprinting beacon.
+The Arcade uses **Cloudflare Web Analytics** for aggregate pageviews and performance. It is enabled by default and uses Cloudflare's cookie-free, non-fingerprinting browser beacon. The site does not send game scores, note guesses, player names, or custom player identifiers.
 
-## Configuration
-- `analytics/config.js`: one public Cloudflare site token, and an emergency
-  `enabled: true/false` master switch. It is **not** an API secret.
-- `analytics/analytics.js`: injects the official Cloudflare beacon (module)
-  only when the switch is enabled. The same loader is referenced by the home
-  page, Privacy page, and each of the three independent games.
-- `privacy.html`: short explanation for visitors, accessible from the home
-  footer. It is informational; no visitor On/Off controls are necessary for
-  these aggregate, cookie-free metrics.
+## Live site and configuration
 
-Cloudflare dashboard hostname: `meredithzou.github.io`.
-Live site: `https://meredithzou.github.io/mia-michelle-arcade/`.
+- Primary website: **https://miamichellearcade.com/**
+- GitHub Pages repository: `meredithzou/mia-michelle-arcade`
+- `analytics/config.js`: public Cloudflare Web Analytics site token and `enabled` master switch. The token is **not** an API secret.
+- `analytics/analytics.js`: loads Cloudflare's official beacon once per page.
+- `privacy.html`: public explanation of aggregate analytics.
 
-## Phase 1 limits
-Tracks pageviews, popular paths, country, browser/device categories, and
-website performance. This is not precise unique-person tracking. It does not
-capture `game_start`, `game_end`, score, note guesses or time actively playing.
-Phase 2 gameplay events would need a separate design and privacy review.
+The homepage, Privacy page, and **all five games** load the same shared analytics scripts:
+Chicken Jockey Dash, Chinese Checkers, Name That Note!, Play That Note!, and Do I Have Absolute Pitch?
 
-The prior GA4 proof-of-concept and localStorage consent implementation were
-removed. No Google Analytics library loads from any Arcade page.
+**Dashboard check after the custom-domain move:** The original analytics configuration was created while the site used `meredithzou.github.io`. In Cloudflare Web Analytics, verify that the site hostname/configuration also accepts `miamichellearcade.com`, and confirm actual pageviews from the new hostname. Updating this README or DNS alone does not update Cloudflare's analytics dashboard configuration.
 
-## Privacy and scope
-Cloudflare says its Web Analytics does not use analytics cookies, localStorage,
-or visitor fingerprinting. A visitor's browser does contact Cloudflare's
-beacon servers to send page performance and navigation metrics. We do not send
-usernames, player answers, children’s personal information, or custom IDs.
+## Scope
 
-The site may be used by children; limit this analytics integration to internal
-site traffic/performance statistics. Before expanding into events or user
-profiling, reassess applicable privacy requirements. The site's Privacy page
-discloses the measurement provider.
+Analytics covers page visits, popular paths, approximate country/device/browser breakdowns, and web performance. It does **not** capture `game_start`, `game_end`, scores, correct answers, or active playtime. Any future gameplay event tracking needs separate design and privacy review, especially because children may use the site.
 
-## QA checklist
-- Run `python3 scripts/check_site.py`.
-- All home/game/Privacy pages load exactly one shared Cloudflare beacon.
-- Confirm the token matches the Cloudflare site's configured hostname.
-- In Safari/Chrome devtools, verify `static.cloudflareinsights.com/beacon.min.js`
-  loads and beacon POSTs reach `cloudflareinsights.com/cdn-cgi/rum`.
-- Confirm NO `googletagmanager.com`, `google-analytics.com`, `_ga` cookies or
-  `arcade.analytics.consent` localStorage writes from our own site.
-- Confirm dashboard pageviews for `/mia-michelle-arcade/` and the three game paths.
-- Verify iPad gameplay, sound, buttons, touch navigation, and Rainbow/Halloween theme.
-- If site CORS rejection occurs, check that Cloudflare Web Analytics hostname is
-  exactly `meredithzou.github.io`.
+The previous Google Analytics experiment was removed. No GA4 code should be loaded by the Arcade.
+
+## QA
+
+1. Run `python3 scripts/check_site.py`.
+2. Confirm the homepage, Privacy page, and five games each load `analytics/config.js` and `analytics/analytics.js` exactly once.
+3. In browser developer tools, confirm `static.cloudflareinsights.com/beacon.min.js` loads and that beacon requests succeed.
+4. In Cloudflare Web Analytics, check that visits to `https://miamichellearcade.com/` and `/games/<game-slug>/` appear. This requires checking the dashboard, not just the source code.
+5. Confirm the site does not load Google Analytics or write tracking-consent cookies/localStorage entries.
+6. Verify touch gameplay and audio separately on iPad Safari.
+
+Cloudflare's beacon is independent of whether the DNS records are proxied (orange cloud) or DNS-only (gray cloud).
