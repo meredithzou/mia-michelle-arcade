@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" role="img" aria-label="Find the Pair game with two emoji matching cards">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#ffeaf5"/><stop offset="1" stop-color="#e2efff"/></linearGradient></defs>
+<rect width="800" height="500" fill="url(#bg)"/>
+<g text-anchor="middle" font-family="Arial,sans-serif"><text x="400" y="64" font-size="20" font-weight="700" letter-spacing="4" fill="#9979ae">MIA'S GAME LAB</text><text x="400" y="123" font-size="56" font-weight="900" fill="#58397d">Find the Pair!</text><text x="400" y="162" font-size="20" fill="#857198">Find the matching picture!</text></g>
+<circle cx="218" cy="322" r="137" fill="#fff9fd" stroke="#f9bcd5" stroke-width="7"/>
+<circle cx="581" cy="322" r="137" fill="#f8fbff" stroke="#b5d5ff" stroke-width="7"/>
+<g font-family="Apple Color Emoji,Segoe UI Emoji,Noto Color Emoji" font-size="47" text-anchor="middle">
+<text x="160" y="279">🐱</text><text x="260" y="277">🌈</text><text x="146" y="349">🦋</text><text x="281" y="349">🎮</text><text x="178" y="411">🍎</text><text x="259" y="410">🦖</text>
+<text x="524" y="279">🌙</text><text x="625" y="278">🐸</text><text x="507" y="349">🦋</text><text x="639" y="349">🚀</text><text x="545" y="411">🎈</text><text x="623" y="410">🍕</text>
+</g></svg>
