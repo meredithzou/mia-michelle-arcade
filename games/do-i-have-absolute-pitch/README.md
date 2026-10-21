@@ -35,7 +35,7 @@ including upgrades from local prototype v1/v2. Only preferences are stored.
 All keys in the window are loaded so unselected wrong keys also produce audio.
 Audio credits and loading/retry controls are available in Settings.
 
-Direct entry: games/do-i-have-absolute-pitch/index.html. The homepage includes a 1 Player card with an SVG preview illustration.
+Direct entry: games/do-i-have-absolute-pitch/index.html. The homepage includes a 1 Player card with a real browser screenshot in `assets/absolute-pitch-preview.jpg`, captured from the deployed game in its initial Play Pitch state and cropped to the game panel only (no surrounding page background or return button). The thumbnail uses contain sizing to keep the title, keyboard and score visible.
 Physical piano/microphone answer recognition remains a future extension.
 
 Validation:
