@@ -29,7 +29,10 @@
   .card:last-child { background:radial-gradient(circle at 42% 28%, #fff, #f5faff 73%, #dbeaff); outline:4px solid #c7dcff; }
   .symbol { -webkit-appearance:none; appearance:none; background:transparent; border:0; padding:0; display:flex; justify-content:center; align-items:center; width:23%; height:23%; position:absolute; left:var(--x); top:var(--y); transform:translate(-50%,-50%); cursor:pointer; border-radius:100%; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
   .symbol .emoji { display:block; line-height:1; font-size:clamp(36px,4.5vw,60px); transform:rotate(var(--rotate)) scale(var(--scale)); transition:filter .14s,transform .18s; user-select:none; -webkit-user-select:none; }
-  .symbol:hover { background:#ffe5f27a; }
+  /* Prevent sticky hover highlights after taps on iPad and other touch devices. */
+  @media (hover:hover) and (pointer:fine) {
+    .symbol:hover { background:#ffe5f27a; }
+  }
   .symbol:focus-visible { outline:3px solid #ae57df; outline-offset:2px; }
   .symbol:active .emoji { transform:rotate(var(--rotate)) scale(.83); }
   .symbol.found { background:#a7ee9b90; box-shadow:0 0 0 4px #83dc9e; z-index:3; }
