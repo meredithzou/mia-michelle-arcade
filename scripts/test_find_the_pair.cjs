@@ -9,6 +9,14 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const source = fs.readFileSync(path.join(__dirname, '../games/find-the-pair/index.html'), 'utf8');
+
+// The pink hover highlight must only apply to true mouse-like pointing devices.
+// Touch Safari can keep :hover active after a tap; do not leave an unguarded rule.
+const guardedHover = /@media\s*\(\s*hover\s*:\s*hover\s*\)\s*and\s*\(\s*pointer\s*:\s*fine\s*\)\s*\{\s*(\.symbol:hover\s*\{[^}]*\})\s*\}/.exec(source);
+assert.ok(guardedHover, 'Picture hover highlight must be gated behind mouse-only media conditions');
+assert.doesNotMatch(source.replace(guardedHover[0], ''), /\.symbol:hover\s*\{/,
+  'No unguarded picture hover highlight on touch devices');
+
 const script = [...source.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
   .map(match => match[1]).find(code => code.includes('const deck = []'));
 assert.ok(script, 'The playable game script should exist');
