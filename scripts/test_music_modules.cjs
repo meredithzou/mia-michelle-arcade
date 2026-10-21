@@ -1,3 +1,10 @@
+/**
+ * Shared music-module and Name That Note! regression tests.
+ * Runs the real game handlers with a fake DOM, then checks note scoring,
+ * clef settings, notation geometry, and shared pitch/keyboard behavior.
+ * The SVG geometry hash catches unintended changes to music rendering.
+ * Run: node scripts/test_music_modules.cjs
+ */
 // Regression checks for the shared modules and the real Name That Note! handlers.
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
 const {fixture}=require('./music_game_fixture.cjs');
