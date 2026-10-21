@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""Static quality contract for Arcade pages and independently shipped games."""
+"""Arcade-wide static quality gate (run: python3 scripts/check_site.py).
+
+Checks every playable game for a home link, title, mobile viewport, analytics,
+and valid local assets. Also compares homepage cards with README and other
+published game-count claims so descriptions do not become stale.
+
+Automatically discovers games/*/index.html; legacy URL redirects are exempt.
+This is a structural check, not a browser/touch/audio end-to-end test.
+"""
 from html.parser import HTMLParser
 import re
 from pathlib import Path
@@ -32,6 +40,7 @@ for path in REQUIRED:
 
 
 class Page(HTMLParser):
+    """Collect links, script tags, navigation labels, and page metadata from HTML."""
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.links = []
@@ -80,6 +89,7 @@ class Page(HTMLParser):
 
 
 def parse(path):
+    """Parse a repository HTML file and report malformed/unreadable content."""
     page = Page()
     try:
         page.feed(path.read_text(encoding="utf-8"))
@@ -90,6 +100,7 @@ def parse(path):
 
 
 def check_links(path, page):
+    """Fail when a local href/src points outside the repo or to a missing file."""
     for link in page.links:
         parts = urlsplit(link)
         if parts.scheme or parts.netloc or link.startswith(("#", "//")):
@@ -104,6 +115,7 @@ def check_links(path, page):
 
 
 def check_analytics(path, page):
+    """Require exactly one analytics config + loader in the correct order."""
     prefix = "" if path.parent == ROOT else "../../"
     expected = (prefix + "analytics/config.js", prefix + "analytics/analytics.js")
     for asset in expected:
@@ -115,6 +127,7 @@ def check_analytics(path, page):
 
 
 def check_game(path, page):
+    """Enforce the common requirements for each playable game entry page."""
     name = path.relative_to(ROOT)
     if not page.title.strip():
         ERRORS.append(f"{name}: missing nonempty <title>")
@@ -130,6 +143,7 @@ def check_game(path, page):
 
 
 class CardParser(HTMLParser):
+    """Extract visible homepage card content for cross-page consistency tests."""
     """Extract published homepage cards without depending on CSS."""
     def __init__(self):
         super().__init__(convert_charrefs=True)
@@ -255,6 +269,7 @@ def check_catalog(home_source, game_pages, published_pages):
 
 
 def main():
+    """Discover games, check each page, then validate the published catalog."""
     home_path = ROOT / "index.html"
     if home_path.is_file():
         home = parse(home_path)
