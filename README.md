@@ -28,6 +28,20 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 No app server, login, or build framework is required. Game preferences are stored in the visitor's own browser. The [Privacy page](privacy.html) describes aggregate website statistics.
 
 
+
+## Homepage image cache busting
+
+Homepage images use URLs like `assets/example-preview.png?v=abcdef123456`. The 12-character version is computed from the image's Git blob content hash, so changing a screenshot automatically yields a new URL for browsers without renaming the actual image. There is no build system or runtime JavaScript.
+
+After adding or replacing an image referenced in `index.html`, run:
+
+```sh
+python3 scripts/update_preview_versions.py
+python3 scripts/update_preview_versions.py --check
+```
+
+Commit the regenerated `index.html` with the asset change. CI verifies the versions and fails if any screenshot is stale; **never edit a version number by hand**. As with any GitHub Pages update, browsers still need to fetch the latest HTML after deployment before seeing the new URL.
+
 ## Quality checks for every game
 
 `scripts/check_site.py` automatically discovers `games/*/index.html` and checks each playable game for:
