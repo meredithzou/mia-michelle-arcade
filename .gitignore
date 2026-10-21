@@ -1,0 +1,8 @@
+# Private planning and AI workspace context belong outside this public repository.
+/AGENTS.md
+/PROJECT_BRIEF.md
+/.chatgpt/
+/private-notes/
+
+# Local operating-system files
+.DS_Store

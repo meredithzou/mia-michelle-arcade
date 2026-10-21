@@ -1,29 +1,50 @@
 # 🎮 Mia and Michelle's Arcade
 
-A small, non-commercial family project created with love for play and learning. Two touch-friendly games: **Chicken Jockey Dash** and **Chinese Checkers**.
+A family-made collection of touch-friendly browser games for kids and grown-ups. Designed for iPad and playable in a regular web browser.
 
-## Website structure
+**Play:** https://miamichellearcade.com/
 
-- `index.html` — the game library front page
-- `site-config.js` — chooses which visual theme is active
-- `styles/base.css` — shared layout and responsive styles
-- `themes/pastel-rainbow/theme.css` — our original rainbow theme, saved permanently
-- `assets/` — game card screenshots
-- `games/chicken-jockey-dash/index.html` — chicken jumping game
-- `games/chinese-checkers/index.html` — two-to-six-player Chinese Checkers with sound and optional stop after every jump
+## Games
 
-## Adding a new game
+| Game | What you do |
+| --- | --- |
+| [Chicken Jockey Dash](games/chicken-jockey-dash/) | Tap to jump over obstacles in a side-scrolling runner. |
+| [Chinese Checkers](games/chinese-checkers/) | Play local, same-screen Chinese Checkers with 2–6 people. |
+| [Name That Note!](games/name-that-note/) | Identify notes shown on a musical staff. |
+| [Play That Note!](games/play-that-note/) | Find the displayed note on a piano keyboard. |
+| [Do I Have Absolute Pitch?](games/do-i-have-absolute-pitch/) | Hear a pitch and choose the matching piano key. |
 
-1. Add `games/new-game/index.html` and its optional assets.
-2. Add a card linking to `games/new-game/index.html` in the homepage `index.html`.
-3. Add a screenshot in `assets/`.
+## Project layout
 
-## Seasonal themes
+- `index.html` — homepage and game links.
+- `games/<game-slug>/` — independent, touch-first HTML/JavaScript games.
+- `shared/music/` — reusable notation, piano audio, keyboard, and styling.
+- `shared/settings.js` — browser-local game preference storage.
+- `styles/`, `themes/`, `assets/` — site layout, themes, and previews.
+- `analytics/` — optional-to-disable Cloudflare Web Analytics integration (see [analytics/README.md](analytics/README.md)).
+- `scripts/` — static-site and game regression tests.
 
-Keep `themes/pastel-rainbow/` unchanged. When ready, add e.g. `themes/halloween/theme.css` defining the same theme variables (and any seasonal overrides), then change `activeTheme` in `site-config.js` to `halloween`. Switch back anytime by setting it to `pastel-rainbow`.
+No app server, login, or build framework is required. Game preferences are stored in the visitor's own browser. The [Privacy page](privacy.html) describes aggregate website statistics.
 
-## GitHub Pages
+## Running and checking the site
 
-Use the `main` branch and `/(root)` as the Pages publishing source in repository Settings → Pages.
+Serve the repository root with a static web server, or use GitHub Pages. From the repository root, run:
 
-**Copyright note:** This project is meant for non-commercial family fun and learning. Non-commercial status does not replace permission to use third-party intellectual property. The Chicken Jockey game references Minecraft-associated character concepts; consider replacing that content with original characters before sharing publicly.
+```sh
+python3 scripts/check_site.py
+node scripts/test_settings.cjs
+node scripts/test_music_modules.cjs
+node scripts/test_name_that_note_audio.cjs
+node scripts/test_play_that_note.cjs
+node scripts/test_absolute_pitch.cjs
+```
+
+GitHub Actions runs these checks on pull requests and pushes to `main`. Changes to games should also be tested on a real touch device, especially audio playback in iPad Safari.
+
+## Hosting and forks
+
+This repository is published through GitHub Pages. The root `CNAME` file connects the original website to `miamichellearcade.com`. **If you fork the project and publish your own site, remove or replace `CNAME` with a domain you control.** You can use a standard GitHub Pages URL without a custom domain.
+
+## Intellectual property
+
+This repository does not currently include a project-wide open-source license. Public visibility and the ability to fork on GitHub do not by themselves grant broad reuse rights. Some game concepts or assets reference third-party works; see notices in the relevant game files and `assets/licenses/`. Please respect those rights when adapting or redistributing content.
