@@ -20,3 +20,4 @@ jobs:
       - run: node scripts/test_music_modules.cjs
       - run: node scripts/test_play_that_note.cjs
       - run: node scripts/test_absolute_pitch.cjs
+      - run: node scripts/test_find_the_pair.cjs
