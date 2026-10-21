@@ -1,4 +1,11 @@
 #!/usr/bin/env node
+/**
+ * Settings persistence regression tests (run: node scripts/test_settings.cjs).
+ * Loads the real shared/settings.js and game-defined schemas into an isolated VM.
+ * Checks save/restore, validation, version migration, legacy preferences,
+ * and graceful fallback when localStorage is missing, corrupt, or full.
+ * No browser, network, or npm dependencies are needed.
+ */
 "use strict";
 // Run with: node scripts/test_settings.cjs
 // No npm dependencies; tests storage and actual game-owned schemas from HTML.
