@@ -40,8 +40,12 @@ for path in REQUIRED:
 
 
 class Page(HTMLParser):
-    """Collect links, script tags, navigation labels, and page metadata from HTML."""
+    """Collect HTML resource URLs, navigation links, and page metadata.
+
+    This is a source-code check, not a JavaScript or browser interaction test.
+    """
     def __init__(self):
+        """Initialize lists of resources, anchors, and page metadata flags."""
         super().__init__(convert_charrefs=True)
         self.links = []
         self.scripts = []
@@ -53,6 +57,7 @@ class Page(HTMLParser):
         self._in_title = False
 
     def handle_starttag(self, tag, attrs):
+        """Record URLs, script order, link labels, and metadata as tags open."""
         a = dict(attrs)
         if tag == "a":
             self._anchor = {"href": a.get("href", ""), "label": a.get("aria-label", ""), "text": ""}
@@ -75,12 +80,14 @@ class Page(HTMLParser):
                         self.links.append(a[attribute])
 
     def handle_data(self, data):
+        """Collect readable anchor text and browser title text."""
         if self._anchor is not None:
             self._anchor["text"] += data
         if self._in_title:
             self.title += data
 
     def handle_endtag(self, tag):
+        """Finish recording an anchor or title when its tag closes."""
         if tag == "a" and self._anchor is not None:
             self.anchors.append(self._anchor)
             self._anchor = None
@@ -89,7 +96,10 @@ class Page(HTMLParser):
 
 
 def parse(path):
-    """Parse a repository HTML file and report malformed/unreadable content."""
+    """Read one HTML file and return parsed page metadata.
+
+    Report decoding or parsing errors instead of silently skipping a page.
+    """
     page = Page()
     try:
         page.feed(path.read_text(encoding="utf-8"))
@@ -100,7 +110,11 @@ def parse(path):
 
 
 def check_links(path, page):
-    """Fail when a local href/src points outside the repo or to a missing file."""
+    """Validate local href, src, and srcset paths relative to the HTML file.
+
+    External URLs and in-page anchors are excluded; missing or out-of-repo
+    targets fail the PR checks.
+    """
     for link in page.links:
         parts = urlsplit(link)
         if parts.scheme or parts.netloc or link.startswith(("#", "//")):
@@ -115,7 +129,10 @@ def check_links(path, page):
 
 
 def check_analytics(path, page):
-    """Require exactly one analytics config + loader in the correct order."""
+    """Require one analytics config and one loader, in the correct order.
+
+    Root pages and games use different relative script paths.
+    """
     prefix = "" if path.parent == ROOT else "../../"
     expected = (prefix + "analytics/config.js", prefix + "analytics/analytics.js")
     for asset in expected:
@@ -127,7 +144,10 @@ def check_analytics(path, page):
 
 
 def check_game(path, page):
-    """Enforce the common requirements for each playable game entry page."""
+    """Require a page title, mobile viewport, labeled home link, and analytics.
+
+    This runs for playable games, not for compatibility redirect pages.
+    """
     name = path.relative_to(ROOT)
     if not page.title.strip():
         ERRORS.append(f"{name}: missing nonempty <title>")
@@ -143,15 +163,18 @@ def check_game(path, page):
 
 
 class CardParser(HTMLParser):
-    """Extract visible homepage card content for cross-page consistency tests."""
-    """Extract published homepage cards without depending on CSS."""
+    """Read the displayed name, description, preview, badge, and URL of each
+    homepage game card for comparison with the README and game pages.
+    """
     def __init__(self):
+        """Initialize the homepage card list and current text field."""
         super().__init__(convert_charrefs=True)
         self.cards = []
         self.current = None
         self.field = None
 
     def handle_starttag(self, tag, attrs):
+        """Start a card and capture its links, images, and labeled fields."""
         a = dict(attrs)
         classes = a.get("class", "").split()
         if tag == "article" and "card" in classes:
@@ -171,10 +194,12 @@ class CardParser(HTMLParser):
             self.field = "players"
 
     def handle_data(self, data):
+        """Collect text for the active card name, description, or badge."""
         if self.current is not None and self.field:
             self.current[self.field] += data
 
     def handle_endtag(self, tag):
+        """Finish a card field or store the completed article card."""
         if self.current is None:
             return
         if (tag == "div" and self.field in ("name", "desc")) or (
@@ -188,12 +213,20 @@ class CardParser(HTMLParser):
 
 
 def normalized_name(name):
-    """Ignore decorative emoji and punctuation, not actual game words."""
+    """Compare game names while ignoring emoji, spacing, and punctuation.
+
+    Changes to actual name words must still be detected.
+    """
     return re.sub(r"[^a-z0-9]+", "", name.casefold())
 
 
 def check_catalog(home_source, game_pages, published_pages):
-    """Keep homepage cards, README game list, and stated counts in sync."""
+    """Compare homepage game cards, README entries, and game titles.
+
+    Validate card links, preview/alt text, description, and player badges;
+    also flag outdated game-count claims in the public documents.
+    Unlisted playable games remain allowed during development.
+    """
     cards_parser = CardParser()
     cards_parser.feed(home_source)
     cards_parser.close()
@@ -269,7 +302,11 @@ def check_catalog(home_source, game_pages, published_pages):
 
 
 def main():
-    """Discover games, check each page, then validate the published catalog."""
+    """Run all static checks and return 0 on success or 1 on failure.
+
+    Discover game pages automatically, exempt known legacy redirects,
+    check each playable game, then compare the published catalogs.
+    """
     home_path = ROOT / "index.html"
     if home_path.is_file():
         home = parse(home_path)
