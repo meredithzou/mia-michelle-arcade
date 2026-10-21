@@ -35,6 +35,8 @@ No app server, login, or build framework is required. Game preferences are store
 - A labeled link back to the Arcade homepage (`../../index.html`).
 - Exactly one Cloudflare analytics config and loader, in the correct order.
 - Valid relative HTML links to local scripts, stylesheets, images, and other resources.
+- Homepage game cards, names, previews, player badges, and README's published-game catalog remain consistent.
+- Numeric game-count claims in the homepage, README, and analytics documentation match the number of published homepage cards.
 
 Legacy URL redirects are explicitly exempt from the playable-game rules and must point to their intended destination. A game can remain unlisted on the homepage during development; homepage cards are not mandatory for every game.
 
