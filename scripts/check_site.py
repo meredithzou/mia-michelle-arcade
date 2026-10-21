@@ -251,7 +251,7 @@ def check_catalog(home_source, game_pages, published_pages):
             continue
         if not card["name"].strip() or not card["desc"].strip():
             ERRORS.append(f"Homepage card #{i} ({slug}): missing name or description")
-        if not re.fullmatch(r"\d+ Player|\d+[–-]\d+ Players", card["players"].strip()):
+        if not re.fullmatch(r"1 Player|(?:[2-9]\d*|1\d+|\d+[–-]\d+) Players", card["players"].strip()):
             ERRORS.append(f"Homepage card #{i} ({slug}): missing/invalid player-count badge")
         if not card["images"] or not card["images"][0]["src"].startswith("assets/") or not card["images"][0]["alt"].strip():
             ERRORS.append(f"Homepage card #{i} ({slug}): missing preview image or alt text")
