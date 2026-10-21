@@ -26,6 +26,20 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 
 No app server, login, or build framework is required. Game preferences are stored in the visitor's own browser. The [Privacy page](privacy.html) describes aggregate website statistics.
 
+
+## Quality checks for every game
+
+`scripts/check_site.py` automatically discovers `games/*/index.html` and checks each playable game for:
+
+- A nonempty browser page title and mobile viewport metadata.
+- A labeled link back to the Arcade homepage (`../../index.html`).
+- Exactly one Cloudflare analytics config and loader, in the correct order.
+- Valid relative HTML links to local scripts, stylesheets, images, and other resources.
+
+Legacy URL redirects are explicitly exempt from the playable-game rules and must point to their intended destination. A game can remain unlisted on the homepage during development; homepage cards are not mandatory for every game.
+
+These checks validate HTML structure, **not** runtime interaction. New or modified games still need manual touch, sound, gameplay, and layout testing on target devices.
+
 ## Running and checking the site
 
 Serve the repository root with a static web server, or use GitHub Pages. From the repository root, run:
