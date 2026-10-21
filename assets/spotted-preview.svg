@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" role="img" aria-label="Spotted! picture matching game with two illustrated cards">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe9f2"/><stop offset=".5" stop-color="#fcf9ff"/><stop offset="1" stop-color="#e6f0ff"/></linearGradient>
+<radialGradient id="p" cx=".4" cy=".2"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#fff1f9"/></radialGradient>
+<radialGradient id="b" cx=".4" cy=".2"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#f0f7ff"/></radialGradient>
+</defs>
+<rect width="800" height="500" fill="url(#bg)"/>
+<g font-family="Arial, sans-serif" text-anchor="middle">
+<text x="400" y="54" font-size="19" font-weight="700" letter-spacing="5" fill="#9073b3">MIA'S GAME LAB</text>
+<text x="400" y="109" font-size="57" font-weight="900" fill="#543976">Spotted!</text>
+<text x="400" y="145" font-size="21" font-weight="600" fill="#66607d">Find the ONE matching picture!</text>
+<rect x="300" y="160" width="200" height="37" rx="18" fill="#fff" stroke="#eedcea" stroke-width="2"/>
+<text x="400" y="185" font-size="17" font-weight="700" fill="#b34b88">⭐ Matches: 0 / 10</text>
+<text x="208" y="225" font-size="15" letter-spacing="3" font-weight="800" fill="#8778a7">CARD 1</text>
+<text x="592" y="225" font-size="15" letter-spacing="3" font-weight="800" fill="#8778a7">CARD 2</text>
+</g>
+<circle cx="208" cy="361" r="125" fill="url(#p)" stroke="#ffc1d8" stroke-width="6"/>
+<circle cx="592" cy="361" r="125" fill="url(#b)" stroke="#c5dcff" stroke-width="6"/>
+<g text-anchor="middle" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji" font-size="42" dominant-baseline="middle">
+<text x="155" y="297">🦖</text><text x="253" y="296">🐝</text><text x="146" y="365">🐢</text><text x="258" y="366">🦋</text><text x="162" y="426">🚀</text><text x="254" y="427">🐙</text>
+<text x="538" y="297">🐸</text><text x="632" y="299">🎮</text><text x="532" y="367">🌙</text><text x="645" y="367">🦋</text><text x="544" y="429">🥕</text><text x="628" y="429">🍉</text>
+</g>
+</svg>
