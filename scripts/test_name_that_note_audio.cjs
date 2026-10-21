@@ -1,3 +1,10 @@
+/**
+ * Browser audio lifecycle regression tests for shared/music/audio.js.
+ * Uses simulated AudioContext and page visibility events to verify recovery
+ * after interruption, resume failures, and returning to a game on iPad.
+ * This is deterministic logic testing, not a real-speaker audio test.
+ * Run: node scripts/test_name_that_note_audio.cjs
+ */
 // Run with: node scripts/test_name_that_note_audio.cjs
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const html=fs.readFileSync(path.join(__dirname,'../shared/music/audio.js'),'utf8');

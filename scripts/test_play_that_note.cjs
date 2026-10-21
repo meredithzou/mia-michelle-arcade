@@ -1,3 +1,10 @@
+/**
+ * Play That Note! gameplay regression tests using the real game script.
+ * Covers keyboard layout, note spelling/octaves, answer scoring,
+ * candidate generation, and Settings interactions across clefs/ranges.
+ * Runs with a small fake DOM; it does not measure real touch layout.
+ * Run: node scripts/test_play_that_note.cjs
+ */
 // Run with node scripts/test_play_that_note.cjs. Tests the real game script using a small DOM fixture.
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');

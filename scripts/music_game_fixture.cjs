@@ -1,3 +1,10 @@
+/**
+ * Shared test fixture for the three music games.
+ * Provides a minimal fake DOM and VM context, loads each game's actual
+ * scripts, and optionally substitutes deterministic audio. This lets
+ * regression tests run in Node without a browser or network access.
+ * Not a standalone test; imported by the music-game test scripts.
+ */
 const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 class Element{
