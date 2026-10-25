@@ -68,8 +68,9 @@ function retireAudioContext(){
 function context(gesture=false){try{
  if(ac&&gesture&&audioNeedsFreshContext)retireAudioContext();
  if(!ac){
- // Treat practice sounds as media so supported iPhones can play in Silent Mode.
- try{if('audioSession' in navigator)navigator.audioSession.type='playback'}catch{}
+ // Preserve microphone-compatible sessions: playback-only rejects capture on iPad.
+ // Otherwise retain the Silent Mode workaround for ordinary practice sounds.
+ try{if('audioSession' in navigator&&navigator.audioSession.type!=='play-and-record')navigator.audioSession.type='playback'}catch{}
  ac=new(window.AudioContext||window.webkitAudioContext)();
  bus=ac.createGain();bus.gain.value=isEnabled()?.48:0;bus.connect(ac.destination);
  audioNeedsFreshContext=false;ac.onstatechange=audioStateChanged;audioStateChanged();

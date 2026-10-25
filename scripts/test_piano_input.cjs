@@ -11,9 +11,9 @@ for(const rate of [44100,48000])for(let midi=21;midi<=108;midi++){
  }
 }
 assert.equal(window.ArcadePianoInput.detect(new Float32Array(8192),48000),null);
-const quiet=Float32Array.from({length:8192},(_,i)=>.006*Math.sin(2*Math.PI*440*i/48000));
+const quiet=Float32Array.from({length:8192},(_,i)=>.0006*Math.sin(2*Math.PI*440*i/48000));
 assert.equal(window.ArcadePianoInput.detect(quiet,48000),null);
-assert.equal(window.ArcadePianoInput.detect(quiet,48000,{minRms:.003}).midi,69);
+assert.equal(window.ArcadePianoInput.detect(quiet,48000,{minRms:window.ArcadePianoInput.sensitivityThresholds.high}).midi,69);
 let seed=1;const noise=Float32Array.from({length:8192},()=>{seed=(seed*1664525+1013904223)>>>0;return .15*(seed/2**32-.5)});
 assert.equal(window.ArcadePianoInput.detect(noise,48000),null);
 (async()=>{

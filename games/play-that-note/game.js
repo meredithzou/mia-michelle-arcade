@@ -1,8 +1,7 @@
 (()=>{'use strict';const root=document.getElementById('npx');if(root.dataset.ready)return;root.dataset.ready='1';const $=id=>root.querySelector('#'+id),NS='http://www.w3.org/2000/svg',letters=window.ArcadeMusicPitch.letters;const {CL,H,el,lines,clef,note,accidental}=window.ArcadeMusicNotation;
 const {name,midi}=window.ArcadeMusicPitch;
-const init={mode:'treble',trebleMin:28,trebleMax:40,bassMin:16,bassMax:28,values:['quarter'],sound:true,accidentals:'mixed',input:'touch',sensitivity:'standard'};
-// Match Piano Note Finder: a lower RMS gate picks up quieter notes.
-const micThresholds={low:.012,standard:.003,high:.001};
+const init={mode:'treble',trebleMin:28,trebleMax:40,bassMin:16,bassMax:28,values:['quarter'],sound:true,accidentals:'mixed',input:'touch',sensitivity:window.ArcadePianoInput.defaultSensitivity};
+const micThresholds=window.ArcadePianoInput.sensitivityThresholds;
 const practiceSettings=window.ArcadeSettings.create({
  key:'arcade.settings.play-that-note',version:1,defaults:init,
  migrateLegacy:storage=>{
@@ -159,7 +158,7 @@ const sensitivityHelp=document.createElement('p');sensitivityHelp.textContent='H
 $('npxsounds').previousElementSibling.before(sensitivityHeading,sensitivityOptions,sensitivityHelp);
 settings=function(){
  originalSettings();preparePiano(draft);sensitivityOptions.replaceChildren();
- for(const [value,label] of [['low','Low'],['standard','Standard'],['high','High']]){
+ for(const {id:value,label} of window.ArcadePianoInput.sensitivityOptions){
   const button=document.createElement('button');button.type='button';button.textContent=label;button.className=draft.sensitivity===value?'active':'';button.setAttribute('aria-pressed',String(draft.sensitivity===value));
   button.onclick=()=>{draft.sensitivity=value;settings()};sensitivityOptions.append(button);
  }

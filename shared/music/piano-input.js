@@ -1,7 +1,26 @@
 // Monophonic microphone input. No game rules, recording uploads or dependencies.
 // MIDI uses A4=440 Hz. A stable note emits once; release or a new pitch rearms it.
 (()=>{'use strict';
-function detect(samples,rate,{minHz=25,maxHz=4300,minRms=.012}={}){
+// One source of truth for every microphone game. Lower gates hear quieter notes.
+const sensitivityThresholds=Object.freeze({low:.003,standard:.001,high:.0003});
+const defaultSensitivity='standard';
+const sensitivityOptions=Object.freeze(Object.keys(sensitivityThresholds).map(id=>Object.freeze({id,label:id[0].toUpperCase()+id.slice(1)})));
+// AudioSession is page-wide. Keep capture compatible even after piano playback,
+// and restore the previous mode only after the last input releases its claim.
+let sessionUsers=0,previousSessionType;
+function claimSession(){
+ try{
+  if(!navigator.audioSession)return false;
+  if(!sessionUsers)previousSessionType=navigator.audioSession.type;
+  navigator.audioSession.type='play-and-record';sessionUsers++;return true;
+ }catch{return false}
+}
+function releaseSession(){
+ if(--sessionUsers)return;
+ try{if(navigator.audioSession.type==='play-and-record')navigator.audioSession.type=previousSessionType}catch{}
+ previousSessionType=undefined;
+}
+function detect(samples,rate,{minHz=25,maxHz=4300,minRms=sensitivityThresholds[defaultSensitivity]}={}){
  let mean=0;for(const x of samples)mean+=x;mean/=samples.length;
  const n=Math.floor(samples.length/2),d=new Float32Array(n);let power=0;
  for(const x of samples)power+=(x-mean)**2;
@@ -22,14 +41,15 @@ function detect(samples,rate,{minHz=25,maxHz=4300,minRms=.012}={}){
  const pitch=69+12*Math.log2(frequency/440),midi=Math.round(pitch);
  return {frequency,midi,cents:100*(pitch-midi),confidence:1-b,rms};
 }
-function create({onNote=()=>{},onState=()=>{},onLevel=()=>{},minRms=.012}={}){
- let stream,context,source,analyser,frame,epoch=0,live=false,candidate=null,since=0,last=null,quiet=0;
+function create({onNote=()=>{},onState=()=>{},onLevel=()=>{},minRms=sensitivityThresholds[defaultSensitivity]}={}){
+ let stream,context,source,analyser,frame,epoch=0,live=false,candidate=null,since=0,last=null,quiet=0,sessionClaimed=false;
  function reset(){candidate=null;last=null;since=0;quiet=0}
- function stop(){epoch++;live=false;window.cancelAnimationFrame?.(frame);stream?.getTracks().forEach(t=>t.stop());source?.disconnect();if(context)context.close().catch(()=>{});stream=context=source=analyser=null;reset();onState('stopped')}
+ function stop(){epoch++;live=false;window.cancelAnimationFrame?.(frame);stream?.getTracks().forEach(t=>t.stop());source?.disconnect();if(context)context.close().catch(()=>{});stream=context=source=analyser=null;if(sessionClaimed){sessionClaimed=false;releaseSession()}reset();onState('stopped')}
  async function start(){
   stop();const token=epoch;onState('requesting');
   try{
    if(!navigator.mediaDevices?.getUserMedia)throw Error('Microphone needs HTTPS and a supported browser.');
+   sessionClaimed=claimSession();
    const s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false});
    if(token!==epoch){s.getTracks().forEach(t=>t.stop());return}
    stream=s;context=new (window.AudioContext||window.webkitAudioContext)();await context.resume();
@@ -52,5 +72,5 @@ function create({onNote=()=>{},onState=()=>{},onLevel=()=>{},minRms=.012}={}){
  const hide=()=>{if(document.hidden)stop()};document.addEventListener('visibilitychange',hide);
  return {start,stop,reset,setThreshold(value){if(Number.isFinite(value)&&value>=.0001&&value<=.1){minRms=value;reset()}},destroy(){stop();document.removeEventListener('visibilitychange',hide)}};
 }
-window.ArcadePianoInput=Object.freeze({detect,create});
+window.ArcadePianoInput=Object.freeze({detect,create,sensitivityThresholds,defaultSensitivity,sensitivityOptions});
 })();

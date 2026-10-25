@@ -15,11 +15,13 @@ const window={addEventListener:(event,cb)=>windowEvents[event]=cb,localStorage:n
 };
 const ctx={window,document,setTimeout:()=>1,clearTimeout(){},console};vm.createContext(ctx);
 for(const file of ['shared/settings.js','shared/music/pitch.js','shared/music/notation.js','shared/music/keyboard.js'])vm.runInContext(read(file),ctx);
+const fakeCreate=window.ArcadePianoInput.create;vm.runInContext(read('shared/music/piano-input.js'),ctx);
+window.ArcadePianoInput={...window.ArcadePianoInput,create:fakeCreate};
 vm.runInContext(read('games/play-that-note/game.js').replace('})();','window.test={get q(){return q},get sensitivityOptions(){return sensitivityOptions},next};})();'),ctx);
 const key=m=>ids.npxletters.children.find(b=>Number(b.dataset.midi)===m);
 const target=()=>window.test.q.m;
 assert(ids.npxletters.children.every(b=>!b.disabled));
-assert.equal(starts,0,'Capture requires a user gesture');assert.equal(threshold,.003);
+assert.equal(starts,0,'Capture requires a user gesture');assert.equal(threshold,.001);
 assert.equal(ids.npxkeyhint.hidden,true);
 ids.npxinput.onclick();assert(ids.npxletters.children.every(b=>b.disabled));
 const initial=ids.npxnum.textContent;
@@ -39,8 +41,8 @@ assert.equal(sounds,1);
 ids.npxinput.onclick();ids.npxinput.onclick();assert(ids.npxletters.children.every(b=>b.disabled));
 window.test.next();assert(ids.npxletters.children.every(b=>!b.disabled));
 // Apply High; closing Settings without applying a later Low choice preserves it.
-ids.npxsettings.onclick();window.test.sensitivityOptions.children[2].onclick();ids.npxapply.onclick();assert.equal(threshold,.001);
-ids.npxsettings.onclick();window.test.sensitivityOptions.children[0].onclick();ids.npxclose.onclick();assert.equal(threshold,.001);
+ids.npxsettings.onclick();window.test.sensitivityOptions.children[2].onclick();ids.npxapply.onclick();assert.equal(threshold,.0003);
+ids.npxsettings.onclick();window.test.sensitivityOptions.children[0].onclick();ids.npxclose.onclick();assert.equal(threshold,.0003);
 ids.npxinput.onclick();const beforeSettings=ids.npxnum.textContent;ids.npxsettings.onclick();callbacks.onNote({midi:target()});assert.equal(ids.npxnum.textContent,beforeSettings);
 const beforeClose=starts;ids.npxclose.onclick();assert.equal(starts,beforeClose+1);
 callbacks.onState('error','Microphone permission was denied.');assert(ids.npxletters.children.every(b=>!b.disabled));

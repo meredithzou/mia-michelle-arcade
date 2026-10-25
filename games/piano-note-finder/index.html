@@ -17,14 +17,14 @@
 <div class="meter-head"><span>Live microphone level</span><span id="live">— dBFS</span></div>
 <progress id="level" max="1" value="0" aria-label="Live microphone volume"></progress>
 <p class="prompt" id="prompt">Play a piano key and check its name.</p>
-<div class="sensitivity-label">Sensitivity</div><div class="sensitivity" role="group" aria-label="Microphone sensitivity"><button data-threshold=".012" aria-pressed="false">Low</button><button data-threshold=".003" aria-pressed="true">Standard</button><button data-threshold=".001" aria-pressed="false">High</button></div>
+<div class="sensitivity-label">Sensitivity</div><div id="sensitivityoptions" class="sensitivity" role="group" aria-label="Microphone sensitivity"></div>
 <p class="prompt">Higher sensitivity picks up quieter notes, but may also pick up more background noise.</p>
 </div>
 <footer>Sound stays on your device. Nothing is recorded or uploaded.<br>Volume is the microphone’s digital level (dBFS), not room loudness in decibels. One note at a time · A4 = 440 Hz · Experimental.</footer>
 </main>
 <script src="../../shared/settings.js"></script>
-<script src="../../shared/music/piano-input.js"></script>
-<script src="game.js"></script>
+<script src="../../shared/music/piano-input.js?v=mic-config-2"></script>
+<script src="game.js?v=mic-config-2"></script>
 <script src="../../analytics/config.js"></script>
 <script src="../../analytics/analytics.js"></script>
 </body></html>

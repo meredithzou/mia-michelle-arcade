@@ -29,7 +29,7 @@ function fixture(game='name-that-note', options={}){
  const document={hidden:false,getElementById:id=>ids[id],createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),addEventListener(){}};
  const window={addEventListener(){},localStorage:null},ctx={window,document,navigator:{},setTimeout:()=>1,clearTimeout(){},fetch:()=>Promise.reject(Error('offline fixture')),AbortController,console};
  vm.createContext(ctx);
- for(const [,src] of html.matchAll(/<script src="([^"]+)"><\/script>/g)){if(src.includes('analytics/'))continue;const file=path.posix.normalize(`games/${game}/${src}`);if(src!=='game.js')vm.runInContext(read(file),ctx);}
+ for(const [,src] of html.matchAll(/<script src="([^"]+)"><\/script>/g)){if(src.includes('analytics/'))continue;const source=src.split('?')[0],file=path.posix.normalize(`games/${game}/${source}`);if(source!=='game.js')vm.runInContext(read(file),ctx);}
  if(options.audio)window.ArcadeMusicAudio={create:options.audio};
  let code=read(`games/${game}/game.js`);
  code=code.replace('})();',`window.test={get q(){return q},get cfg(){return cfg},get locked(){return locked},next,restart,${game==='play-that-note'?'candidates,bounds,keyboard,':game==='do-i-have-absolute-pitch'?'candidates,bounds,playPitch,renderPianoState,':''} };})();`);

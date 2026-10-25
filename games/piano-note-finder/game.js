@@ -1,10 +1,10 @@
 'use strict';
 const $=id=>document.getElementById(id),sharp=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'],flat={1:'D♭',3:'E♭',6:'G♭',8:'A♭',10:'B♭'};
 const preferences=window.ArcadeSettings.create({
- key:'arcade.settings.piano-note-finder',version:1,defaults:{sensitivity:'standard'},
- normalize:(value,defaults)=>({sensitivity:['low','standard','high'].includes(value.sensitivity)?value.sensitivity:defaults.sensitivity})
+ key:'arcade.settings.piano-note-finder',version:1,defaults:{sensitivity:window.ArcadePianoInput.defaultSensitivity},
+ normalize:(value,defaults)=>({sensitivity:Object.hasOwn(window.ArcadePianoInput.sensitivityThresholds,value.sensitivity)?value.sensitivity:defaults.sensitivity})
 });
-const saved=preferences.load(),thresholds={low:.012,standard:.003,high:.001};
+const saved=preferences.load(),thresholds=window.ArcadePianoInput.sensitivityThresholds;
 let state='stopped',threshold=thresholds[saved.sensitivity],lastLevel=0;
 const db=rms=>rms>0?Math.max(-100,Math.round(20*Math.log10(rms))):-100;
 const input=ArcadePianoInput.create({
@@ -29,11 +29,14 @@ const input=ArcadePianoInput.create({
  }
 });
 $('toggle').onclick=()=>state==='listening'?input.stop():input.start();
-for(const button of document.querySelectorAll('[data-threshold]'))button.onclick=()=>{
- threshold=Number(button.dataset.threshold);input.setThreshold(threshold);
- preferences.save({sensitivity:Object.keys(thresholds).find(k=>thresholds[k]===threshold)});
- for(const b of document.querySelectorAll('[data-threshold]'))b.setAttribute('aria-pressed',String(b===button));
-};
+const sensitivityButtons=[];
+for(const {id,label} of window.ArcadePianoInput.sensitivityOptions){
+ const button=document.createElement('button');button.type='button';button.textContent=label;button.dataset.sensitivity=id;
+ button.setAttribute('aria-pressed',String(id===saved.sensitivity));
+ button.onclick=()=>{
+  threshold=thresholds[id];input.setThreshold(threshold);preferences.save({sensitivity:id});
+  for(const b of sensitivityButtons)b.setAttribute('aria-pressed',String(b===button));
+ };
+ sensitivityButtons.push(button);$('sensitivityoptions').append(button);
+}
 window.addEventListener('pagehide',()=>input.stop());
-
-for(const b of document.querySelectorAll('[data-threshold]'))b.setAttribute('aria-pressed',String(Number(b.dataset.threshold)===threshold));
