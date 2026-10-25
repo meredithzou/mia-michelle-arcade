@@ -10,8 +10,8 @@ The Arcade uses **Cloudflare Web Analytics** for aggregate pageviews and perform
 - `analytics/analytics.js`: loads Cloudflare's official beacon once per page.
 - `privacy.html`: public explanation of aggregate analytics.
 
-The homepage, Privacy page, and **all nine games** load the same shared analytics scripts:
-Chicken Jockey Dash, Chinese Checkers, Name That Note!, Play That Note!, Do I Have Absolute Pitch?, Find the Pair!, Five in a Row (Gomoku), Piano Note Finder, and Jigsaw Garden.
+The homepage, Privacy page, and **all ten games** load the same shared analytics scripts:
+Chicken Jockey Dash, Chinese Checkers, Name That Note!, Play That Note!, Do I Have Absolute Pitch?, Find the Pair!, Five in a Row (Gomoku), Piano Note Finder, Jigsaw Garden, and Marble Run Lab.
 
 **Dashboard check after the custom-domain move:** The original analytics configuration was created while the site used `meredithzou.github.io`. In Cloudflare Web Analytics, verify that the site hostname/configuration also accepts `miamichellearcade.com`, and confirm actual pageviews from the new hostname. Updating this README or DNS alone does not update Cloudflare's analytics dashboard configuration.
 
@@ -24,7 +24,7 @@ The previous Google Analytics experiment was removed. No GA4 code should be load
 ## QA
 
 1. Run `python3 scripts/check_site.py`.
-2. Confirm the homepage, Privacy page, and nine games each load `analytics/config.js` and `analytics/analytics.js` exactly once.
+2. Confirm the homepage, Privacy page, and ten games each load `analytics/config.js` and `analytics/analytics.js` exactly once.
 3. In browser developer tools, confirm `static.cloudflareinsights.com/beacon.min.js` loads and that beacon requests succeed.
 4. In Cloudflare Web Analytics, check that visits to `https://miamichellearcade.com/` and `/games/<game-slug>/` appear. This requires checking the dashboard, not just the source code.
 5. Confirm the site does not load Google Analytics or write tracking-consent cookies/localStorage entries.
