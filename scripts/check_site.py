@@ -172,13 +172,20 @@ class CardParser(HTMLParser):
         self.cards = []
         self.current = None
         self.field = None
+        self.sections = []
 
     def handle_starttag(self, tag, attrs):
         """Start a card and capture its links, images, and labeled fields."""
         a = dict(attrs)
         classes = a.get("class", "").split()
+        if tag == "section":
+            self.sections.append(classes)
         if tag == "article" and "card" in classes:
-            self.current = {"name": "", "desc": "", "players": "", "links": [], "images": []}
+            self.current = {
+                "name": "", "desc": "", "players": "", "links": [], "images": [],
+                "in_game_grid": any("grid" in s for s in self.sections)
+                and not any("hero" in s for s in self.sections),
+            }
             return
         if self.current is None:
             return
@@ -200,6 +207,8 @@ class CardParser(HTMLParser):
 
     def handle_endtag(self, tag):
         """Finish a card field or store the completed article card."""
+        if tag == "section" and self.sections:
+            self.sections.pop()
         if self.current is None:
             return
         if (tag == "div" and self.field in ("name", "desc")) or (
@@ -237,6 +246,8 @@ def check_catalog(home_source, game_pages, published_pages):
     if not cards:
         ERRORS.append("Homepage has no game cards")
     for i, card in enumerate(cards, start=1):
+        if not card["in_game_grid"]:
+            ERRORS.append(f"Homepage card #{i}: game cards must be in the game grid, outside the hero banner")
         links = [x for x in card["links"] if x.startswith("games/") and x.endswith("/index.html")]
         slugs = {x.split("/")[1] for x in links}
         if len(slugs) != 1:
