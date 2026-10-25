@@ -125,6 +125,7 @@
     </div>
   </div>
 </main>
+<script src="../../shared/settings.js"></script>
 <script>
 (function(){
   'use strict';
@@ -160,8 +161,16 @@
   };
   const counts = {easy:2,medium:4,hard:6};
   const byId=id=>document.getElementById(id);
+  const difficultyStorage=window.ArcadeSettings.create({
+    key:'arcade.settings.find-the-pair',
+    version:1,
+    defaults:{level:'easy'},
+    normalize:(value,defaults)=>({
+      level:['easy','medium','hard'].includes(value.level)?value.level:defaults.level
+    })
+  });
   const cards=[byId('card1'),byId('card2')];
-  let level='easy', score=0, common=-1, previousCommon=-1, busy=false, oldPair='', roundTimer=null;
+  let level=difficultyStorage.load().level, score=0, common=-1, previousCommon=-1, busy=false, oldPair='', roundTimer=null;
   const shuffle = arr => {const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;};
   function msg(s,good){byId('message').textContent=s;byId('message').classList.toggle('success',!!good);}
   function showProgress(){
@@ -224,6 +233,7 @@
   function changeLevel(next){
     if(next===level || !(next in counts))return;
     level=next;
+    difficultyStorage.save({level});
     byId('game').dataset.level=level;
     for(const name of Object.keys(counts)){
       const button=byId('level-'+name);
@@ -235,6 +245,13 @@
   }
   for(const name of Object.keys(counts))
     byId('level-'+name).addEventListener('click',()=>changeLevel(name));
+  // Initialize selected button state from a saved preference (or Easy by default).
+  byId('game').dataset.level=level;
+  for(const name of Object.keys(counts)){
+    const button=byId('level-'+name), active=name===level;
+    button.classList.toggle('active',active);
+    button.setAttribute('aria-pressed',String(active));
+  }
   byId('hint').addEventListener('click',()=>{
     if(busy)return;
     cards.forEach(c=>c.querySelectorAll('.symbol').forEach(b=>{
