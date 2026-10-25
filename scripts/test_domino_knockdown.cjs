@@ -11,3 +11,15 @@ run('btn.reset.onclick()');assert.equal(run('paths.length'),2);assert(run('!comp
 run('btn.clear.onclick()');assert.equal(run('paths.length'),0);assert(run('drawing'));assert(el('push').disabled);
 el('board').handlers.pointerdown(event(100,150));el('board').handlers.pointermove(event(700,300,2));assert.equal(run('points.length'),1,'ignore another finger');el('board').handlers.pointercancel(event(100,150));assert(run('!dragging'));
 run('push();paint(100000)');assert(run('completed'),'single domino can tumble');run('preset()');assert.equal(run('paths.length'),1);console.log('PASS: multiple touch strokes, independent chains, reset, undo, clear, pointer cancellation, single domino, preset');
+// Audio regression: enabling gives immediate feedback after resume; disabling mutes it.
+(async()=>{
+ let started=0,stopped=0,peak=0,resumed=0;
+ const param={setValueAtTime(){},exponentialRampToValueAtTime(){},linearRampToValueAtTime(v){peak=Math.max(peak,v)}};
+ class Audio {constructor(){this.state='suspended';this.currentTime=0;this.destination={}}async resume(){resumed++;this.state='running'}createOscillator(){return {type:'',frequency:param,connect(){},disconnect(){},start(){started++},stop(){stopped++}}}createGain(){return {gain:param,connect(){},disconnect(){}}}}
+ box.window.AudioContext=Audio;box.navigator={audioSession:{type:'auto'}};
+ await run('btn.sound.onclick()');assert.equal(started,1,'Sound On must play preview');assert.equal(resumed,1);assert.equal(box.navigator.audioSession.type,'playback');assert(peak>=.1);
+ await run('btn.sound.onclick()');const afterMute=started;run('clickSound()');assert.equal(started,afterMute);assert(stopped>=2,'Off must stop active sounds');
+ run("audio.state='interrupted'");await run('btn.sound.onclick()');assert.equal(resumed,2,'resume interrupted iPad context');assert.equal(started,2);
+ await run('btn.sound.onclick()');run("audio=null;window.AudioContext=undefined");await run('btn.sound.onclick()');assert(run('!soundOn'));assert(el('hint').textContent.includes('could not start'));
+ console.log('PASS: audible enable feedback, mute, iPad playback session, interrupted resume, unavailable audio feedback');
+})().catch(e=>{console.error(e);process.exitCode=1});
