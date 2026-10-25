@@ -267,3 +267,37 @@ test("Listening game: stored empty active pool recovers safely",()=>{
  equal(s.load().selectedByRange.lower,Array.from({length:25},(_,i)=>36+i));
  equal(s.load().selectedByRange.middle,[]);
 });
+
+
+const pairHTML=read("games/find-the-pair/index.html");
+const pairSchema=schemaFromHTML(pairHTML,
+  "const difficultyStorage=window.ArcadeSettings.create({",
+  "const cards=[byId('card1')");
+test("Find the Pair!: difficulty preference persists and validates all three modes",()=>{
+  const f=fixture();
+  const store=f.api.create(pairSchema);
+  equal(store.load(),{level:"easy"});
+  for(const level of ["easy","medium","hard"]){
+    assert.equal(store.save({level}),true);
+    equal(f.api.create(pairSchema).load(),{level});
+  }
+  store.save({level:"unknown",extra:"ignored"});
+  equal(store.load(),{level:"easy"});
+  store.save({});
+  equal(store.load(),{level:"easy"});
+  assert.notEqual(pairSchema.key,noteSchema.key);
+  assert.notEqual(pairSchema.key,ccSchema.key);
+});
+test("Find the Pair!: corrupt or unavailable storage falls back to Easy",()=>{
+  for(const record of ["{bad", "null", JSON.stringify({version:99,settings:{level:"hard"}})]){
+    const f=fixture({[pairSchema.key]:record});
+    equal(f.api.create(pairSchema).load(),{level:"easy"});
+  }
+  equal(fixture({}, {failRead:true,failWrite:true}).api.create(pairSchema).load(),{level:"easy"});
+  const f=fixture({}, {failWrite:true});
+  assert.equal(f.api.create(pairSchema).save({level:"hard"}),false);
+  equal(f.api.create(pairSchema).load(),{level:"easy"});
+  assert.ok(pairHTML.indexOf('src="../../shared/settings.js"') < pairHTML.indexOf("(function(){"));
+  assert.ok(pairHTML.includes("difficultyStorage.load().level"));
+  assert.ok(pairHTML.includes("difficultyStorage.save({level})"));
+});
