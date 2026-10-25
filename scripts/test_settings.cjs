@@ -48,7 +48,9 @@ function schemaFromHTML(html, beginning, ending) {
       create(opts) { schema = opts; return { load() { return opts.defaults; } }; }
     }
   };
-  vm.runInNewContext(html.slice(start, end), { window });
+  const schemaContext={window};vm.createContext(schemaContext);
+  vm.runInContext(read('shared/music/piano-input.js'),schemaContext);
+  vm.runInContext(html.slice(start, end),schemaContext);
   assert.ok(schema, "game must register a schema");
   return schema;
 }

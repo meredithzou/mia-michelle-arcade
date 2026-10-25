@@ -6,7 +6,16 @@ The independent music/piano-input.js module exposes ArcadePianoInput.detect
 for single-note analysis and create for microphone lifecycle management.
 It reports frequency, MIDI pitch, cents, confidence and RMS. Games own display,
 preferences and grading. No microphone samples or detected notes leave the device.
+The frozen sensitivityThresholds (.003 / .001 / .0003), sensitivityOptions and
+defaultSensitivity (standard) exports are the single configuration for all games.
+Both detect and create default to the shared Standard gate. Games read these
+exports for settings, validation and controls; never hardcode numeric gates or
+numeric data attributes in game HTML. Changing this module updates both games.
 See games/piano-note-finder/README.md for thresholds, limits and lifecycle rules.
+On platforms with AudioSession, capture claims play-and-record before requesting
+the microphone and restores the prior type after the last input stops. The piano
+playback engine must preserve that claim; forcing playback while capturing can
+reject getUserMedia with an incompatible audio-session category error on iPad.
 
 Use `shared/settings.js` to remember game preferences **locally on the
 same browser and device**. The helper only handles a JSON storage record,

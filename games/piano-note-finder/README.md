@@ -4,7 +4,9 @@ One-note microphone tool: note name and octave, enharmonic black-key label,
 frequency, captured-note RMS in dBFS, and live input level. No scoring or tuning
 comparison. A4 reference is 440 Hz; dBFS is not calibrated room loudness.
 
-Low / Standard / High sensitivity gates are RMS .012 / .003 / .001.
+Low / Standard / High sensitivity gates are RMS .003 / .001 / .0003.
+Options, gates and the Standard default come from shared/music/piano-input.js,
+also used by Play That Note!; do not duplicate them in the game or markup.
 Only sensitivity persists under arcade.settings.piano-note-finder version 1.
 Microphone permission and activation are never stored or started automatically.
 

@@ -15,8 +15,9 @@ including its octave and accidental. No chords or physical keyboard are required
 - The toolbar microphone toggle enables optional physical-piano answers. Screen
   keys stay visible as feedback, but cannot be tapped or scored in this mode.
   Recognition follows the same exact-pitch and first-attempt scoring rules.
-- Settings offer Low / Standard / High microphone sensitivity with the same
-  RMS thresholds as Piano Note Finder (0.012 / 0.003 / 0.001). Standard is the
+- Settings offer Low / Standard / High microphone sensitivity with
+  RMS thresholds 0.003 / 0.001 / 0.0003, read from the same shared configuration
+  as Piano Note Finder. The previous High is now Standard, the
   default; the choice is saved per game. Higher sensitivity can pick up more
   background noise. The screen omits live pitch/volume diagnostics.
 - Microphone access starts only after a user action and browser permission;
