@@ -198,32 +198,43 @@ test("Integration: scripts load before game code; apply, mute, and preference ac
   assert.ok(!read("games/chicken-jockey-dash/index.html").includes('src="../../shared/settings.js"'));
 });
 
+const defaultPlay={...defaultNote,accidentals:"mixed",input:"touch",sensitivity:"standard"};
 test("Play That Note: independent preferences, bounded ranges and accidental validation", () => {
   const f=fixture(), store=f.api.create(playSchema);
-  equal(store.load(), {...defaultNote, accidentals:"mixed"});
+  equal(store.load(),defaultPlay);
   assert.notEqual(playSchema.key,noteSchema.key);
   store.save({mode:"bass",trebleMin:28,trebleMax:42,bassMin:14,bassMax:28,values:["half"],sound:false,accidentals:"flat"});
-  equal(store.load(),{mode:"bass",trebleMin:28,trebleMax:42,bassMin:14,bassMax:28,values:["half"],sound:false,accidentals:"flat"});
+  equal(store.load(),{mode:"bass",trebleMin:28,trebleMax:42,bassMin:14,bassMax:28,values:["half"],sound:false,accidentals:"flat",input:"touch",sensitivity:"standard"});
   equal(f.api.create(noteSchema).load(),defaultNote);
   store.save({mode:"grand",trebleMin:21,trebleMax:46,bassMin:35,bassMax:10,values:[],accidentals:"double-sharp"});
-  equal(store.load(),{...defaultNote,accidentals:"mixed"});
-  for(const flags of [{failRead:true},{failWrite:true}])equal(fixture({},flags).api.create(playSchema).load(),{...defaultNote,accidentals:"mixed"});
+  equal(store.load(),defaultPlay);
+  for(const flags of [{failRead:true},{failWrite:true}])equal(fixture({},flags).api.create(playSchema).load(),defaultPlay);
+});
+test("Play That Note: microphone sensitivity validates and persists independently",()=>{
+ const f=fixture(),s=f.api.create(playSchema);
+ for(const sensitivity of ['low','standard','high']){
+  s.save({...defaultPlay,input:'piano',sensitivity});
+  equal(f.api.create(playSchema).load(),{...defaultPlay,input:'piano',sensitivity});
+ }
+ s.save({...defaultPlay,input:'invalid',sensitivity:'extreme'});equal(s.load(),defaultPlay);
+ equal(f.api.create(noteSchema).load(),defaultNote);
 });
 test("Play That Note: migrate renamed preferences without losing the legacy record", () => {
   const legacyKey="arcade.settings.find-that-note";
   const chosen={...defaultNote,mode:"bass",sound:false,accidentals:"flat"};
   const raw=JSON.stringify({version:1,settings:chosen});
   const f=fixture({[legacyKey]:raw});
-  equal(f.api.create(playSchema).load(),chosen);
-  equal(JSON.parse(f.items.get(playSchema.key)).settings,chosen);
+  const migrated={...chosen,input:'touch',sensitivity:'standard'};
+  equal(f.api.create(playSchema).load(),migrated);
+  equal(JSON.parse(f.items.get(playSchema.key)).settings,migrated);
   assert.equal(f.items.get(legacyKey),raw);
-  const current={...chosen,sound:true};
+  const current={...migrated,sound:true};
   f.api.create(playSchema).save(current);
   equal(f.api.create(playSchema).load(),current);
   for(const value of ['broken',JSON.stringify({version:99,settings:chosen})]){
-    equal(fixture({[legacyKey]:value}).api.create(playSchema).load(),{...defaultNote,accidentals:"mixed"});
+    equal(fixture({[legacyKey]:value}).api.create(playSchema).load(),defaultPlay);
   }
-  equal(fixture({[legacyKey]:raw},{failWrite:true}).api.create(playSchema).load(),chosen);
+  equal(fixture({[legacyKey]:raw},{failWrite:true}).api.create(playSchema).load(),migrated);
 });
 console.log("Settings tests passed");
 
@@ -234,7 +245,7 @@ test("Listening game: selected-note preferences persist independently and valida
  equal(s.load(),defaults);
  const chosen={...defaults,range:"lower",hints:false,selectedByRange:{...defaults.selectedByRange,lower:[36,41,59]}};
  s.save(chosen);equal(f.api.create(pitchSchema).load(),chosen);
- equal(f.api.create(playSchema).load(),{...defaultNote,accidentals:"mixed"});
+ equal(f.api.create(playSchema).load(),defaultPlay);
  s.save({...chosen,selectedByRange:{lower:[36,36,60,61,-1,"40",NaN],middle:[],upper:[72]}});
  equal(s.load().selectedByRange,{lower:[36,60],middle:[],upper:[72]});
  for(const flags of [{failRead:true},{failWrite:true}])equal(fixture({},flags).api.create(pitchSchema).load(),defaults);

@@ -1,6 +1,8 @@
 (()=>{'use strict';const root=document.getElementById('npx');if(root.dataset.ready)return;root.dataset.ready='1';const $=id=>root.querySelector('#'+id),NS='http://www.w3.org/2000/svg',letters=window.ArcadeMusicPitch.letters;const {CL,H,el,lines,clef,note,accidental}=window.ArcadeMusicNotation;
 const {name,midi}=window.ArcadeMusicPitch;
-const init={mode:'treble',trebleMin:28,trebleMax:40,bassMin:16,bassMax:28,values:['quarter'],sound:true,accidentals:'mixed'};
+const init={mode:'treble',trebleMin:28,trebleMax:40,bassMin:16,bassMax:28,values:['quarter'],sound:true,accidentals:'mixed',input:'touch',sensitivity:'standard'};
+// Match Piano Note Finder: a lower RMS gate picks up quieter notes.
+const micThresholds={low:.012,standard:.003,high:.001};
 const practiceSettings=window.ArcadeSettings.create({
  key:'arcade.settings.play-that-note',version:1,defaults:init,
  migrateLegacy:storage=>{
@@ -24,12 +26,45 @@ const practiceSettings=window.ArcadeSettings.create({
   }
   if(['natural','sharp','flat','mixed'].includes(value.accidentals))result.accidentals=value.accidentals;
   if(typeof value.sound==='boolean')result.sound=value.sound;
+  if(['touch','piano'].includes(value.input))result.input=value.input;
+  if(Object.hasOwn(micThresholds,value.sensitivity))result.sensitivity=value.sensitivity;
   return result;
  }
 });
 let cfg=practiceSettings.load(),draft,q,total=0,correct=0,judged=false,locked=false,bag=[],last='',vcounts={},lastVal='',timer;
+// Microphone capture always requires a fresh user gesture, even after reload.
+cfg.input='touch';
 const audio=window.ArcadeMusicAudio.create({root,isEnabled:()=>cfg.sound,getQuestion:()=>q,onStateChange:()=>renderPianoState()});
-const keys=window.PlayThatNoteKeyboard.create({container:$('npxletters'),onAnswer:answer});
+const keys=window.PlayThatNoteKeyboard.create({container:$('npxletters'),onAnswer:m=>{if(cfg.input==='touch')answer(m)}});
+let micActive=false;
+const mic=window.ArcadePianoInput.create({
+ minRms:micThresholds[cfg.sensitivity],
+ onState:(state,detail)=>{micActive=state==='listening';$('npxmicstatus').textContent=detail||({requesting:'Allow microphone access…',listening:'Microphone on',stopped:'Microphone off'}[state]||state);if(state==='error'){cfg.input='touch';if(!locked)message(inputPrompt())}inputUI()},
+ onNote:p=>{if(cfg.input!=='piano'||locked||!$('npxshade').hidden)return;answer(p.midi)}
+});
+function inputUI(){
+ const piano=cfg.input==='piano',b=$('npxinput');
+ $('npxmic').hidden=false;root.dataset.input=cfg.input;
+ b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/>'+(!piano?'<path d="M3 3l18 18"/>':'')+'</svg>';
+ b.setAttribute('aria-label',piano?'Turn microphone off':'Turn microphone on');
+ b.setAttribute('aria-pressed',String(micActive));
+ b.title=micActive?'Microphone on':'Microphone off';
+ touchKeysUI();
+}
+// In microphone mode these keys are a display of the played note only.
+function touchKeysUI(){for(const key of $('npxletters').children)key.disabled=cfg.input==='piano'||locked}
+function inputPrompt(){return cfg.input==='piano'?'Play the right piano key on your physical piano':'Tap the matching piano key on the screen'}
+const inputHint=document.createElement('p');
+inputHint.className='npx-input-hint';
+inputHint.style.cssText='margin:0 14px 12px;text-align:center;color:#847d97;font-size:12px;line-height:1.6';
+inputHint.innerHTML='<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="vertical-align:-3px;margin-right:4px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg>Turn the microphone on to play your physical piano, or leave it off to tap the on-screen piano keys.';
+$('npxmsg').after(inputHint);
+$('npxinput').onclick=()=>{
+ mic.stop();cfg.input=cfg.input==='piano'?'touch':'piano';
+ if(draft)draft.input=cfg.input;practiceSettings.save(cfg);inputUI();
+ if(!locked)message(inputPrompt());
+ if(cfg.input==='piano')mic.start();
+};
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function draw(){
  const score=$('npxscore'),c=q.clef,staffY=78,base=c==='treble'?30:18;
@@ -57,18 +92,25 @@ function pitch(){
 function answerName(){return letters[q.i%7]+(q.a===1?'♯':q.a===-1?'♭':'')+Math.floor(q.i/7)}
 function keyboard(){
  const [low,high]=bounds();keys.render(low,high);
- $('npxkeyhint').textContent=keys.name(low)+' – '+keys.name(high)+' · Match the octave · C4 = middle C';
+ touchKeysUI();
+ $('npxkeyhint').hidden=true;
 }
 function val(){let min=Math.min(...cfg.values.map(v=>vcounts[v]||0)),ws=cfg.values.map(v=>Math.exp(-.45*((vcounts[v]||0)-min))*(v===lastVal?.78:1)),n=Math.random()*ws.reduce((a,b)=>a+b,0),v=cfg.values.at(-1);for(let j=0;j<ws.length;j++){n-=ws[j];if(n<0){v=cfg.values[j];break}}vcounts[v]=(vcounts[v]||0)+1;lastVal=v;return v}
 function message(t,k=''){$('npxmsg').textContent=t;$('npxmsg').className='npx-msg '+k}
-function next(){clearTimeout(timer);locked=judged=false;q={...pitch(),v:val()};keyboard();$('npxreveal').disabled=false;$('npxnext').hidden=true;message('Tap the matching piano key');draw()}
+function next(){clearTimeout(timer);mic.reset();locked=judged=false;q={...pitch(),v:val()};keyboard();$('npxreveal').disabled=false;$('npxnext').hidden=true;message(inputPrompt());draw()}
 function restart(){clearTimeout(timer);total=correct=0;bag=[];last='';vcounts={};lastVal='';$('npxnum').textContent='0';$('npxacc').textContent='—';next()}
 function grade(ok){if(judged)return;judged=true;total++;$('npxnum').textContent=total;if(ok)correct++;$('npxacc').textContent=Math.round(100*correct/total)+'%'}
-function play(m){audio.play(m)}
-function wrong(){audio.wrong()}
+function play(m){if(cfg.input!=='piano')audio.play(m)}
+function wrong(){if(cfg.input!=='piano')audio.wrong()}
 function answer(m){
  if(locked||!$('npxshade').hidden)return;const ok=m===q.m;grade(ok);
- if(!ok){keys.mark(m,'bad');message('Not quite. Try again!','bad');wrong();return}
+ // Keep the latest played key visible, including on a scrolled phone keyboard.
+ for(const b of $('npxletters').children)b.classList.remove('bad');
+ if(cfg.input==='piano'){
+  const key=[...$('npxletters').children].find(b=>Number(b.dataset.midi)===m);
+  if(key){const scroll=key.parentElement.parentElement;scroll.scrollLeft=key.offsetLeft-(scroll.clientWidth-key.offsetWidth)/2}
+ }
+ if(!ok){keys.mark(m,'bad');message(cfg.input==='piano'?(m<q.m?'Too low. Try a higher key.':'Too high. Try a lower key.'):'Not quite. Try again!','bad');wrong();return}
  locked=true;keys.lock(m,'good');
  message('✓ '+answerName()+' — correct!','good');play(q.m);$('npxreveal').disabled=true;$('npxnext').hidden=false;timer=setTimeout(next,1150);
 }
@@ -92,7 +134,7 @@ function settings(){
   const b=document.createElement('button');b.textContent=label;b.className=draft.accidentals===k?'active':'';b.setAttribute('aria-pressed',String(draft.accidentals===k));b.onclick=()=>{draft.accidentals=k;settings()};acc.append(b);
  }
  let modes=$('npxclefs');modes.replaceChildren();for(let [k,label] of [['treble','Treble'],['bass','Bass']]){let b=document.createElement('button'),t=document.createElement('span');t.textContent=label;b.append(modeIcon(k),t);b.className=draft.mode===k?'active':'';b.onclick=()=>{draft.mode=k;settings()};modes.append(b)}let ranges=$('npxranges');ranges.replaceChildren();for(let c of ['treble','bass'])if(draft.mode===c||draft.mode==='both'||draft.mode==='grand')ranges.append(range(c));let values=$('npxvalues');values.replaceChildren();for(let [v,label] of [['quarter','Quarter'],['half','Half'],['whole','Whole']]){let b=document.createElement('button'),t=document.createElement('span');t.textContent=label;b.append(valueIcon(v),t);b.className=draft.values.includes(v)?'active':'';b.onclick=()=>{if(draft.values.includes(v)){if(draft.values.length===1)return;draft.values=draft.values.filter(x=>x!==v)}else draft.values.push(v);settings()};values.append(b)}let sounds=$('npxsounds');sounds.replaceChildren();for(let [k,label] of [[true,'On'],[false,'Off']]){let b=document.createElement('button');b.textContent=label;b.className=draft.sound===k?'active':'';b.setAttribute('aria-pressed',String(draft.sound===k));b.onclick=()=>setSound(k);sounds.append(b)}}
-$('npxsettings').onclick=()=>{clearTimeout(timer);draft={...cfg,values:[...cfg.values]};$('npxshade').hidden=false;settings()};$('npxclose').onclick=()=>{$('npxshade').hidden=true;if(locked)timer=setTimeout(next,900)};$('npxreset').onclick=()=>{draft={...init,values:[...init.values]};setSound(draft.sound)};$('npxapply').onclick=()=>{cfg={...draft,values:[...draft.values]};practiceSettings.save(cfg);$('npxshade').hidden=true;mute();restart()};mute();restart();
+$('npxsettings').onclick=()=>{mic.stop();clearTimeout(timer);draft={...cfg,values:[...cfg.values]};$('npxshade').hidden=false;settings()};$('npxclose').onclick=()=>{$('npxshade').hidden=true;if(locked)timer=setTimeout(next,900)};$('npxreset').onclick=()=>{draft={...init,values:[...init.values]};setSound(draft.sound)};$('npxapply').onclick=()=>{cfg={...draft,values:[...draft.values]};practiceSettings.save(cfg);$('npxshade').hidden=true;mute();restart()};mute();restart();
 function practicePitches(c){return candidates(c).map(p=>p.m)}
 function pianoReadiness(c){return audio.readiness(practicePitches(c))}
 function renderPianoState(){
@@ -111,7 +153,17 @@ function renderPianoState(){
 }
 function preparePiano(c){audio.prepare(practicePitches(c),q?q.m:null)}
 const originalSettings=settings;
-settings=function(){originalSettings();preparePiano(draft)};
+const sensitivityHeading=document.createElement('h3');sensitivityHeading.textContent='Microphone sensitivity';
+const sensitivityOptions=document.createElement('div');sensitivityOptions.className='npx-sounds';sensitivityOptions.style.gridTemplateColumns='repeat(3,minmax(0,1fr))';sensitivityOptions.setAttribute('role','group');sensitivityOptions.setAttribute('aria-label','Microphone sensitivity');
+const sensitivityHelp=document.createElement('p');sensitivityHelp.textContent='Higher sensitivity picks up quieter notes, but may also pick up more background noise.';
+$('npxsounds').previousElementSibling.before(sensitivityHeading,sensitivityOptions,sensitivityHelp);
+settings=function(){
+ originalSettings();preparePiano(draft);sensitivityOptions.replaceChildren();
+ for(const [value,label] of [['low','Low'],['standard','Standard'],['high','High']]){
+  const button=document.createElement('button');button.type='button';button.textContent=label;button.className=draft.sensitivity===value?'active':'';button.setAttribute('aria-pressed',String(draft.sensitivity===value));
+  button.onclick=()=>{draft.sensitivity=value;settings()};sensitivityOptions.append(button);
+ }
+};
 for(const id of ['npxmute','npxclose','npxapply','npxrestart']){
  const old=$ (id).onclick;
  $(id).onclick=()=>{old();if(id==='npxapply'||id==='npxmute'&&cfg.sound)preparePiano(cfg);else renderPianoState()};
@@ -119,5 +171,11 @@ for(const id of ['npxmute','npxclose','npxapply','npxrestart']){
 const originalRange=range;
 range=function(c){const box=originalRange(c);for(const b of box.querySelectorAll('button')){const old=b.onclick;b.onclick=()=>{old();preparePiano(draft)}}return box};
 $('npxretry').onclick=()=>{const c=$('npxshade').hidden?cfg:draft;audio.retry(practicePitches(c))};
+inputUI();
+const applyInput=$('npxapply').onclick;$('npxapply').onclick=()=>{mic.stop();applyInput();mic.setThreshold(micThresholds[cfg.sensitivity]);inputUI();if(cfg.input==='piano')mic.start()};
+const closeInput=$('npxclose').onclick;$('npxclose').onclick=()=>{closeInput();if(cfg.input==='piano')mic.start()};
+function stopMicrophoneInput(){mic.stop();cfg.input='touch';if(draft)draft.input='touch';inputUI();if(!locked)message(inputPrompt())}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopMicrophoneInput()});
+window.addEventListener('pagehide',stopMicrophoneInput);
 renderPianoState();preparePiano(cfg);
 })();

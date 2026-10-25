@@ -12,6 +12,20 @@ including its octave and accidental. No chords or physical keyboard are required
   Spellings whose sounding pitch falls beyond the keyboard endpoints are excluded.
 - Wrong attempts and Show Answer count the question as incorrect once. A correct
   retry completes it without changing the original first-attempt accuracy.
+- The toolbar microphone toggle enables optional physical-piano answers. Screen
+  keys stay visible as feedback, but cannot be tapped or scored in this mode.
+  Recognition follows the same exact-pitch and first-attempt scoring rules.
+- Settings offer Low / Standard / High microphone sensitivity with the same
+  RMS thresholds as Piano Note Finder (0.012 / 0.003 / 0.001). Standard is the
+  default; the choice is saved per game. Higher sensitivity can pick up more
+  background noise. The screen omits live pitch/volume diagnostics.
+- Microphone access starts only after a user action and browser permission;
+  reload never starts capture. Settings, backgrounding and page exit stop it.
+  Closing/applying Settings can resume capture from that user gesture. Game
+  feedback audio is suppressed in microphone mode to avoid self-triggering.
+- Audio is analyzed locally by the existing shared music/piano-input.js module,
+  with no recording, persistence or upload. A Privacy note appears below the game.
+  Microphone capture requires HTTPS (or localhost) and browser support.
 - Keyboard minimum width is 630px to preserve touch targets. On narrow phones,
   scroll the keyboard horizontally; iPad portrait/landscape can show all keys.
 - Shared settings and notation are loaded directly, so the game works without
@@ -41,6 +55,8 @@ Validation:
 python3 scripts/check_site.py
 node scripts/test_settings.cjs
 node scripts/test_play_that_note.cjs
+node scripts/test_play_that_note_microphone.cjs
+node scripts/test_piano_input.cjs
 node scripts/test_name_that_note_audio.cjs
 node scripts/test_music_modules.cjs
 ```
