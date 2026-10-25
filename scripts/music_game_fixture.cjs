@@ -9,7 +9,9 @@ const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 class Element{
  constructor(tag='div'){this.tagName=tag;this.children=[];this.dataset={};this.style={};this.attributes={};this.hidden=false;this.disabled=false;this.className='';this.textContent='';this.listeners={};this.classList={add:(c)=>{this.className+=' '+c},remove:(c)=>{this.className=this.className.split(' ').filter(x=>x!==c).join(' ')}}}
- append(...xs){this.children.push(...xs)}
+ append(...xs){for(const x of xs){x.parentElement=this;this.children.push(x)}}
+ before(...xs){this.adjacentBefore=xs}
+ after(...xs){this.adjacentAfter=xs}
  replaceChildren(...xs){this.children=xs}
  setAttribute(k,v){this.attributes[k]=String(v)}
  addEventListener(k,f){this.listeners[k]=f}
@@ -19,6 +21,11 @@ class Element{
 function fixture(game='name-that-note', options={}){
  const html=read(`games/${game}/index.html`),ids={};for(const [,id] of html.matchAll(/id="([^"]+)"/g))ids[id]=new Element();
  ids.npx.querySelector=s=>ids[s.slice(1)];ids.npxshade.hidden=true;
+ // The fixture has a flat ID map; model only the new controls' surrounding nodes.
+ if(game==='play-that-note'){
+  ids.npxsounds.previousElementSibling=new Element('h3');
+  ids.npxletters.parentElement=new Element();
+ }
  const document={hidden:false,getElementById:id=>ids[id],createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),addEventListener(){}};
  const window={addEventListener(){},localStorage:null},ctx={window,document,navigator:{},setTimeout:()=>1,clearTimeout(){},fetch:()=>Promise.reject(Error('offline fixture')),AbortController,console};
  vm.createContext(ctx);
