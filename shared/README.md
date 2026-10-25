@@ -1,5 +1,13 @@
 # Shared game settings
 
+## Piano microphone input
+
+The independent music/piano-input.js module exposes ArcadePianoInput.detect
+for single-note analysis and create for microphone lifecycle management.
+It reports frequency, MIDI pitch, cents, confidence and RMS. Games own display,
+preferences and grading. No microphone samples or detected notes leave the device.
+See games/piano-note-finder/README.md for thresholds, limits and lifecycle rules.
+
 Use `shared/settings.js` to remember game preferences **locally on the
 same browser and device**. The helper only handles a JSON storage record,
 version, migration hook and browser storage failures. **Every game defines
