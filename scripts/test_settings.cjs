@@ -241,7 +241,13 @@ test("Play That Note: migrate renamed preferences without losing the legacy reco
 console.log("Settings tests passed");
 
 
-const pitchSchema=schemaFromHTML(read("games/do-i-have-absolute-pitch/game.js"),"const init={range:","let cfg=practiceSettings.load()");
+const pitchSchema=schemaFromHTML(read("games/do-i-have-absolute-pitch/game.js"),"const pianoInput=window.ArcadePianoInput;","let cfg=practiceSettings.load()");
+test("Listening game: microphone sensitivity persists and invalid values use the shared default",()=>{
+ const f=fixture(),s=f.api.create(pitchSchema);
+ assert.equal(s.load().sensitivity,'standard');
+ s.save({...s.load(),sensitivity:'high'});assert.equal(s.load().sensitivity,'high');
+ s.save({...s.load(),sensitivity:'invalid'});assert.equal(s.load().sensitivity,'standard');
+});
 test("Listening game: selected-note preferences persist independently and validate each range",()=>{
  const f=fixture(),s=f.api.create(pitchSchema),defaults=JSON.parse(JSON.stringify(pitchSchema.defaults));
  equal(s.load(),defaults);

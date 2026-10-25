@@ -17,7 +17,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 | [Name That Note!](games/name-that-note/) | Identify notes shown on a musical staff. |
 | [Play That Note!](games/play-that-note/) | Find the displayed note on a piano keyboard. |
 | [Piano Note Finder](games/piano-note-finder/) | Play one real piano note and see its name, octave, frequency and microphone level. |
-| [Do I Have Absolute Pitch?](games/do-i-have-absolute-pitch/) | Hear a pitch and choose the matching piano key. |
+| [Do I Have Absolute Pitch?](games/do-i-have-absolute-pitch/) | Hear a pitch and answer using the on-screen keyboard or a real piano through the microphone. |
 | [Find the Pair!](games/find-the-pair/) | Spot the one matching picture on two cards and collect 10 stars. |
 
 ## Homepage collections
@@ -81,6 +81,7 @@ node scripts/test_music_modules.cjs
 node scripts/test_name_that_note_audio.cjs
 node scripts/test_play_that_note.cjs
 node scripts/test_absolute_pitch.cjs
+node scripts/test_absolute_pitch_microphone.cjs
 node scripts/test_piano_input.cjs
 node scripts/test_piano_note_finder.cjs
 node scripts/test_audio_session_capture.cjs
