@@ -56,7 +56,7 @@ class Element {
     };
   }
   set innerHTML(value) { if (value === '') this.children = []; }
-  setAttribute() {}
+  setAttribute(name, value) { (this.attrs??={})[name] = value; }
   addEventListener(event, callback) { this.listeners[event] = callback; }
   appendChild(child) { this.children.push(child); }
   replaceChildren(...children) { this.children = children; }
@@ -67,7 +67,8 @@ class Element {
   click() { assert.ok(this.listeners.click); this.listeners.click(); }
   get offsetWidth() { return 100; }
 }
-const ids = ['card1','card2','score','progress','message','hint','reset','again','win'];
+const ids = ['game','card1','card2','score','progress','message','hint','reset','again','win',
+  'level-easy','level-medium','level-hard'];
 const dom = Object.fromEntries(ids.map(id => [id, new Element()]));
 const timers = new Map();
 let nextTimer = 0;
@@ -81,13 +82,23 @@ vm.runInNewContext(script, {
   Math,
 });
 const symbols = card => dom[card].querySelectorAll('.symbol');
-function match() {
+function match(count) {
   const a = symbols('card1'), b = symbols('card2');
-  assert.equal(a.length, 6);
-  assert.equal(b.length, 6);
+  assert.equal(a.length, count, 'Card 1 picture count');
+  assert.equal(b.length, count, 'Card 2 picture count');
+  assert.equal(new Set(a.map(x=>x.dataset.picture)).size, count);
+  assert.equal(new Set(b.map(x=>x.dataset.picture)).size, count);
   const common = a.filter(button => b.some(other => other.dataset.picture === button.dataset.picture));
   assert.equal(common.length, 1, 'Displayed cards must share exactly one picture');
   return common[0];
+}
+function checkMode(name,count) {
+  assert.equal(dom.game.dataset.level, name);
+  for(const level of ['easy','medium','hard']) {
+    assert.equal(dom['level-'+level].classList.contains('active'), level===name);
+    assert.equal(dom['level-'+level].attrs['aria-pressed'], String(level===name));
+  }
+  return match(count);
 }
 function completeRound() {
   assert.equal(timers.size, 1, 'Exactly one round timer');
@@ -95,14 +106,32 @@ function completeRound() {
   timers.delete(id);
   callback();
 }
-const first = match();
+// Easy is the initial mode: two large symbols per card for the youngest players.
+const first = checkMode('easy',2);
 symbols('card1').find(button => button.dataset.picture !== first.dataset.picture).click();
 assert.equal(dom.score.textContent, 0, 'Wrong answer does not score');
 dom.hint.click();
 assert.equal([...symbols('card1'), ...symbols('card2')]
   .filter(button => button.classList.contains('hint')).length, 2, 'Hint highlights the match on both cards');
-for (let score = 1; score <= 10; score++) {
-  match().click();
+match(2).click();
+assert.equal(dom.score.textContent, 1);
+assert.equal(timers.size, 1);
+// Changing difficulty mid-animation cancels the old timer and starts afresh.
+dom['level-medium'].click();
+assert.equal(timers.size, 0);
+assert.equal(dom.score.textContent, 0);
+checkMode('medium',4);
+for (let i=0; i<3; i++) {
+  match(4).click();
+  assert.equal(dom.score.textContent, i+1);
+  completeRound();
+}
+// Switching to Hard must reset the progress and keep the old six-picture game.
+dom['level-hard'].click();
+assert.equal(dom.score.textContent, 0);
+checkMode('hard',6);
+for (let score=1; score<=10; score++) {
+  match(6).click();
   assert.equal(dom.score.textContent, score);
   completeRound();
 }
@@ -110,9 +139,19 @@ assert.ok(dom.win.classList.contains('show'), 'Victory after 10 matches');
 dom.again.click();
 assert.equal(dom.score.textContent, 0);
 assert.ok(!dom.win.classList.contains('show'));
-match();
+checkMode('hard',6);
+dom['level-easy'].click();
+checkMode('easy',2);
+for (let i=1; i<=10; i++) {
+  match(2).click();
+  assert.equal(dom.score.textContent, i);
+  completeRound();
+}
+assert.ok(dom.win.classList.contains('show'), 'Victory also works in Easy');
 dom.reset.click();
 assert.equal(dom.score.textContent, 0);
+assert.ok(!dom.win.classList.contains('show'));
+checkMode('easy',2);
 assert.match(source, /Amazing! You did it!/);
 assert.doesNotMatch(source, /Good job, Mia|You're amazing, Mia!/i);
-console.log('Find the Pair! passed: 465 card pairs, scoring, hint, win, replay, restart.');
+console.log('Find the Pair! passed: 465 card pairs, 2/4/6 modes, switch/reset, hint, scoring, wins.');
