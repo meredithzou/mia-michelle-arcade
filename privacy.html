@@ -5,31 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Privacy | Mia and Michelle's Arcade</title>
   <style>
-    body { margin: 0; padding: 22px 16px 45px; background: #fbf8ff; color: #352b48; font: 16px/1.65 system-ui,-apple-system,sans-serif; }
+    body { margin: 0; padding: calc(65px + env(safe-area-inset-top,0px)) 16px 45px; background: #fbf8ff; color: #352b48; font: 16px/1.65 system-ui,-apple-system,sans-serif; }
     main { margin: auto; max-width: 660px; }
     h1 { line-height: 1.3; font-size: clamp(24px,5vw,34px); }
     h2 { font-size: 19px; margin-top: 24px; }
     a { color: #6945a5; }
     .box { background: white; border: 1px solid #e2d9ed; border-radius: 14px; padding: 16px; }
+    .arcade-back { position: fixed; top: calc(8px + env(safe-area-inset-top,0px)); left: 12px; z-index: 10000; display: inline-block; padding: 9px 13px; border-radius: 999px; background: #7653e6; color: white; text-decoration: none; box-shadow: 0 3px 12px #43336733; font: 700 13px system-ui,-apple-system,sans-serif; box-sizing: border-box; touch-action: manipulation; }
+    .arcade-back:focus-visible { outline: 3px solid #352b48; outline-offset: 3px; }
+    .box p:first-child { margin-top: 0; }
+    .box p:last-child { margin-bottom: 0; }
     .hint { color: #625b6f; font-size: 14px; }
   </style>
 </head>
 <body>
   <main>
-    <p><a href="index.html">← Back to the arcade</a></p>
+    <a class="arcade-back" href="index.html">← Mia and Michelle's Arcade</a>
     <h1>Privacy</h1>
-    <p>Welcome to our little family arcade! Our games are free to play, and you don't need an account.</p>
+    <p>Welcome to our little family arcade! Our games are free to play, and you don't need an account. We do our best to protect your privacy and keep personal information out of our games. We only use basic website statistics to understand how the arcade is used.</p>
 
     <h2>Simple website statistics</h2>
     <div class="box">
-      <p>We use <strong>Cloudflare Web Analytics</strong> to see which game pages are popular, general visitor locations and device types, and how our website performs. This helps us make the arcade better.</p>
+      <p>We use <strong>Cloudflare Web Analytics</strong> for simple website statistics. This helps us make the arcade better.</p>
+      <p><strong>What we collect:</strong> Basic page visits and performance information, such as which game pages are popular, general visitor locations, and device types.</p>
       <p>Cloudflare Web Analytics doesn't use tracking cookies or device fingerprinting. Your browser sends basic page and performance information to Cloudflare, but we don't track individual players or use these statistics for advertising.</p>
-      <p class="hint">We don't send player names, email addresses, game answers, or scores to this analytics service. <a href="https://developers.cloudflare.com/web-analytics/about/">Learn about Cloudflare Web Analytics</a>.</p>
+      <p><strong>What we don’t collect:</strong> We don’t send player names, email addresses, game answers, scores, saved settings, or microphone audio to this analytics service.</p>
+      <p class="hint"> <a href="https://developers.cloudflare.com/web-analytics/about/">Learn about Cloudflare Web Analytics</a>.</p>
     </div>
 
-    <p class="hint">Some games remember your settings on this device using browser storage. These preferences are not sent to our analytics service.</p>
+    <h2>Settings on your device</h2>
+    <div class="box">
+      <p>You may notice that some games remember your settings the next time you play. These preferences are saved only in your browser on your own device, using <strong>local storage</strong>.</p>
+      <p>We don’t collect these saved preferences or upload them to our servers or analytics service. They stay in that browser, such as Chrome or Safari, and aren’t synced across browsers or devices.</p>
+      <p class="hint">You can remove saved settings by clearing this website’s data in your browser.</p>
+    </div>
     <h2>Optional microphone input</h2>
-    <p>Piano Note Finder and Play That Note! offer optional microphone input. Permission is requested only when you tap Listen or turn on the microphone. Sound is analyzed live on your device to estimate a single note. These games do not record, save, or upload audio, and do not send detected notes or microphone levels to analytics. Tap Stop, turn off the microphone, or leave the page to stop microphone access.</p>
+    <div class="box">
+    <p><strong>Piano Note Finder</strong> and <strong>Play That Note!</strong> offer optional microphone input. Permission is requested only when you tap Listen or turn on the microphone. Sound is analyzed live on your device to estimate a single note. These games do not record, save, or upload audio, and do not send detected notes or microphone levels to analytics. Tap Stop, turn off the microphone, or leave the page to stop microphone access.</p>
+    </div>
     <p>Questions about privacy? <a href="mailto:mingzou.cn@gmail.com">Email us</a>.</p>
   </main>
   <!-- Same basic, cookie-free page analytics used elsewhere in the arcade. -->
@@ -37,3 +50,4 @@
   <script src="analytics/analytics.js"></script>
 </body>
 </html>
+
