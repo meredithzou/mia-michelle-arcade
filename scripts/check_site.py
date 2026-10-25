@@ -323,7 +323,7 @@ def main():
         home = parse(home_path)
         check_links(home_path, home)
         check_analytics(home_path, home)
-        for phrase in ("Mia and Michelle", "Pick a game", "Made with ChatGPT"):
+        for phrase in ("Mia and Michelle", "From an Idea to a Game", "Family Classics", "The Music Box", "Made with ChatGPT"):
             if phrase not in home_path.read_text(encoding="utf-8"):
                 ERRORS.append(f"Homepage missing: {phrase}")
     else:

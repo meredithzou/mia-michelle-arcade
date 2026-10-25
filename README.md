@@ -19,6 +19,10 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 | [Do I Have Absolute Pitch?](games/do-i-have-absolute-pitch/) | Hear a pitch and choose the matching piano key. |
 | [Find the Pair!](games/find-the-pair/) | Spot the one matching picture on two cards and collect 10 stars. |
 
+## Homepage collections
+
+The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, Find the Pair!, Jigsaw Garden, Marble Run Lab), **Family Classics** (Chinese Checkers, Gomoku), and **The Music Box** (the music games/tools). Keep new cards in the appropriate collection, with Piano Note Finder last in the music collection. `styles/home.css` gives cards an equal height and three/two/one columns at desktop/tablet/phone widths.
+
 ## Project layout
 
 - `index.html` — homepage and game links.

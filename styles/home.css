@@ -1,0 +1,44 @@
+/* Homepage collections: three equal columns, two on tablets, one on phones. */
+.collections-nav { display:flex; flex-wrap:wrap; gap:10px; margin:23px 0 0; }
+.collections-nav a { display:inline-flex; align-items:center; min-height:44px; padding:10px 17px; border:1px solid #e7def1; border-radius:99px; background:#ffffffbd; color:#65517f; font-size:13px; font-weight:750; }
+.collection { margin-top:34px; scroll-margin-top:20px; }
+.collection + .collection { border-top:1px solid #dfdce780; padding-top:28px; }
+.collection-head { display:flex; align-items:flex-start; gap:17px; margin:0 4px 20px; }
+.section-icon { width:66px; height:66px; flex:none; display:grid; place-items:center; font-size:34px; border-radius:22px; background:#ffe9c4; box-shadow:0 6px 15px #a38fbd13; }
+.classics .section-icon { background:#e2f4e9; }
+.music .section-icon { background:#ede5ff; }
+.section-kicker { font-size:12px; letter-spacing:.045em; color:#897492; font-weight:750; margin:0 0 4px; }
+.collection h2 { margin:0; font-size:29px; letter-spacing:-.035em; line-height:1.2; }
+.collection-head p { margin:9px 0 0; font-size:14px; line-height:1.75; color:#718179; max-width:860px; }
+.ideas .collection-head p { font-size:13px; line-height:1.65; max-width:800px; }
+.collection .grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.collection .card { height:490px; }
+.collection .thumb { padding:12px 12px 0; }
+.collection .thumbFrame { aspect-ratio:1.6; border-radius:18px; }
+.collection .thumb img { object-fit:contain; }
+.collection .body { padding:15px 16px 16px; gap:10px; min-height:0; }
+.collection .name { font-size:20px; min-height:50px; line-height:1.25; }
+.collection .desc { font-size:13px; min-height:0; }
+.collection .meta { margin-top:auto; }
+.collection .actions { margin-top:0; }
+.collection .btn { padding:13px 14px; }
+.collection .btn:focus-visible, .collections-nav a:focus-visible { outline:3px solid #6552c7; outline-offset:3px; }
+.hero h1 { font-size:43px; }
+.hero p { max-width:900px; }
+footer { margin-top:25px; }
+@media (max-width:850px) {
+  .collection .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .hero h1 { font-size:36px; }
+}
+@media (max-width:560px) {
+  .collection .grid { grid-template-columns:1fr; }
+  .collection-head { gap:12px; }
+  .section-icon { width:48px; height:48px; font-size:27px; border-radius:16px; }
+  .collection h2 { font-size:25px; }
+  .collection-head p { font-size:13px; }
+  .section-kicker { font-size:10px; }
+  .collections-nav { gap:6px; }
+  .collections-nav a { font-size:11px; padding:10px 12px; }
+  .hero h1 { font-size:32px; }
+  .collection { margin-top:28px; }
+}

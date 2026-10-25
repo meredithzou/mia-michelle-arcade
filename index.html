@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Mia and Michelle's Arcade</title>
   <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/home.css" />
   <link rel="stylesheet" id="arcade-theme" href="themes/pastel-rainbow/theme.css" />
   <script src="site-config.js"></script>
   <script>
@@ -31,18 +32,10 @@
       </div>
     </section>
 
-    <h2>Pick a game ✨</h2>
+    <nav class="collections-nav" aria-label="Collections"><a href="#ideas">💡 From an Idea to a Game</a><a href="#classics">🎲 Family Classics</a><a href="#music">🎶 The Music Box</a></nav>
 
-    <section class="grid">
-      <article class="card">
-        <a class="thumb" href="games/find-the-pair/index.html"><div class="thumbFrame"><img src="assets/find-the-pair-preview.svg?v=9b4613c09fcf" alt="Find the Pair! picture-matching game preview" /></div></a>
-        <div class="body">
-          <div class="name">🔍 Find the Pair!</div>
-          <div class="desc">Find the one picture that appears on both cards! Tap each match to collect stars. Can you find all 10?</div>
-          <div class="meta"><span class="chip">1 Player</span></div>
-          <div class="actions"><a class="btn primary" href="games/find-the-pair/index.html">Play now</a></div>
-        </div>
-      </article>
+    <section class="collection ideas" id="ideas" aria-labelledby="ideas-title"><header class="collection-head"><div class="section-icon">💡</div><div><div class="section-kicker">Little ideas. Playable adventures.</div><h2 id="ideas-title">From an Idea to a Game</h2><p>It all started when Mia spotted a Chicken Jockey in an ad and said, “I want to make a game with that!” That spark became Chicken Jockey Dash. More ideas followed—and with a little imagination and help from ChatGPT, we’re turning her playful ideas into games we can play together.</p></div></header>
+      <section class="grid" aria-label="From an Idea to a Game games">
 
       <article class="card">
         <a class="thumb" href="games/chicken-jockey-dash/index.html"><div class="thumbFrame"><img src="assets/chicken-jockey-preview.png?v=9ca440875f62" alt="Chicken Jockey Dash preview" /></div></a>
@@ -54,6 +47,41 @@
         </div>
       </article>
 
+      <article class="card">
+        <a class="thumb" href="games/find-the-pair/index.html"><div class="thumbFrame"><img src="assets/find-the-pair-preview.svg?v=9b4613c09fcf" alt="Find the Pair! picture-matching game preview" /></div></a>
+        <div class="body">
+          <div class="name">🔍 Find the Pair!</div>
+          <div class="desc">Find the one picture that appears on both cards! Tap each match to collect stars. Can you find all 10?</div>
+          <div class="meta"><span class="chip">1 Player</span></div>
+          <div class="actions"><a class="btn primary" href="games/find-the-pair/index.html">Play now</a></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <a class="thumb" href="games/jigsaw-garden/index.html"><div class="thumbFrame"><img src="assets/jigsaw-garden-preview.jpg?v=108baeeeb8bb" style="object-fit:contain" alt="Jigsaw Garden with a garden picnic picture and nine interlocking puzzle pieces" /></div></a>
+        <div class="body">
+          <div class="name">🧩 Jigsaw Garden</div>
+          <div class="desc">Piece together a garden, an ocean, or a cosmic adventure! Choose 9, 16, or 25 pieces, or turn your own photo into a puzzle.</div>
+          <div class="meta"><span class="chip">1 Player</span></div>
+          <div class="actions"><a class="btn primary" href="games/jigsaw-garden/index.html">Play now</a></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <a class="thumb" href="games/marble-run-lab/index.html"><div class="thumbFrame"><img src="assets/marble-run-preview.jpg?v=9205470adc07" style="object-fit:contain" alt="Marble Run Lab with a marble, zigzag ramps, and a finish cup" /></div></a>
+        <div class="body">
+          <div class="name">🔮 Marble Run Lab</div>
+          <div class="desc">Build your own marble run! Add ramps, bowls, walls, and bouncy pieces, then drop a marble and follow its trail to the finish.</div>
+          <div class="meta"><span class="chip">1 Player</span></div>
+          <div class="actions"><a class="btn primary" href="games/marble-run-lab/index.html">Play now</a></div>
+        </div>
+      </article>
+
+      </section>
+    </section>
+
+    <section class="collection classics" id="classics" aria-labelledby="classics-title"><header class="collection-head"><div class="section-icon">🎲</div><div><div class="section-kicker">A little strategy. A little friendly competition.</div><h2 id="classics-title">Family Classics</h2><p>A few familiar favorites for our family to play together. A little strategy, a little friendly competition, and time spent around the same board.</p></div></header>
+      <section class="grid" aria-label="Family Classics games">
 
       <article class="card">
         <a class="thumb" href="games/chinese-checkers/index.html"><div class="thumbFrame"><img src="assets/chinese-checkers-preview.png?v=ab84b90adeb6" alt="Chinese Checkers preview" /></div></a>
@@ -64,33 +92,7 @@
           <div class="actions"><a class="btn primary" href="games/chinese-checkers/index.html">Play now</a></div>
         </div>
       </article>
-      <article class="card">
-        <a class="thumb" href="games/name-that-note/index.html"><div class="thumbFrame"><img src="assets/name-that-note-preview.png?v=55c69cdfc13a" alt="Name That Note! music-reading game preview" /></div></a>
-        <div class="body">
-          <div class="name">🎵 Name That Note!</div>
-          <div class="desc">Practice reading music! Identify notes on the staff, pick a letter from C to B, and track your accuracy.</div>
-          <div class="meta"><span class="chip">1 Player</span></div>
-          <div class="actions"><a class="btn primary" href="games/name-that-note/index.html">Play now</a></div>
-        </div>
-      </article>
-      <article class="card">
-        <a class="thumb" href="games/play-that-note/index.html"><div class="thumbFrame"><img src="assets/play-that-note-preview.png?v=ca9444947090" alt="Play That Note piano-keyboard game preview" /></div></a>
-        <div class="body">
-          <div class="name">🎹 Play That Note!</div>
-          <div class="desc">Read the note on the staff, then tap the matching piano key. Practice sharps, flats, and finding the right octave!</div>
-          <div class="meta"><span class="chip">1 Player</span></div>
-          <div class="actions"><a class="btn primary" href="games/play-that-note/index.html">Play now</a></div>
-        </div>
-      </article>
-      <article class="card">
-        <a class="thumb" href="games/do-i-have-absolute-pitch/index.html"><div class="thumbFrame"><img src="assets/absolute-pitch-preview.jpg?v=249564ed44c2" style="object-fit:contain" alt="Screenshot of Do I Have Absolute Pitch? with the Play Pitch button and piano keyboard" /></div></a>
-        <div class="body">
-          <div class="name">🎶 Do I Have Absolute Pitch?</div>
-          <div class="desc">Listen to a piano pitch, then tap the matching key. Replay, use optional hints, and choose the notes you want to practice!</div>
-          <div class="meta"><span class="chip">1 Player</span></div>
-          <div class="actions"><a class="btn primary" href="games/do-i-have-absolute-pitch/index.html">Play now</a></div>
-        </div>
-      </article>
+
       <article class="card">
         <a class="thumb" href="games/gomoku/index.html"><div class="thumbFrame"><img src="assets/gomoku-preview.jpg?v=538c91c56e7b" style="object-fit:contain" alt="Five in a Row (Gomoku) wooden board with black and white stones" /></div></a>
         <div class="body">
@@ -100,24 +102,43 @@
           <div class="actions"><a class="btn primary" href="games/gomoku/index.html">Play now</a></div>
         </div>
       </article>
+
+      </section>
+    </section>
+
+    <section class="collection music" id="music" aria-labelledby="music-title"><header class="collection-head"><div class="section-icon">🎶</div><div><div class="section-kicker">Little tools for curious ears.</div><h2 id="music-title">The Music Box</h2><p>A little collection of tools and games we made to help our children explore notes, practice listening, and enjoy making music. Useful for adult learners, too!</p></div></header>
+      <section class="grid" aria-label="The Music Box games">
+
       <article class="card">
-        <a class="thumb" href="games/jigsaw-garden/index.html"><div class="thumbFrame"><img src="assets/jigsaw-garden-preview.jpg?v=108baeeeb8bb" style="object-fit:contain" alt="Jigsaw Garden with a garden picnic picture and nine interlocking puzzle pieces" /></div></a>
+        <a class="thumb" href="games/name-that-note/index.html"><div class="thumbFrame"><img src="assets/name-that-note-preview.png?v=55c69cdfc13a" alt="Name That Note! music-reading game preview" /></div></a>
         <div class="body">
-          <div class="name">🧩 Jigsaw Garden</div>
-          <div class="desc">Piece together a garden, an ocean, or a cosmic adventure! Choose 9, 16, or 25 pieces, or turn your own photo into a puzzle.</div>
+          <div class="name">🎵 Name That Note!</div>
+          <div class="desc">Practice reading music! Identify notes on the staff, pick a letter from C to B, and track your accuracy.</div>
           <div class="meta"><span class="chip">1 Player</span></div>
-          <div class="actions"><a class="btn primary" href="games/jigsaw-garden/index.html">Play now</a></div>
+          <div class="actions"><a class="btn primary" href="games/name-that-note/index.html">Play now</a></div>
         </div>
       </article>
+
       <article class="card">
-        <a class="thumb" href="games/marble-run-lab/index.html"><div class="thumbFrame"><img src="assets/marble-run-preview.jpg?v=9205470adc07" style="object-fit:contain" alt="Marble Run Lab with a marble, zigzag ramps, and a finish cup" /></div></a>
+        <a class="thumb" href="games/play-that-note/index.html"><div class="thumbFrame"><img src="assets/play-that-note-preview.png?v=ca9444947090" alt="Play That Note piano-keyboard game preview" /></div></a>
         <div class="body">
-          <div class="name">🔮 Marble Run Lab</div>
-          <div class="desc">Build your own marble run! Add ramps, bowls, walls, and bouncy pieces, then drop a marble and follow its trail to the finish.</div>
+          <div class="name">🎹 Play That Note!</div>
+          <div class="desc">Read the note on the staff, then tap the matching piano key. Practice sharps, flats, and finding the right octave!</div>
           <div class="meta"><span class="chip">1 Player</span></div>
-          <div class="actions"><a class="btn primary" href="games/marble-run-lab/index.html">Play now</a></div>
+          <div class="actions"><a class="btn primary" href="games/play-that-note/index.html">Play now</a></div>
         </div>
       </article>
+
+      <article class="card">
+        <a class="thumb" href="games/do-i-have-absolute-pitch/index.html"><div class="thumbFrame"><img src="assets/absolute-pitch-preview.jpg?v=249564ed44c2" style="object-fit:contain" alt="Screenshot of Do I Have Absolute Pitch? with the Play Pitch button and piano keyboard" /></div></a>
+        <div class="body">
+          <div class="name">🎶 Do I Have Absolute Pitch?</div>
+          <div class="desc">Listen to a piano pitch, then tap the matching key. Replay, use optional hints, and choose the notes you want to practice!</div>
+          <div class="meta"><span class="chip">1 Player</span></div>
+          <div class="actions"><a class="btn primary" href="games/do-i-have-absolute-pitch/index.html">Play now</a></div>
+        </div>
+      </article>
+
       <article class="card">
         <a class="thumb" href="games/piano-note-finder/index.html"><div class="thumbFrame"><img src="assets/piano-note-finder-preview.png?v=e7c942541e87" style="object-fit:contain" alt="Piano Note Finder with a detected note, its frequency and microphone level" /></div></a>
         <div class="body">
@@ -127,6 +148,8 @@
           <div class="actions"><a class="btn primary" href="games/piano-note-finder/index.html">Play now</a></div>
         </div>
       </article>
+
+      </section>
     </section>
 
     <footer class="site-footer compact-footer">
