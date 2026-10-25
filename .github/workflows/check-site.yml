@@ -12,6 +12,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python3 scripts/check_site.py
+      - run: python3 scripts/test_homepage_layout.py
       - run: python3 scripts/test_preview_versions.py
       - run: python3 scripts/update_preview_versions.py --check
       - uses: actions/setup-node@v4
@@ -22,4 +23,6 @@ jobs:
       - run: node scripts/test_music_modules.cjs
       - run: node scripts/test_play_that_note.cjs
       - run: node scripts/test_absolute_pitch.cjs
+      - run: node scripts/test_piano_input.cjs
+      - run: node scripts/test_piano_note_finder.cjs
       - run: node scripts/test_find_the_pair.cjs

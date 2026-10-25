@@ -71,6 +71,15 @@ const defaultNote = {
   bassMin: 16, bassMax: 28, values: ["quarter"], sound: true
 };
 const defaultCC = { language: "zh", sound: true, hints: true, playerCount: 2, jumpRule: "long" };
+const finderSchema=schemaFromHTML(read("games/piano-note-finder/game.js"),"const preferences=","const saved=");
+test("Piano Note Finder: validated sensitivity, persistence, and independent storage",()=>{
+ const f=fixture(),store=f.api.create(finderSchema);
+ equal(store.load(),{sensitivity:"standard"});
+ for(const sensitivity of ["low","standard","high"]){store.save({sensitivity});equal(f.api.create(finderSchema).load(),{sensitivity});}
+ store.save({sensitivity:"unknown"});equal(store.load(),{sensitivity:"standard"});
+ assert.notEqual(finderSchema.key,noteSchema.key);assert.notEqual(finderSchema.key,playSchema.key);
+ equal(fixture({}, {failRead:true,failWrite:true}).api.create(finderSchema).load(),{sensitivity:"standard"});
+});
 
 test("Default settings are isolated per game", () => {
   const f = fixture();
