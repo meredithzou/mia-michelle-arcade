@@ -50,6 +50,10 @@ python3 scripts/update_preview_versions.py --check
 
 Commit the regenerated `index.html` with the asset change. CI verifies the versions and fails if any screenshot is stale; **never edit a version number by hand**. As with any GitHub Pages update, browsers still need to fetch the latest HTML after deployment before seeing the new URL.
 
+## Shared return button
+
+Every playable game uses `shared/arcade-nav.css` and the same top-left, pill-shaped return link, with a 44px touch target, safe-area spacing, and keyboard focus outline. Colors may differ using `--arcade-return-bg`, `--arcade-return-color`, and `--arcade-return-focus`; keep geometry and text shared. Use `class="arcade-game-page"` on the body and exactly one `<a class="arcade-return" href="../../index.html">← Mia and Michelle’s Arcade</a>`. Load the shared stylesheet after game styles. Legacy redirect pages are exempt.
+
 ## Quality checks for every game
 
 `scripts/check_site.py` automatically discovers `games/*/index.html` and checks each playable game for:
@@ -78,6 +82,13 @@ node scripts/test_play_that_note.cjs
 node scripts/test_absolute_pitch.cjs
 node scripts/test_piano_input.cjs
 node scripts/test_piano_note_finder.cjs
+node scripts/test_audio_session_capture.cjs
+node scripts/test_play_that_note_microphone.cjs
+node scripts/test_find_the_pair.cjs
+node scripts/test_marble_run.cjs
+python3 scripts/test_homepage_layout.py
+python3 scripts/test_preview_versions.py
+python3 scripts/update_preview_versions.py --check
 ```
 
 GitHub Actions runs these checks on pull requests and pushes to `main`. Changes to games should also be tested on a real touch device, especially audio playback in iPad Safari.

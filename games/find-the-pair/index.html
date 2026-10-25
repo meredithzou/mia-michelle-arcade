@@ -9,8 +9,8 @@
   :root { --ink:#33314d; --purple:#8562bc; --pink:#f05b9b; --soft:#fef5fb; }
   * { box-sizing:border-box; }
   body { margin:0; background:radial-gradient(circle at 8% 8%, #ffe7f0, transparent 28%),radial-gradient(circle at 93% 20%, #dfedff, transparent 32%),linear-gradient(145deg,#fffafc,#f8f7ff); font-family: ui-rounded, 'Arial Rounded MT Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color:var(--ink); }
-  .back-link { display:inline-block; margin:14px 0 0 18px; font-size:13px; font-weight:800; color:#765795; text-decoration:none; padding:8px 12px; border:1px solid #e7d9f1; background:#ffffffb8; border-radius:999px; }
-  .back-link:focus-visible { outline:3px solid #956ed1; outline-offset:3px; }
+  
+  
   .app { width:min(100%,1050px); margin:auto; min-height:620px; padding:27px 22px 35px; text-align:center; position:relative; overflow:hidden; }
   .eyebrow { font-size:12px; font-weight:800; letter-spacing:3px; color:#9073b3; margin:0 0 4px; }
   h1 { margin:0; font-size:clamp(32px,5vw,52px); line-height:1.12; font-weight:950; letter-spacing:-1px; color:#543976; }
@@ -87,9 +87,10 @@
   }
   @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }
 </style>
+<link rel="stylesheet" href="../../shared/arcade-nav.css">
 </head>
-<body>
-<a class="back-link" href="../../index.html">← Mia and Michelle’s Arcade</a>
+<body class="arcade-game-page" style="--arcade-return-bg:#7653e6"><a class="arcade-return" href="../../index.html">← Mia and Michelle’s Arcade</a>
+
 <main class="app" id="game" data-level="easy">
   <p class="eyebrow">✨ MIA'S GAME LAB ✨</p>
   <h1>Find the Pair! 🔍</h1>

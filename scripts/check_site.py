@@ -32,6 +32,7 @@ REQUIRED = (
     "analytics/config.js",
     "analytics/analytics.js",
     "shared/settings.js",
+    "shared/arcade-nav.css",
     "shared/music/audio.js",
 )
 for path in REQUIRED:
@@ -51,6 +52,8 @@ class Page(HTMLParser):
         self.scripts = []
         self.anchors = []
         self.title = ""
+        self.stylesheets = []
+        self.body_classes = []
         self.viewport = False
         self.redirect = False
         self._anchor = None
@@ -59,8 +62,12 @@ class Page(HTMLParser):
     def handle_starttag(self, tag, attrs):
         """Record URLs, script order, link labels, and metadata as tags open."""
         a = dict(attrs)
+        if tag == "body":
+            self.body_classes = a.get("class", "").split()
+        if tag == "link" and a.get("rel") == "stylesheet":
+            self.stylesheets.append(a.get("href"))
         if tag == "a":
-            self._anchor = {"href": a.get("href", ""), "label": a.get("aria-label", ""), "text": ""}
+            self._anchor = {"href": a.get("href", ""), "label": a.get("aria-label", ""), "text": "", "classes": a.get("class", "").split()}
         if tag == "title":
             self._in_title = True
         if tag == "meta":
@@ -158,8 +165,15 @@ def check_game(path, page):
         ERRORS.append(f"{name}: missing return-to-Arcade link (../../index.html)")
     elif not any(a["label"].strip() or a["text"].strip() for a in home):
         ERRORS.append(f"{name}: return-to-Arcade link needs visible text or aria-label")
+    if len(home) != 1 or "arcade-return" not in home[0]["classes"]:
+        ERRORS.append(f"{name}: require exactly one shared arcade-return home link")
+    elif home[0]["text"].strip() != "← Mia and Michelle’s Arcade":
+        ERRORS.append(f"{name}: inconsistent return-button text")
+    if "arcade-game-page" not in page.body_classes:
+        ERRORS.append(f"{name}: missing arcade-game-page body class")
+    if page.stylesheets.count("../../shared/arcade-nav.css") != 1:
+        ERRORS.append(f"{name}: require shared return-button stylesheet once")
     check_analytics(path, page)
-
 
 
 class CardParser(HTMLParser):
