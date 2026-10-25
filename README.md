@@ -13,6 +13,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 | [Chicken Jockey Dash](games/chicken-jockey-dash/) | Tap to jump over obstacles in a side-scrolling runner. |
 | [Chinese Checkers](games/chinese-checkers/) | Play local, same-screen Chinese Checkers with 2–6 people. |
 | [Five in a Row (Gomoku)](games/gomoku/) | Play same-screen 五子棋 with two people, undo moves, and connect five to win. |
+| [Chinese Chess (中国象棋)](games/chinese-chess/) | Play same-screen Chinese Chess with legal move hints, check warnings, undo, and board rotation. |
 | [Name That Note!](games/name-that-note/) | Identify notes shown on a musical staff. |
 | [Play That Note!](games/play-that-note/) | Find the displayed note on a piano keyboard. |
 | [Piano Note Finder](games/piano-note-finder/) | Play one real piano note and see its name, octave, frequency and microphone level. |
@@ -21,7 +22,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 
 ## Homepage collections
 
-The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, Find the Pair!, Jigsaw Garden, Marble Run Lab), **Family Classics** (Chinese Checkers, Gomoku), and **The Music Box** (the music games/tools). Keep new cards in the appropriate collection, with Piano Note Finder last in the music collection. `styles/home.css` gives cards an equal height and three/two/one columns at desktop/tablet/phone widths.
+The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, Find the Pair!, Jigsaw Garden, Marble Run Lab), **Family Classics** (Chinese Checkers, Gomoku, Chinese Chess), and **The Music Box** (the music games/tools). Keep new cards in the appropriate collection, with Piano Note Finder last in the music collection. `styles/home.css` gives cards an equal height and three/two/one columns at desktop/tablet/phone widths.
 
 ## Project layout
 
@@ -86,6 +87,7 @@ node scripts/test_audio_session_capture.cjs
 node scripts/test_play_that_note_microphone.cjs
 node scripts/test_find_the_pair.cjs
 node scripts/test_marble_run.cjs
+node scripts/test_chinese_chess.cjs
 python3 scripts/test_homepage_layout.py
 python3 scripts/test_preview_versions.py
 python3 scripts/update_preview_versions.py --check
