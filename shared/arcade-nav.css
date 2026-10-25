@@ -1,0 +1,12 @@
+/* Shared return button. Override colors only with custom properties. */
+body.arcade-game-page { padding-top:calc(68px + env(safe-area-inset-top, 0px)) !important; }
+a.arcade-return {
+  position:fixed; top:calc(8px + env(safe-area-inset-top, 0px)); left:max(12px, env(safe-area-inset-left, 0px)); z-index:50;
+  display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box;
+  min-height:44px; max-width:calc(100vw - 24px); margin:0; padding:9px 13px;
+  border:0; border-radius:999px; background:var(--arcade-return-bg, #214f43); color:var(--arcade-return-color, #fff);
+  font:700 13px/1.3 system-ui,-apple-system,sans-serif; text-decoration:none;
+  box-shadow:0 3px 12px #173d3433; touch-action:manipulation;
+}
+a.arcade-return:hover { filter:brightness(1.08); }
+a.arcade-return:focus-visible { outline:3px solid var(--arcade-return-focus, #c0903b); outline-offset:3px; }
