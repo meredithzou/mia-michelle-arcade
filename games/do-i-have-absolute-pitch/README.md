@@ -36,7 +36,28 @@ All keys in the window are loaded so unselected wrong keys also produce audio.
 Audio credits and loading/retry controls are available in Settings.
 
 Direct entry: games/do-i-have-absolute-pitch/index.html. The homepage includes a 1 Player card with a real browser screenshot in `assets/absolute-pitch-preview.jpg`, captured from the deployed game in its initial Play Pitch state and cropped to the game panel only (no surrounding page background or return button). The thumbnail uses contain sizing to keep the title, keyboard and score visible.
-Physical piano/microphone answer recognition remains a future extension.
+Listen to the mystery pitch, then match its note and octave. Tap the on-screen
+keyboard, or enable the microphone icon to answer with a physical piano.
+Play one note at a time. Hints retain the same low/high/correct colors in both modes.
+
+Capture and detection use `shared/music/piano-input.js`, including its iPad
+AudioSession handling and shared Low/Standard/High sensitivity options. Settings
+save the sensitivity locally; microphone capture always requires an explicit click
+after reload or returning from the background. Audio is processed on the device.
+
+During mystery playback, microphone notes are ignored. Capture stays alive to
+preserve the iPad audio session, but grading resumes only after the current audio
+completion callback plus a 350 ms acoustic-tail guard. Replay and navigation cancel
+stale callbacks. Physical-piano guesses do not produce duplicate speaker sounds.
+Settings pause capture; page hiding stops it and returns to touch input.
+
+Run `node scripts/test_absolute_pitch.cjs` and
+`node scripts/test_absolute_pitch_microphone.cjs` from the repository root.
+The microphone regression uses simulated capture events; verify permission,
+speaker replay rejection, repeated notes, black keys, octaves, sensitivity and
+background cleanup on a real iPad with a piano before release. The fixed tail guard
+does not guarantee rejection of prolonged room reverberation; use headphones if needed.
+
 
 Validation:
 
@@ -44,6 +65,7 @@ Validation:
 python3 scripts/check_site.py
 node scripts/test_settings.cjs
 node scripts/test_absolute_pitch.cjs
+node scripts/test_absolute_pitch_microphone.cjs
 node scripts/test_play_that_note.cjs
 node scripts/test_music_modules.cjs
 node scripts/test_name_that_note_audio.cjs

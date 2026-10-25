@@ -30,3 +30,9 @@
 #pitchselection button.selected:after{content:'✓';position:absolute;top:10px;left:0;right:0;text-align:center;font-size:15px;color:#503077}
 
 #pitchselectionstatus.pitch-selection-error{color:#b73751;font-weight:650}
+.npx #pitchinput[aria-pressed="true"]{background:#7653e6;color:white;border-color:#7653e6}
+.npx .pitch-input-status,.npx .pitch-input-help{font-size:12px;line-height:1.6;color:#847d97}
+.npx .pitch-input-status{font-size:11px;color:#78698d}
+.npx .pitch-input-hint{margin:0 14px 12px;text-align:center;color:#847d97;font-size:12px;line-height:1.6}
+.npx .pitch-input-hint svg{vertical-align:-3px;margin-right:4px}
+.pitch-privacy{max-width:880px;box-sizing:border-box;margin:0 auto;padding:4px 18px 20px;color:#78698d;font:12px/1.6 ui-rounded,system-ui,-apple-system,sans-serif}
