@@ -27,3 +27,4 @@ jobs:
       - run: node scripts/test_piano_input.cjs
       - run: node scripts/test_piano_note_finder.cjs
       - run: node scripts/test_find_the_pair.cjs
+      - run: node scripts/test_marble_run.cjs

@@ -8,6 +8,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 
 | Game | What you do |
 | --- | --- |
+| [Marble Run Lab](games/marble-run-lab/) | Build a track, drop a marble, and follow its trail. |
 | [Jigsaw Garden](games/jigsaw-garden/) | Fit 9, 16, or 25 pieces together, choose a scene, or use your own photo. |
 | [Chicken Jockey Dash](games/chicken-jockey-dash/) | Tap to jump over obstacles in a side-scrolling runner. |
 | [Chinese Checkers](games/chinese-checkers/) | Play local, same-screen Chinese Checkers with 2–6 people. |
