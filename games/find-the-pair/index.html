@@ -15,6 +15,11 @@
   .eyebrow { font-size:12px; font-weight:800; letter-spacing:3px; color:#9073b3; margin:0 0 4px; }
   h1 { margin:0; font-size:clamp(32px,5vw,52px); line-height:1.12; font-weight:950; letter-spacing:-1px; color:#543976; }
   .lead { font-size:clamp(14px,2vw,18px); margin:12px auto 16px; font-weight:600; color:#67607d; }
+  .difficulty { display:flex; align-items:center; justify-content:center; gap:9px; flex-wrap:wrap; margin:0 auto 16px; }
+  .level { font:850 15px ui-rounded,'Arial Rounded MT Bold',system-ui,sans-serif; color:#765c90; background:white; border:2px solid #e9dff2; border-radius:15px; padding:9px 15px; min-width:105px; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+  .level small { display:block; font-size:11px; font-weight:650; opacity:.85; margin-top:3px; }
+  .level.active { background:#eee6ff; color:#5d3e85; border-color:#9a7ce5; box-shadow:0 4px 12px #9475c92d; }
+  .level:focus-visible { outline:3px solid #9568dc; outline-offset:3px; }
   .scorebar { display:flex; justify-content:center; align-items:center; gap:12px; margin:0 auto 14px; flex-wrap:wrap; }
   .score-pill { background:white; border:2px solid #f1dce9; box-shadow:0 3px 9px #b27baf12; border-radius:999px; padding:9px 17px; font-size:15px; font-weight:800; }
   #score { color:#db3982; font-size:19px; }
@@ -29,6 +34,10 @@
   .card:last-child { background:radial-gradient(circle at 42% 28%, #fff, #f5faff 73%, #dbeaff); outline:4px solid #c7dcff; }
   .symbol { -webkit-appearance:none; appearance:none; background:transparent; border:0; padding:0; display:flex; justify-content:center; align-items:center; width:23%; height:23%; position:absolute; left:var(--x); top:var(--y); transform:translate(-50%,-50%); cursor:pointer; border-radius:100%; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
   .symbol .emoji { display:block; line-height:1; font-size:clamp(36px,4.5vw,60px); transform:rotate(var(--rotate)) scale(var(--scale)); transition:filter .14s,transform .18s; user-select:none; -webkit-user-select:none; }
+  .app[data-level="easy"] .symbol { width:36%; height:36%; }
+  .app[data-level="easy"] .symbol .emoji { font-size:clamp(50px,7vw,88px); }
+  .app[data-level="medium"] .symbol { width:29%; height:29%; }
+  .app[data-level="medium"] .symbol .emoji { font-size:clamp(40px,5.8vw,70px); }
   /* Prevent sticky hover highlights after taps on iPad and other touch devices. */
   @media (hover:hover) and (pointer:fine) {
     .symbol:hover { background:#ffe5f27a; }
@@ -69,6 +78,11 @@
     .card:first-child::before { content:'CARD 1'; }
     .card:last-child::before { content:'CARD 2'; }
     .card .symbol .emoji { font-size:clamp(32px,9vw,52px); }
+    .app[data-level="easy"] .card .symbol .emoji { font-size:clamp(49px,13vw,70px); }
+    .app[data-level="medium"] .card .symbol .emoji { font-size:clamp(39px,10vw,55px); }
+    .difficulty { gap:7px; }
+    .level { min-width:89px; padding:9px 11px; font-size:14px; }
+    .level small { font-size:10px; }
     .message { min-height:48px; }
   }
   @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }
@@ -76,10 +90,15 @@
 </head>
 <body>
 <a class="back-link" href="../../index.html">← Mia and Michelle’s Arcade</a>
-<main class="app">
+<main class="app" id="game" data-level="easy">
   <p class="eyebrow">✨ MIA'S GAME LAB ✨</p>
   <h1>Find the Pair! 🔍</h1>
   <p class="lead">Find the ONE picture that's on both cards. Tap it!</p>
+  <div class="difficulty" role="group" aria-label="Choose difficulty">
+    <button class="level active" id="level-easy" type="button" aria-pressed="true">🌼 Easy <small>2 pictures</small></button>
+    <button class="level" id="level-medium" type="button" aria-pressed="false">🌷 Medium <small>4 pictures</small></button>
+    <button class="level" id="level-hard" type="button" aria-pressed="false">⭐ Hard <small>6 pictures</small></button>
+  </div>
   <div class="scorebar">
     <div class="score-pill">⭐ Matches: <span id="score">0</span> / 10</div>
     <div class="progress" id="progress" aria-label="Progress toward 10 matches"></div>
@@ -106,6 +125,7 @@
     </div>
   </div>
 </main>
+<script src="../../shared/settings.js"></script>
 <script>
 (function(){
   'use strict';
@@ -134,9 +154,23 @@
   }
   deck.push([25,26,27,28,29,30]);
   const locations = [[27,27],[70,27],[18,53],[81,53],[36,77],[64,77]];
+  const positions = {
+    easy: [[29,50],[71,50]],
+    medium: [[29,29],[71,29],[29,71],[71,71]],
+    hard: locations
+  };
+  const counts = {easy:2,medium:4,hard:6};
   const byId=id=>document.getElementById(id);
+  const difficultyStorage=window.ArcadeSettings.create({
+    key:'arcade.settings.find-the-pair',
+    version:1,
+    defaults:{level:'easy'},
+    normalize:(value,defaults)=>({
+      level:['easy','medium','hard'].includes(value.level)?value.level:defaults.level
+    })
+  });
   const cards=[byId('card1'),byId('card2')];
-  let score=0, common=-1, previousCommon=-1, busy=false, oldPair='', roundTimer=null;
+  let level=difficultyStorage.load().level, score=0, common=-1, previousCommon=-1, busy=false, oldPair='', roundTimer=null;
   const shuffle = arr => {const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;};
   function msg(s,good){byId('message').textContent=s;byId('message').classList.toggle('success',!!good);}
   function showProgress(){
@@ -146,7 +180,7 @@
   }
   function makeCard(container,symbols){
     container.replaceChildren();
-    const slots=shuffle(locations);
+    const slots=shuffle(positions[level]);
     shuffle(symbols).forEach((id,i)=>{
       const b=document.createElement('button');
       b.type='button';b.className='symbol';
@@ -170,7 +204,11 @@
       shared=deck[a].find(v=>deck[b].includes(v));
     } while(a===b||key===oldPair||shared===previousCommon);
     oldPair=key; common=shared;
-    makeCard(cards[0],deck[a]);makeCard(cards[1],deck[b]);
+    // The original 31-card deck has one shared picture per pair. For easier
+    // levels, keep it and show fewer distinct decoys on each card.
+    const visible = full => level==='hard' ? full :
+      [shared,...shuffle(full.filter(id=>id!==shared)).slice(0,counts[level]-1)];
+    makeCard(cards[0],visible(deck[a]));makeCard(cards[1],visible(deck[b]));
     busy=false;
   }
   function choose(button,id){
@@ -191,6 +229,28 @@
       if(score>=10){byId('win').classList.add('show'); return;}
       nextRound();msg('Find the matching picture! 🔍',false);
     },850);
+  }
+  function changeLevel(next){
+    if(next===level || !(next in counts))return;
+    level=next;
+    difficultyStorage.save({level});
+    byId('game').dataset.level=level;
+    for(const name of Object.keys(counts)){
+      const button=byId('level-'+name);
+      const active=name===level;
+      button.classList.toggle('active',active);
+      button.setAttribute('aria-pressed',String(active));
+    }
+    restart(); // Clear score and any pending turn animation when switching.
+  }
+  for(const name of Object.keys(counts))
+    byId('level-'+name).addEventListener('click',()=>changeLevel(name));
+  // Initialize selected button state from a saved preference (or Easy by default).
+  byId('game').dataset.level=level;
+  for(const name of Object.keys(counts)){
+    const button=byId('level-'+name), active=name===level;
+    button.classList.toggle('active',active);
+    button.setAttribute('aria-pressed',String(active));
   }
   byId('hint').addEventListener('click',()=>{
     if(busy)return;
