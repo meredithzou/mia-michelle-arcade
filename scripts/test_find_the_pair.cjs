@@ -72,7 +72,21 @@ const ids = ['game','card1','card2','score','progress','message','hint','reset',
 const dom = Object.fromEntries(ids.map(id => [id, new Element()]));
 const timers = new Map();
 let nextTimer = 0;
+const savedPreferences=[];
 vm.runInNewContext(script, {
+  window: {
+    ArcadeSettings: {
+      create(schema){
+        assert.equal(schema.key, 'arcade.settings.find-the-pair');
+        assert.equal(schema.version, 1);
+        assert.equal(schema.defaults.level, 'easy');
+        return {
+          load: () => ({level:'easy'}),
+          save: value => {savedPreferences.push(value.level);return true;}
+        };
+      }
+    }
+  },
   document: {
     getElementById: id => {assert.ok(dom[id], `Missing DOM: ${id}`); return dom[id];},
     createElement: () => new Element(),
@@ -119,6 +133,7 @@ assert.equal(timers.size, 1);
 // Changing difficulty mid-animation cancels the old timer and starts afresh.
 dom['level-medium'].click();
 assert.equal(timers.size, 0);
+assert.equal(savedPreferences.at(-1), 'medium');
 assert.equal(dom.score.textContent, 0);
 checkMode('medium',4);
 for (let i=0; i<3; i++) {
@@ -128,6 +143,7 @@ for (let i=0; i<3; i++) {
 }
 // Switching to Hard must reset the progress and keep the old six-picture game.
 dom['level-hard'].click();
+assert.equal(savedPreferences.at(-1), 'hard');
 assert.equal(dom.score.textContent, 0);
 checkMode('hard',6);
 for (let score=1; score<=10; score++) {
@@ -141,6 +157,7 @@ assert.equal(dom.score.textContent, 0);
 assert.ok(!dom.win.classList.contains('show'));
 checkMode('hard',6);
 dom['level-easy'].click();
+assert.equal(savedPreferences.at(-1), 'easy');
 checkMode('easy',2);
 for (let i=1; i<=10; i++) {
   match(2).click();
