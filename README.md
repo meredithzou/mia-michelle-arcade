@@ -12,8 +12,8 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 | [Marble Run Lab](games/marble-run-lab/) | Build a track, drop a marble, and follow its trail. |
 | [Jigsaw Garden](games/jigsaw-garden/) | Fit 9, 16, or 25 pieces together, choose a scene, or use your own photo. |
 | [Chicken Jockey Dash](games/chicken-jockey-dash/) | Tap to jump over obstacles in a side-scrolling runner. |
-| [Chinese Checkers](games/chinese-checkers/) | Play local, same-screen Chinese Checkers with 2–6 people. |
-| [Five in a Row (Gomoku)](games/gomoku/) | Play same-screen 五子棋 with two people, undo moves, and connect five to win. |
+| [Chinese Checkers (跳棋)](games/chinese-checkers/) | Play local, same-screen Chinese Checkers with 2–6 people. |
+| [Five in a Row (五子棋)](games/gomoku/) | Play same-screen 五子棋 with two people, undo moves, and connect five to win. |
 | [Chinese Chess (中国象棋)](games/chinese-chess/) | Play same-screen Chinese Chess with legal move hints, check warnings, undo, and board rotation. |
 | [Name That Note!](games/name-that-note/) | Identify notes shown on a musical staff. |
 | [Play That Note!](games/play-that-note/) | Find the displayed note on a piano keyboard. |

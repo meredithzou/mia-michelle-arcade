@@ -42,3 +42,6 @@ footer { margin-top:25px; }
   .hero h1 { font-size:32px; }
   .collection { margin-top:28px; }
 }
+
+/* Custom title art follows the inline emoji spacing and first text line. */
+.collection .game-title-icon { display:inline-block; width:27px; height:27px; object-fit:contain; vertical-align:-6px; margin-right:3px; }
