@@ -23,7 +23,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 
 ## Homepage collections
 
-The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, Find the Pair!, Jigsaw Garden, Marble Run Lab, Domino Knockdown!), **Family Classics** (Chinese Checkers, Gomoku, Chinese Chess), and **The Music Box** (the music games/tools). Keep new cards in the appropriate collection, with Piano Note Finder last in the music collection. `styles/home.css` gives cards an equal height and three/two/one columns at desktop/tablet/phone widths.
+The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, Find the Pair!, Jigsaw Garden, Marble Run Lab, Domino Knockdown!), **Family Classics** (Chinese Checkers, Five in a Row, Chinese Chess), and **The Music Box** (the music games/tools). Keep new cards in the appropriate collection, with Piano Note Finder last in the music collection. `styles/home.css` gives cards an equal height and three/two/one columns at desktop/tablet/phone widths.
 
 ## Project layout
 
