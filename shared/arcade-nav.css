@@ -1,7 +1,9 @@
-/* Shared return button. Override colors only with custom properties. */
+/* Shared return button. Scrolls with the document; never overlays a scrolled game.
+   The body padding reserves its top row, including on flex-centered game pages.
+   Override colors only with custom properties. */
 body.arcade-game-page { padding-top:calc(68px + env(safe-area-inset-top, 0px)) !important; }
 a.arcade-return {
-  position:fixed; top:calc(8px + env(safe-area-inset-top, 0px)); left:max(12px, env(safe-area-inset-left, 0px)); z-index:50;
+  position:absolute; top:calc(8px + env(safe-area-inset-top, 0px)); left:max(12px, env(safe-area-inset-left, 0px)); z-index:50;
   display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box;
   min-height:44px; max-width:calc(100vw - 24px); margin:0; padding:9px 13px;
   border:0; border-radius:999px; background:var(--arcade-return-bg, #214f43); color:var(--arcade-return-color, #fff);
