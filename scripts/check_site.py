@@ -19,7 +19,6 @@ ERRORS = []
 
 # Compatibility URLs are redirects, not playable games. Their targets must exist.
 REDIRECTS = {
-    "gomoku": "five-in-a-row",
     "name-the-note": "name-that-note",
     "find-that-note": "play-that-note",
 }
