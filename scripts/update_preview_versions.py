@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Update homepage image cache keys from the files' content (Git blob hashes).
+"""Update homepage image and layout stylesheet cache keys from the files' content (Git blob hashes).
 
-Run without arguments after adding/replacing homepage images. --check is used
+Run without arguments after changing homepage images or layout stylesheets. --check is used
 by CI so image updates cannot be merged with stale cache keys. This keeps the
 GitHub Pages site static: no JavaScript, service worker, or build step needed.
 """
@@ -13,13 +13,20 @@ import re
 
 ROOT = Path(__file__).resolve().parent.parent
 HOME = ROOT / "index.html"
-# Only inspect actual <img> tags, not unrelated src attributes or text.
+# Inspect only image tags and local layout stylesheet links.
 IMG_TAG = re.compile(r"<img\b[^>]*>", re.IGNORECASE)
 LOCAL_IMAGE_SRC = re.compile(
     r"""(?P<attribute>\ssrc\s*=\s*)(?P<quote>["'])"""
     r"""(?P<path>assets/[a-zA-Z0-9_./-]+\.(?:png|jpe?g|webp|svg))"""
     r"""(?P<query>\?[^"']*)?(?P=quote)""",
     re.IGNORECASE,
+)
+
+LINK_TAG = re.compile(r"<link\b[^>]*>", re.IGNORECASE)
+LOCAL_STYLE_HREF = re.compile(
+    r"""(?P<attribute>\shref\s*=\s*)(?P<quote>["'])"""
+    r"""(?P<path>styles/[a-zA-Z0-9_./-]+\.css)"""
+    r"""(?P<query>\?[^"']*)?(?P=quote)""", re.IGNORECASE,
 )
 
 
@@ -35,14 +42,14 @@ def image_version(path):
 
 
 def version_html(source, root):
-    """Version local images without reformatting or changing other HTML.
+    """Version images and layout stylesheets without reformatting or changing other HTML.
 
     Preserve image attributes and external URLs. Reject unrelated query
     parameters instead of silently removing an intentional image option.
     """
     root = root.resolve()
 
-    def replace_tag(tag_match):
+    def replace_tag(tag_match, pattern=LOCAL_IMAGE_SRC):
         """Rewrite the local image source, if one exists in this <img> tag."""
         def replace_src(match):
             """Replace the current v= value with the asset's content hash."""
@@ -51,13 +58,18 @@ def version_html(source, root):
                 raise ValueError(f"Unexpected image query: {match.group('path')}{query}")
             asset = (root / match.group("path")).resolve()
             if not asset.is_relative_to(root) or not asset.is_file():
-                raise FileNotFoundError(f"Missing homepage image: {match.group('path')}")
+                raise FileNotFoundError(f"Missing homepage asset: {match.group('path')}")
             versioned_url = f"{match.group('path')}?v={image_version(asset)}"
             return f"{match.group('attribute')}{match.group('quote')}{versioned_url}{match.group('quote')}"
 
-        return LOCAL_IMAGE_SRC.sub(replace_src, tag_match.group(0), count=1)
+        return pattern.sub(replace_src, tag_match.group(0), count=1)
 
-    return IMG_TAG.sub(replace_tag, source)
+    source = IMG_TAG.sub(replace_tag, source)
+    def replace_stylesheet(match):
+        if not re.search(r"""\brel\s*=\s*["']stylesheet["']""", match.group(0), re.IGNORECASE):
+            return match.group(0)
+        return replace_tag(match, LOCAL_STYLE_HREF)
+    return LINK_TAG.sub(replace_stylesheet, source)
 
 
 def main():
@@ -70,17 +82,17 @@ def main():
     updated = version_html(original, ROOT)
     if args.check:
         if updated != original:
-            print("Homepage image versions are stale. Run: python3 scripts/update_preview_versions.py")
+            print("Homepage image/style versions are stale. Run: python3 scripts/update_preview_versions.py")
             print("".join(difflib.unified_diff(original.splitlines(True), updated.splitlines(True), fromfile="index.html", tofile="expected index.html")))
             return 1
-        print("Homepage image versions are up to date.")
+        print("Homepage image/style versions are up to date.")
         return 0
 
     if updated != original:
         HOME.write_text(updated, encoding="utf-8")
         print("Updated homepage image versions in index.html.")
     else:
-        print("Homepage image versions already up to date.")
+        print("Homepage image/style versions already up to date.")
     return 0
 
 

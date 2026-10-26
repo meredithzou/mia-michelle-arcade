@@ -43,6 +43,20 @@ class HomepageImageVersionTests(unittest.TestCase):
         self.assertNotEqual(first, second)
         self.assertIn('src="assets/example.png?v=', second)
 
+    def test_stylesheet_content_change_invalidates_cache(self):
+        (self.root / "styles").mkdir()
+        css = self.root / "styles/home.css"
+        css.write_text(".icon { width:24px }")
+        source = '<link rel="stylesheet" href="styles/home.css"><link rel="preload" href="styles/home.css">'
+        first = version_html(source, self.root)
+        self.assertEqual(first, version_html(first, self.root))
+        self.assertIn('<link rel="preload" href="styles/home.css">', first)
+        css.write_text(".icon { width:27px }")
+        second = version_html(first, self.root)
+        self.assertNotEqual(first, second)
+        self.assertIn(f'styles/home.css?v={image_version(css)}', second)
+
+
     def test_missing_image_fails(self):
         """Prevent publishing a version key for a nonexistent preview."""
         with self.assertRaises(FileNotFoundError):

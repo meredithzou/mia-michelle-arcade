@@ -39,18 +39,18 @@ No app server, login, or build framework is required. Game preferences are store
 
 
 
-## Homepage image cache busting
+## Homepage image and layout CSS cache busting
 
 Homepage images use URLs like `assets/example-preview.png?v=abcdef123456`. The 12-character version is computed from the image's Git blob content hash, so changing a screenshot automatically yields a new URL for browsers without renaming the actual image. There is no build system or runtime JavaScript.
 
-After adding or replacing an image referenced in `index.html`, run:
+After changing a homepage image or a stylesheet in `styles/`, run:
 
 ```sh
 python3 scripts/update_preview_versions.py
 python3 scripts/update_preview_versions.py --check
 ```
 
-Commit the regenerated `index.html` with the asset change. CI verifies the versions and fails if any screenshot is stale; **never edit a version number by hand**. As with any GitHub Pages update, browsers still need to fetch the latest HTML after deployment before seeing the new URL.
+Commit the regenerated `index.html` with the asset change. The same content-hash versioning covers layout stylesheet links in `styles/`. Shared `.game-title-icon` CSS is the single source for title icon size, spacing, and alignment; do not duplicate those values inline. CI verifies the versions and fails if any image or layout stylesheet URL is stale; **never edit a version number by hand**. As with any GitHub Pages update, browsers still need to fetch the latest HTML after deployment before seeing the new URL.
 
 ## Shared return button
 
