@@ -54,7 +54,7 @@ Commit the regenerated `index.html` with the asset change. The same content-hash
 
 ## Shared return button
 
-Every playable game uses `shared/arcade-nav.css` and the same top-left, pill-shaped return link, with a 44px touch target, safe-area spacing, and keyboard focus outline. Colors may differ using `--arcade-return-bg`, `--arcade-return-color`, and `--arcade-return-focus`; keep geometry and text shared. Use `class="arcade-game-page"` on the body and exactly one `<a class="arcade-return" href="../../index.html">← Mia and Michelle’s Arcade</a>`. Load the shared stylesheet after game styles. Legacy redirect pages are exempt.
+Every playable game uses `shared/arcade-nav.css` and the same top-left, pill-shaped return link, with a 44px touch target, safe-area spacing, and keyboard focus outline. The button occupies a reserved row at the top of the document and scrolls offscreen with the page; never use fixed or sticky positioning for it. Colors may differ using `--arcade-return-bg`, `--arcade-return-color`, and `--arcade-return-focus`; keep geometry and text shared. Use `class="arcade-game-page"` on the body and exactly one `<a class="arcade-return" href="../../index.html">← Mia and Michelle’s Arcade</a>`. Load the shared stylesheet after game styles. Legacy redirect pages are exempt.
 
 ## Quality checks for every game
 
