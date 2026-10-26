@@ -11,7 +11,7 @@ The Arcade uses **Cloudflare Web Analytics** for aggregate pageviews and perform
 - `privacy.html`: public explanation of aggregate analytics.
 
 The homepage, Privacy page, and **all 12 games** load the same shared analytics scripts:
-Chicken Jockey Dash, Chinese Checkers, Name That Note!, Play That Note!, Do I Have Absolute Pitch?, Find the Pair!, Five in a Row (Gomoku), Piano Note Finder, Jigsaw Garden, Marble Run Lab, Chinese Chess (中国象棋), and Domino Knockdown!.
+Chicken Jockey Dash, Chinese Checkers, Name That Note!, Play That Note!, Do I Have Absolute Pitch?, Find the Pair!, Five in a Row (五子棋), Piano Note Finder, Jigsaw Garden, Marble Run Lab, Chinese Chess (中国象棋), and Domino Knockdown!.
 
 **Dashboard check after the custom-domain move:** The original analytics configuration was created while the site used `meredithzou.github.io`. In Cloudflare Web Analytics, verify that the site hostname/configuration also accepts `miamichellearcade.com`, and confirm actual pageviews from the new hostname. Updating this README or DNS alone does not update Cloudflare's analytics dashboard configuration.
 
