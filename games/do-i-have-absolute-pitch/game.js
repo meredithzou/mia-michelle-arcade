@@ -7,9 +7,20 @@ const init={range:'upper',hints:true,sensitivity:pianoInput.defaultSensitivity,s
  lower:Array.from({length:36},(_,i)=>36+i),middle:Array.from({length:36},(_,i)=>48+i),upper:Array.from({length:36},(_,i)=>60+i)
 }};
 const practiceSettings=window.ArcadeSettings.create({
- key:'arcade.settings.do-i-have-absolute-pitch',version:4,defaults:init,
+ key:'arcade.settings.do-i-have-absolute-pitch',version:5,defaults:init,
  upgrade:(version,value)=>{
-  if(version===3)return value;
+  if(version===3||version===4){
+   const selectedByRange={...value.selectedByRange};
+   for(const [range,lo] of [['lower',36],['middle',48],['upper',60]]){
+    const notes=selectedByRange[range];
+    // Earlier full-range presets contained 25 keys. Upgrade only that exact
+    // selection; sparse/custom selections and current three-octave pools stay.
+    if(Array.isArray(notes)&&notes.length===25&&new Set(notes).size===25&&notes.every(m=>Number.isInteger(m)&&m>=lo&&m<=lo+24)){
+     selectedByRange[range]=[...init.selectedByRange[range]];
+    }
+   }
+   return {...value,selectedByRange};
+  }
   if(![1,2].includes(version))return null;
   const selectedByRange={};
   for(const [range,lo] of [['lower',36],['middle',48],['upper',60]])selectedByRange[range]=Array.from({length:36},(_,i)=>lo+i).filter(m=>value.notes!=='white'||![1,3,6,8,10].includes(m%12));
