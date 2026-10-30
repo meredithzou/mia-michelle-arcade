@@ -264,7 +264,7 @@ test("Listening game: both earlier schemas migrate range, hints, and white-key c
   const saved=f.api.create(pitchSchema).load();
   assert.equal(saved.range,"upper");assert.equal(saved.hints,version===1);
   equal(saved.selectedByRange.upper,[60,62,64,65,67,69,71,72,74,76,77,79,81,83,84,86,88,89,91,93,95]);
-  assert.equal(JSON.parse(f.items.get(pitchSchema.key)).version,4);
+  assert.equal(JSON.parse(f.items.get(pitchSchema.key)).version,5);
  }
 });
 
@@ -272,6 +272,28 @@ test("Listening game: stored empty active pool recovers safely",()=>{
  const f=fixture(),s=f.api.create(pitchSchema);s.save({range:"lower",selectedByRange:{lower:[],middle:[],upper:[72]}});
  equal(s.load().selectedByRange.lower,Array.from({length:36},(_,i)=>36+i));
  equal(s.load().selectedByRange.middle,[]);
+});
+
+test("Listening game: legacy full-range selections expand to all 36 keys in every range",()=>{
+ for(const version of [3,4])for(const range of ['lower','middle','upper']){
+  const selectedByRange=Object.fromEntries([['lower',36],['middle',48],['upper',60]].map(([id,lo])=>[id,Array.from({length:25},(_,i)=>lo+i)]));
+  const f=fixture({[pitchSchema.key]:JSON.stringify({version,settings:{range,hints:false,sensitivity:'high',selectedByRange}})});
+  const saved=f.api.create(pitchSchema).load();
+  equal(saved.selectedByRange,JSON.parse(JSON.stringify(pitchSchema.defaults.selectedByRange)));
+  assert.equal(saved.range,range);assert.equal(saved.hints,false);assert.equal(saved.sensitivity,'high');
+  assert.equal(JSON.parse(f.items.get(pitchSchema.key)).version,5);
+ }
+});
+
+test("Listening game: migration preserves custom pools and already expanded selections",()=>{
+ for(const version of [3,4]){
+  const selectedByRange={lower:[36,41,59],middle:Array.from({length:36},(_,i)=>48+i),upper:[60,62,65,89]};
+  const f=fixture({[pitchSchema.key]:JSON.stringify({version,settings:{range:'middle',selectedByRange}})});
+  equal(f.api.create(pitchSchema).load().selectedByRange,selectedByRange);
+ }
+ const selectedByRange={...pitchSchema.defaults.selectedByRange,middle:Array.from({length:25},(_,i)=>48+i)};
+ const f=fixture(),store=f.api.create(pitchSchema);store.save({...store.load(),selectedByRange});
+ equal(store.load().selectedByRange,JSON.parse(JSON.stringify(selectedByRange)));
 });
 
 
