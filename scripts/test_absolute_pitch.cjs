@@ -107,6 +107,18 @@ ids.npxapply.onclick();assert.equal(ids.npxshade.hidden,false);assert.deepEqual(
 assert.equal(ids.pitchselectionstatus.attributes.role,'alert');
 pick(37).onclick();ids.npxapply.onclick();assert.equal(ids.npxshade.hidden,true);assert.deepEqual(Array.from(g.candidates()),[37]);
 console.log('Selection shortcuts passed: All, White Only, Black Only, None, empty Save blocked and corrected.');
+ids.npxsettings.onclick();
+function selectionState(mode){
+ for(const id of ['all','white','black','none'])assert.equal(ids['pitchselect'+id].attributes['aria-pressed'],String(id===mode));
+ assert.equal(ids.pitchcustompick.attributes['data-active'],String(mode==='custom'));
+}
+selectionState('custom');assert.ok(ids.pitchselectionstatus.textContent.includes('Your Pick'));
+for(const id of ['all','white','black','none']){ids['pitchselect'+id].onclick();selectionState(id)}
+pick(37).onclick();selectionState('custom');
+ids.pitchranges.children[1].onclick();selectionState('all');
+ids.pitchranges.children[0].onclick();selectionState('custom');
+ids.npxclose.onclick();ids.npxsettings.onclick();selectionState('custom');ids.npxclose.onclick();
+console.log('Selection state passed: all four presets, manual Your Pick, per-range restoration and reopening saved custom choices.');
 
 const beforeRestart=plays.length;ids.npxrestart.onclick();
 assert.equal(plays.length,beforeRestart,'Restart waits for the first Play click');

@@ -179,6 +179,15 @@ const selectionKeys=window.PlayThatNoteKeyboard.create({container:$('pitchselect
 function renderSelection(){
  const [lo,hi]=bounds(draft);selectionKeys.render(lo,hi);
  const selected=draft.selectedByRange[draft.range];
+ const pitches=keyboardPitches(draft),black=m=>[1,3,6,8,10].includes(m%12);
+ const modes=[['all','Select All',pitches],['white','White Only',pitches.filter(m=>!black(m))],['black','Black Only',pitches.filter(black)],['none','Select None',[]]];
+ let selectionLabel='Your Pick';
+ for(const [id,label,notes] of modes){
+  const active=notes.length===selected.length&&notes.every(m=>selected.includes(m));
+  $('pitchselect'+id).setAttribute('aria-pressed',String(active));
+  if(active)selectionLabel=label;
+ }
+ $('pitchcustompick').setAttribute('data-active',String(selectionLabel==='Your Pick'));
  for(const b of $('pitchselection').children){
   const on=selected.includes(Number(b.dataset.midi));
   if(on)b.classList.add('selected');else b.classList.remove('selected');
@@ -186,7 +195,7 @@ function renderSelection(){
  }
  $('pitchselectionstatus').setAttribute('role','status');
  $('pitchselectionstatus').classList.remove('pitch-selection-error');
- $('pitchselectionstatus').textContent=selected.length+' notes selected · Tap keys to include or exclude them';
+ $('pitchselectionstatus').textContent=selected.length+' notes selected · '+selectionLabel+' · Tap keys to include or exclude them';
 }
 function toggleNote(m){
  const notes=draft.selectedByRange[draft.range];
