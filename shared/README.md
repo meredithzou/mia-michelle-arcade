@@ -142,3 +142,16 @@ can use `npx-icon-roomy` on its SVG.
 additional feedback classes are cleared before each mark and question reset.
 `audio.stop()` cancels pending playback and stops active notes, allowing callers
 to avoid overlapping sound while reusing decoded recordings.
+
+The keyboard renderer accepts `labelAll: true` in `create` for labeled listening
+or answer pianos, including enharmonic names on black keys. Its default remains
+C-only labels. `render(low, high)` supplies the white-key count and minimum width
+as CSS properties; `keyboard.css` contains the common piano geometry, imported
+by `practice.css` and used directly by the Absolute Pitch learning page.
+
+`music/pitch-playback.js` and `.css` share the Play Pitch button and decorative
+asymmetric ripples between the main Absolute Pitch game and its learning page.
+`audio.play(midi, onEnded, {duration, onStarted})` optionally provides short,
+faded stimuli; callers without options retain the existing piano decay.
+Training stages, scoring, timers and completion marks belong to
+`games/do-i-have-absolute-pitch/`, rather than a shared game engine.

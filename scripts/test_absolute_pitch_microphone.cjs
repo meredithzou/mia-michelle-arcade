@@ -20,10 +20,10 @@ assert(button.innerHTML.includes('M3 3l18 18'),'Off icon is crossed out');assert
 button.onclick();assert.equal(starts,1);assert(ids.npxletters.children.every(b=>b.disabled));
 assert(!button.innerHTML.includes('M3 3l18 18'),'On icon has no slash');
 note(g.q.m);assert.equal(ids.npxnum.textContent,'0','Cannot answer before hearing a question');
-g.playPitch();assert.equal(ids.npxmsg.textContent,'Play the matching piano key on your own piano');note(g.q.m);assert.equal(ids.npxnum.textContent,'0','Speaker playback cannot answer itself');
+g.playPitch();assert.equal(ids.npxmsg.textContent,'Play the matching piano key on a physical piano');note(g.q.m);assert.equal(ids.npxnum.textContent,'0','Speaker playback cannot answer itself');
 ends.at(-1)();note(g.q.m);assert.equal(ids.npxnum.textContent,'0','Ignore acoustic tail');
 finish();key(g.q.m).onclick();assert.equal(ids.npxnum.textContent,'0','Touch events cannot grade in piano mode');
-const target=g.q.m,wrong=target===48?49:target-1,count=sounds.length;
+const target=g.q.m,wrong=target===60?61:target-1,count=sounds.length;
 note(wrong);assert(key(wrong).className.includes(wrong<target?'low':'high'));assert.equal(ids.npxacc.textContent,'0%');
 note(target);assert(g.locked);assert(key(target).className.includes('good'));assert.equal(sounds.length,count,'No duplicated piano output');
 g.next();note(g.q.m);assert.equal(Number(ids.npxnum.textContent),1,'Automatic next pitch is also gated');finish();

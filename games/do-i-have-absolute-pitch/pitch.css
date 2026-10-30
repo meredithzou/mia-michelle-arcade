@@ -1,16 +1,6 @@
 
 .npx-brand h2{font-size:clamp(19px,3.4vw,30px);text-align:center;line-height:1.2}
 .npx-brand-left,.npx-brand-right{flex-shrink:0;width:clamp(28px,7vw,64px)}
-.pitch-paper{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:12px;min-height:230px;padding:22px 12px}
-.pitch-paper>*{position:relative;z-index:1}
-.pitch-paper>.pitch-ripple{position:absolute;z-index:0;pointer-events:none;left:0;top:50%;width:100%;height:96px;transform:translateY(-50%);opacity:0;color:#ac8be7;contain:layout paint;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
-.pitch-paper>.pitch-ripple>.pitch-wave-front{position:absolute;left:50%;top:0;width:200px;height:96px;max-height:none;transform-origin:50% 50%}
-.pitch-wave-front path{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;vector-effect:non-scaling-stroke}
-.pitch-eyebrow{font-size:11px;letter-spacing:2px;color:#8a7b9f;margin:0}
-.npx .pitch-play{display:flex;align-items:center;gap:12px;background:#eee6ff;color:#7352cc;border:1px solid #d9c9fa;border-radius:999px;padding:17px 27px;min-height:68px;font-size:20px}
-.npx .pitch-play svg{width:26px;height:26px;fill:currentColor}
-.npx .pitch-play:active{transform:scale(.98)}
-.npx .pitch-play:focus-visible{outline:3px solid #9866f2;outline-offset:4px}
 #pitchhint{font-size:12px;color:#847d97;text-align:center;margin:0}
 .npx-keyboard button:disabled{opacity:1}
 @media(max-width:460px){.npx-brand{gap:4px}.npx-brand h2{font-size:20px}.pitch-paper{min-height:210px}}
@@ -36,3 +26,11 @@
 .npx .pitch-input-hint{margin:0 14px 12px;text-align:center;color:#847d97;font-size:12px;line-height:1.6}
 .npx .pitch-input-hint svg{vertical-align:-3px;margin-right:4px}
 .pitch-privacy{max-width:880px;box-sizing:border-box;margin:0 auto;padding:4px 18px 20px;color:#78698d;font:12px/1.6 ui-rounded,system-ui,-apple-system,sans-serif}
+.pitch-resources{max-width:880px;margin:20px auto 14px;color:#443751;font:14px/1.7 ui-rounded,system-ui,-apple-system,sans-serif;display:grid;gap:18px}
+.pitch-guide-link{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:23px;background:#f4eefe;border:1px solid #e2d9ef;border-radius:17px}
+.pitch-guide-link small{font-size:13px;color:#80649e}.pitch-guide-link h2{font-size:clamp(17px,2.7vw,21px);font-weight:800;letter-spacing:.5px;margin:4px 0}.pitch-guide-link p{margin:0;color:#78698d;font-size:13px}
+.pitch-guide-link>a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 16px;background:#7653e6;color:white;border-radius:999px;text-decoration:none;white-space:nowrap;font-weight:700}
+.pitch-experiment{padding:21px 23px;background:white;border:1px solid #e2d9ef;border-radius:17px}.pitch-experiment h2{font-size:18px;margin:0 0 8px;color:#684d86}.pitch-experiment p{margin:0 0 12px}.pitch-experiment p:last-child{margin-bottom:0}.pitch-experiment a{color:#7352cc}.pitch-experiment summary{min-height:44px;display:list-item;align-content:center;color:#7352cc;cursor:pointer;font-weight:650}.pitch-experiment details[open] summary{margin-bottom:12px}.pitch-guide-link>a:focus-visible,.pitch-experiment summary:focus-visible{outline:3px solid #aa8cdd;outline-offset:3px}
+@media(max-width:540px){.pitch-guide-link{align-items:flex-start;flex-direction:column;gap:14px;padding:20px}.pitch-experiment{padding:20px}.pitch-resources{margin-left:8px;margin-right:8px}}
+/* Fit all three octaves on tablet-sized screens; retain touch-friendly scrolling on phones. */
+@media(min-width:700px){.npx-game #npxletters.npx-keyboard{min-width:0;width:100%}}

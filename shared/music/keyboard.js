@@ -5,18 +5,22 @@ function keyName(m){
  return names[m%12].map(n=>n+octave).join(' / ');
 }
 const isBlack=m=>[1,3,6,8,10].includes(m%12);
-function create({container,onAnswer}){
+function create({container,onAnswer,labelAll=false}){
  let currentLow,currentHigh;
  function reset(){for(const b of container.children){b.disabled=false;b.classList.remove('bad');b.classList.remove('good');b.classList.remove('show');b.classList.remove('low');b.classList.remove('high')}}
  function render(low,high){
   if(low===currentLow&&high===currentHigh){reset();return}
   currentLow=low;currentHigh=high;container.replaceChildren();
   let white=0,count=0;for(let m=low;m<=high;m++)if(!isBlack(m))count++;
+  container.style.setProperty('--piano-white-count',String(count));
+  container.style.setProperty('--piano-keyboard-min-width',Math.max(630,count*42)+'px');
   for(let m=low;m<=high;m++){
    const black=isBlack(m),b=document.createElement('button');b.type='button';
-   b.dataset.midi=m;b.className=black?'piano-black':'piano-white';b.setAttribute('aria-label',keyName(m));
+   const name=keyName(m);
+   b.dataset.midi=m;b.className=black?'piano-black':'piano-white';b.setAttribute('aria-label',name);
    b.style.left=(black?(white-.31)/count*100:white/count*100)+'%';
-   if(!black){if(m%12===0){b.textContent=keyName(m);if(m===60)b.title='Middle C'}white++}
+   if(labelAll){b.textContent=name.split(' / ').join('\n');b.title=name}
+   if(!black){if(!labelAll&&m%12===0){b.textContent=name;if(m===60)b.title='Middle C'}white++}
    b.onclick=()=>onAnswer(m);container.append(b);
   }
  }
