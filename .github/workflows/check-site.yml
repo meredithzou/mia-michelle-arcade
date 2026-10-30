@@ -25,6 +25,7 @@ jobs:
       - run: node scripts/test_play_that_note_microphone.cjs
       - run: node scripts/test_absolute_pitch.cjs
       - run: node scripts/test_absolute_pitch_microphone.cjs
+      - run: node scripts/test_pitch_training.cjs
       - run: node scripts/test_piano_input.cjs
       - run: node scripts/test_audio_session_capture.cjs
       - run: node scripts/test_piano_note_finder.cjs

@@ -1,0 +1,10 @@
+.npx-keyscroll{overflow-x:auto;padding:3px 0 14px;margin:0 12px;-webkit-overflow-scrolling:touch}
+.npx-keyboard{position:relative;height:196px;min-width:var(--piano-keyboard-min-width,630px);isolation:isolate}
+.npx-keyboard button{position:absolute;top:0;padding:0 0 12px;display:flex;align-items:flex-end;justify-content:center;border-radius:0 0 7px 7px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-size:12px;font-weight:750;opacity:1!important}
+.npx-keyboard .piano-white{width:calc(100% / var(--piano-white-count,15));height:100%;background:linear-gradient(#fff 88%,#ede8f5);border:1px solid #bdb4cf;color:#78698d;z-index:1}
+.npx-keyboard .piano-black{width:calc(100% / var(--piano-white-count,15) * .62);height:62%;background:linear-gradient(#433b52,#201a2c);border:1px solid #171021;box-shadow:0 4px 3px #29203644;z-index:2}
+.npx-keyboard button:focus-visible{outline:3px solid #9866f2;outline-offset:-4px}
+.npx-keyboard button.good{background:#a5e9be;border-color:#27985a;color:#165e35}
+.npx-keyboard button.bad{background:#f5aabd;border-color:#d4677c}
+.npx-keyboard button.show{background:#c5aff5;border-color:#8057c9;color:#503077}
+.npx-keyboard button:active{filter:brightness(.9)}

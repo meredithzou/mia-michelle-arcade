@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Practicing Absolute Pitch · Mia and Michelle’s Arcade</title>
+  <link rel="stylesheet" href="../../shared/arcade-nav.css">
+  <link rel="stylesheet" href="../../shared/music/keyboard.css">
+  <link rel="stylesheet" href="learn.css">
+  <link rel="stylesheet" href="../../shared/music/pitch-playback.css">
+</head>
+<body class="pitch-guide-page">
+  <nav class="guide-return" aria-label="Back to the game"><a class="arcade-return" href="index.html">← Back to the game</a></nav>
+  <main>
+    <header class="intro">
+      <p class="eyebrow">THE MUSIC BOX · A FAMILY LEARNING NOTEBOOK</p>
+      <h1>Practicing Absolute Pitch</h1>
+      <p class="lead">A little research, a few examples, and an experimental way to explore listening.</p>
+    </header>
+
+    <aside class="notice" aria-labelledby="before-title">
+      <h2 id="before-title">Before getting started</h2>
+      <p>This is our family’s interpretation of someone else’s published research, shared for information and informal experimentation. It is not an independently validated training program, professional instruction, or a promise of developing absolute pitch.</p>
+      <p><strong>Users are encouraged to read the original source and decide whether the research and these activities are suitable or useful for them.</strong></p>
+    </aside>
+
+    <section aria-labelledby="research-title">
+      <p class="eyebrow">01 · THE RESEARCH</p>
+      <h2 id="research-title">What we read</h2>
+      <article class="source-card">
+        <p class="source-label">PRIMARY SOURCE · OPEN ACCESS</p>
+        <h3><a href="https://doi.org/10.3758/s13423-024-02620-2" target="_blank" rel="noopener">Learning fast and accurate absolute pitch judgment in adulthood ↗</a></h3>
+        <p>Yetta Kwailing Wong, Leo Y. T. Cheung, Vince S. H. Ngan &amp; Alan C.-N. Wong (2025). <em>Psychonomic Bulletin &amp; Review, 32</em>, 1676–1688.</p>
+        <p><strong>What the paper did.</strong> The analysis included 12 experienced adult musicians who trained over eight weeks, averaging 21.4 hours. The program helped participants learn to name notes by ear across three octaves, starting with F and gradually adding more note names.</p>
+        <p><strong>What the researchers found.</strong> By the end of training, participants could name an average of 7.08 note names at 90% accuracy or above, without feedback and within the required time. In a separate piano test covering all 12 note names, average accuracy increased from 13.9% before training to 31.7% afterwards.</p>
+      </article>
+    </section>
+
+    <section aria-labelledby="method-title">
+      <p class="eyebrow">02 · THE PAPER’S CORE METHOD</p>
+      <h2 id="method-title">How the training worked</h2>
+      <p>The researchers started with one note name, F. Participants learned to recognize it among nearby notes, then gradually learned more names. Sounds came from three octaves, C4–B6, throughout training.</p>
+      <ol class="research-method">
+        <li><strong>Measure the starting point.</strong> Before training, participants heard notes and chose their names from all 12 possibilities. No answers were revealed. The researchers measured accuracy, how far wrong answers were from the actual note, and response time.</li>
+        <li><strong>Learn to recognize F.</strong> Participants heard F4, F5 or F6 mixed with E♭, E, F♯ and G in the same three octaves. The answer was “F” for any F, or “out of bound” for the other notes.</li>
+        <li><strong>Become more accurate and faster.</strong> Each set of note names had 24 training levels. Early levels gave correct/incorrect feedback. Later levels removed feedback and allowed less answer time. The final level required at least 90% accuracy within its time limit.</li>
+        <li><strong>Add a name and keep the earlier ones.</strong> After completing those levels for F, participants learned E as well: answers became E, F or “out of bound.” Next came F♯: E, F, F♯ or “out of bound.” This continued toward all 12 names.</li>
+        <li><strong>Test again after training.</strong> Participants took another separate test covering all 12 names, without feedback, so the researchers could compare performance before and after training.</li>
+      </ol>
+      <div class="example"><span>WHAT TARGET AND NON-TARGET MEAN</span><p><strong>Target:</strong> a note name in the current learning set. Each target has its own answer. <strong>Non-target:</strong> one of the other notes mixed into the practice. The paper calls this answer “out of bound”; our practice calls it “Non-target.”</p></div>
+      <p class="fine">Source: the paper’s <a href="https://doi.org/10.3758/s13423-024-02620-2" target="_blank" rel="noopener">Training and Pre-post tests</a> sections.</p>
+      <details class="source-card"><summary><strong>Example answer sets as training expands</strong></summary>
+        <div class="comparison-wrap"><table><thead><tr><th>Target answers</th><th>Names answered “out of bound”</th></tr></thead><tbody>
+          <tr><td>F</td><td>E♭ · E · F♯ · G</td></tr>
+          <tr><td>E · F</td><td>D · E♭ · F♯ · G</td></tr>
+          <tr><td>E · F · F♯</td><td>D · E♭ · G · G♯</td></tr>
+          <tr><td>Eventually all 12 names</td><td>None</td></tr>
+        </tbody></table></div>
+        <p class="fine">These examples apply the paper’s surrounding-tone rule. Each name spans octaves 4, 5 and 6. Previously learned names stay in the set; E does not replace F.</p>
+      </details>
+    </section>
+
+    <section aria-labelledby="steps-title" id="pitch-training">
+      <p class="eyebrow">03 · OUR FAMILY’S TRAINING IMPLEMENTATION</p>
+      <h2 id="steps-title">Our interpretation, step by step</h2>
+      <p>Our experimental implementation follows our reading of the paper. Each step adds a target note name while retaining the earlier ones, always across octaves 4, 5 and 6.</p>
+      <p class="fine">This is our family’s experimental practice version, based on our reading of the paper’s gradual expansion of note names. It is not the researchers’ software or full training protocol: each step uses feedback rounds rather than the paper’s 24 levels. Later additions follow our reading of its alternating lower/upper expansion rule.</p>
+      <div class="comparison-wrap pt-roadmap"><table><caption>Training overview</caption><thead><tr><th scope="col">Step</th><th scope="col">Target focus</th><th scope="col">Finished <span id="pt-progress" role="status">0 / 12 marked</span></th></tr></thead><tbody>
+          <tr><th scope="row">1</th><td><button type="button" id="pt-open-0" class="pt-open-step">Learn F</button></td><td><input type="checkbox" id="pt-done-0" aria-label="Mark step 1 complete"></td></tr>
+          <tr><th scope="row">2</th><td><button type="button" id="pt-open-1" class="pt-open-step">Add E; keep F</button></td><td><input type="checkbox" id="pt-done-1" aria-label="Mark step 2 complete"></td></tr>
+          <tr><th scope="row">3</th><td><button type="button" id="pt-open-2" class="pt-open-step">Add F♯; keep E and F</button></td><td><input type="checkbox" id="pt-done-2" aria-label="Mark step 3 complete"></td></tr>
+          <tr><th scope="row">4</th><td><button type="button" id="pt-open-3" class="pt-open-step">Add E♭</button></td><td><input type="checkbox" id="pt-done-3" aria-label="Mark step 4 complete"></td></tr>
+          <tr><th scope="row">5</th><td><button type="button" id="pt-open-4" class="pt-open-step">Add G</button></td><td><input type="checkbox" id="pt-done-4" aria-label="Mark step 5 complete"></td></tr>
+          <tr><th scope="row">6</th><td><button type="button" id="pt-open-5" class="pt-open-step">Add D</button></td><td><input type="checkbox" id="pt-done-5" aria-label="Mark step 6 complete"></td></tr>
+          <tr><th scope="row">7</th><td><button type="button" id="pt-open-6" class="pt-open-step">Add G♯</button></td><td><input type="checkbox" id="pt-done-6" aria-label="Mark step 7 complete"></td></tr>
+          <tr><th scope="row">8</th><td><button type="button" id="pt-open-7" class="pt-open-step">Add D♭</button></td><td><input type="checkbox" id="pt-done-7" aria-label="Mark step 8 complete"></td></tr>
+          <tr><th scope="row">9</th><td><button type="button" id="pt-open-8" class="pt-open-step">Add A</button></td><td><input type="checkbox" id="pt-done-8" aria-label="Mark step 9 complete"></td></tr>
+          <tr><th scope="row">10</th><td><button type="button" id="pt-open-9" class="pt-open-step">Add C</button></td><td><input type="checkbox" id="pt-done-9" aria-label="Mark step 10 complete"></td></tr>
+          <tr><th scope="row">11</th><td><button type="button" id="pt-open-10" class="pt-open-step">Add B♭</button></td><td><input type="checkbox" id="pt-done-10" aria-label="Mark step 11 complete"></td></tr>
+          <tr><th scope="row">12</th><td><button type="button" id="pt-open-11" class="pt-open-step">Add B · all 12 names</button></td><td><input type="checkbox" id="pt-done-11" aria-label="Mark step 12 complete"></td></tr>
+      </tbody></table></div>
+      <p class="fine">Completion marks are set by users. The selected step and marks are saved in this browser when storage is available.</p>
+      <div class="pt-session" role="region" aria-label="Current practice step">
+      <div class="pt-stage-nav" aria-label="Training steps">
+        <button type="button" id="pt-prev" aria-label="Previous step">←</button>
+        <label for="pt-stage">Practice step<select id="pt-stage" aria-label="Practice step"></select></label>
+        <button type="button" id="pt-next" aria-label="Next step">→</button>
+      </div>
+      <h3 class="pt-step-title" id="training-step-1"><span id="pt-training-step-title">Step 1 · Learn F</span></h3>
+      <p id="pt-step-description">Start with F as the target.</p>
+      <div class="pt-familiarize">
+        <div><p class="eyebrow">FIRST · GET TO KNOW THE NEW TARGET</p><h3 id="pt-listen-title">Hear F in three octaves</h3><p>Listen to the new target in each octave. Repeat as often as needed before starting the feedback practice.</p></div>
+        <div class="pt-listen-buttons" role="group" aria-label="New target examples">
+          <div class="pt-single-notes"><button type="button" id="pt-f4" class="pt-secondary" disabled>F4</button><button type="button" id="pt-f5" class="pt-secondary" disabled>F5</button><button type="button" id="pt-f6" class="pt-secondary" disabled>F6</button></div>
+          <button type="button" id="pt-sample" class="pt-secondary" disabled>♫ Hear all targets in a random order</button>
+        </div>
+      </div>
+      <div class="pt-familiarize pt-keyboard-listening">
+        <div><p class="eyebrow">SECOND · EXPLORE THE SOUNDS</p><h3 id="pt-explore-title">Hear target and non-target notes</h3><p id="pt-explore-instruction">Tap the teal target keys or pale yellow non-target keys to compare their sounds.</p></div>
+        <p class="pt-piano-reference"><strong>Users can also play the highlighted notes on a well-tuned piano at home, using its sound as a reference for listening practice.</strong></p>
+        <div class="pt-key-legend"><span><i class="target-dot"></i><span id="pt-target-legend">Target · F4, F5, F6</span></span><span id="pt-other-legend-wrap"><i class="other-dot"></i><span id="pt-other-legend">Non-target · E♭, E, F♯, G</span></span></div>
+        <div class="npx-keyscroll pt-listening-scroll"><div id="pt-keyboard" class="npx-keyboard" role="group" aria-label="Listening piano, C4 to B6. Teal targets and pale yellow non-targets."></div></div>
+      </div>
+      <div class="pt-card">
+        <div class="pt-topline"><span class="pt-badge">FEEDBACK PRACTICE</span><span class="pt-audio-state" id="pt-audio" role="status">Loading piano sounds…</span></div>
+        <div class="pt-toolbar"><button type="button" id="pt-reset" class="pitch-restart">↻ Restart</button></div>
+        <h3>Practicing Absolute Pitch</h3>
+        <p class="fine" id="pt-practice-help">For a target pitch, tap its exact piano key, including the octave. For a non-target pitch, select the Non-target button.</p>
+        <button type="button" id="pt-retry" class="pt-secondary" hidden>Retry sounds</button>
+        <div class="pitch-paper">
+          <p class="pitch-eyebrow">LISTEN CLOSELY</p>
+          <button type="button" class="pitch-play" id="pt-play" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7Z"/></svg><strong>Play Pitch</strong></button>
+        </div>
+        <p id="pt-instruction" class="pt-instruction">Tap “Play Pitch” to begin.</p>
+        <div class="pt-clock"><span>Answer time <strong id="pt-remaining">—</strong></span><span>Elapsed <strong id="pt-elapsed">0:00</strong></span></div>
+        <progress id="pt-timer" max="5000" value="0" aria-label="Answer time remaining"></progress>
+        <p class="pt-answer-help">Target keys are highlighted in teal: <strong id="pt-answer-names">F4 · F5 · F6</strong>. Match the octave, too.</p>
+        <div class="npx-keyscroll pt-answer-scroll"><div id="pt-answer-keyboard" class="npx-keyboard" role="group" aria-label="Answer piano, C4 to B6. Teal keys are target answers."></div></div>
+        <div class="pt-nontarget-answer"><button type="button" id="pt-other" disabled><strong>Non-target</strong><span>Not one of the target notes</span></button></div>
+        <p id="pt-feedback" class="pt-feedback" role="status" aria-live="polite"></p>
+        <div class="pt-metrics" aria-label="Session results">
+          <div><strong id="pt-count">0</strong><span>Answered / 30</span></div><div><strong id="pt-accuracy">—</strong><span>Accuracy</span></div><div><strong id="pt-correct-rt">—</strong><span>Avg. correct response</span></div>
+          <div><strong id="pt-target-accuracy">—</strong><span>Target accuracy</span></div><div><strong id="pt-other-accuracy">—</strong><span>Non-target accuracy</span></div><div><strong id="pt-timeouts">0</strong><span>Timed out</span></div>
+        </div>
+        <p id="pt-breakdown" class="fine"></p>
+        <div class="pt-bottom"><button type="button" id="pt-end" class="pt-secondary" disabled>End session</button></div>
+        <p id="pt-summary" class="practice-checkpoint" hidden role="status"></p>
+      </div>
+      </div>
+    </section>
+
+    <section class="notice" aria-labelledby="sound-title">
+      <h2 id="sound-title">About the sound</h2>
+      <p>This family experiment uses recorded piano samples to generate notes. Sound accuracy and training results are not guaranteed; users decide whether the tool is suitable and whether to rely on it.</p>
+      <details><summary><strong>Sound source, processing and limitations</strong></summary>
+        <p>The sound source is <a href="https://github.com/sfzinstruments/SalamanderGrandPiano" target="_blank" rel="noopener">Salamander Grand Piano V3</a> by Alexander Holm (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>), MP3 velocity layer 8, collection v1.0.5.</p>
+        <p>The tool changes a nearby sample’s playback rate to generate each note, using A4 = 440 Hz and equal-temperament ratios, and applies a volume envelope. It does not run the full SFZ instrument or its tuning adjustments.</p>
+        <p>We have not independently verified every rendered note’s frequency. This is best-effort playback, not a calibrated pitch reference or a validated training program.</p>
+      </details>
+    </section>
+
+    <footer class="page-footer"><p>Read the research. Explore thoughtfully. A shared exploration for all users.</p></footer>
+  </main>
+  <nav class="guide-return" aria-label="Back to the game"><a class="arcade-return" href="index.html">← Back to the game</a></nav>
+  <script src="../../shared/music/audio.js"></script>
+  <script src="../../shared/music/pitch-playback.js"></script>
+  <script src="../../shared/music/keyboard.js"></script>
+  <script src="training-session.js"></script>
+  <script src="training.js"></script>
+  <script src="../../analytics/config.js"></script>
+  <script src="../../analytics/analytics.js"></script>
+</body>
+</html>

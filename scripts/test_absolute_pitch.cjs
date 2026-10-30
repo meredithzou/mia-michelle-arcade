@@ -13,8 +13,10 @@ const {ctx,ids,game:g}=fixture('do-i-have-absolute-pitch',{audio:()=>({
  play:(m,onEnded)=>{plays.push(m);if(onEnded)completions.push(onEnded)},stop:()=>stops++,setEnabled(){},prepare(){},retry(){},
  readiness:ps=>({done:ready?ps.length:0,total:ps.length,state:ready?'ready':'loading'})
 })});
+assert.equal(g.cfg.range,'upper');assert.equal(ids.npxletters.children.length,36);
+ids.npxsettings.onclick();ids.pitchranges.children[1].onclick();ids.npxapply.onclick();
 const key=m=>ids.npxletters.children.find(x=>Number(x.dataset.midi)===m);
-assert.equal(ids.npxletters.children.length,25);
+assert.equal(ids.npxletters.children.length,36);
 assert.equal(plays.length,0,'First question waits for a user gesture');
 assert.equal(ids.pitchlabel.textContent,'Play Pitch');
 assert.equal(ids.pitchplay.attributes['aria-label'],'Play the mystery pitch');
@@ -65,19 +67,19 @@ for(const m of [g.q.m-1,g.q.m+1].filter(m=>m>=48&&m<=72)){
  key(m).onclick();assert.ok(key(m).className.includes(m<g.q.m?'low':'high'));
 }
 ids.npxsettings.onclick();ids.pitchranges.children[0].onclick();ids.pitchselectwhite.onclick();ids.npxapply.onclick();
-assert.equal(g.cfg.range,'lower');assert.equal(g.cfg.selectedByRange.lower.length,15);
-const seen=new Set();for(let i=0;i<15;i++){seen.add(g.q.m);assert.ok(key(g.q.m));assert.ok(![1,3,6,8,10].includes(g.q.m%12));g.next()}
-assert.equal(seen.size,15,'Each eligible pitch appears once per shuffled bag');
+assert.equal(g.cfg.range,'lower');assert.equal(g.cfg.selectedByRange.lower.length,21);
+const seen=new Set();for(let i=0;i<21;i++){seen.add(g.q.m);assert.ok(key(g.q.m));assert.ok(![1,3,6,8,10].includes(g.q.m%12));g.next()}
+assert.equal(seen.size,21,'Each eligible pitch appears once per shuffled bag');
 assert.ok(stops>0);assert.equal(ctx.window.test.q.m,g.q.m);
 console.log('Absolute Pitch passed: first gesture, replay, exact octave, retry scoring, reveal, loading, settings, directional hints, shuffled range.');
 
 // Disconnected custom choices are the entire question pool; draft changes require Apply.
 ids.npxsettings.onclick();
 const pick=m=>ids.pitchselection.children.find(b=>Number(b.dataset.midi)===m);
-for(let m=36;m<=60;m++)if(![36,41,59].includes(m)&&g.cfg.selectedByRange.lower.includes(m))pick(m).onclick();
+for(let m=36;m<=71;m++)if(![36,41,59].includes(m)&&g.cfg.selectedByRange.lower.includes(m))pick(m).onclick();
 pick(59).onclick(); // Add a non-adjacent note; 59 is already selected by White keys, so toggle back below.
 if(!pick(59).className.includes('selected'))pick(59).onclick();
-assert.equal(g.cfg.selectedByRange.lower.length,15,'Draft edits do not affect the running pool');
+assert.equal(g.cfg.selectedByRange.lower.length,21,'Draft edits do not affect the running pool');
 ids.npxapply.onclick();assert.deepEqual(Array.from(g.candidates()),[36,41,59]);
 const customSeen=new Set();for(let i=0;i<3;i++){customSeen.add(g.q.m);assert.ok([36,41,59].includes(g.q.m));g.next()}
 assert.equal(customSeen.size,3);
@@ -90,16 +92,16 @@ pick(36).onclick();ids.npxapply.onclick();for(let i=0;i<4;i++){assert.equal(g.q.
 ids.npxsettings.onclick();ids.pitchranges.children[2].onclick();ids.pitchselectall.onclick();ids.npxclose.onclick();
 assert.equal(g.cfg.range,'lower','Closing without Apply preserves active range');
 ids.npxsettings.onclick();ids.pitchranges.children[2].onclick();ids.npxapply.onclick();
-assert.equal(g.cfg.range,'upper');assert.equal(g.candidates().length,25);
+assert.equal(g.cfg.range,'upper');assert.equal(g.candidates().length,36);
 ids.npxsettings.onclick();ids.pitchranges.children[0].onclick();ids.npxapply.onclick();
 assert.deepEqual(Array.from(g.candidates()),[36],'Each range remembers its own selected notes');
 console.log('Custom note selection passed: disconnected pool, single note, non-empty guard, per-range memory, Apply/Cancel.');
 
 ids.npxsettings.onclick();ids.pitchselectblack.onclick();
-assert.equal(ids.pitchselection.children.filter(b=>b.className.includes('selected')).length,10);
+assert.equal(ids.pitchselection.children.filter(b=>b.className.includes('selected')).length,15);
 assert.ok(ids.pitchselection.children.filter(b=>b.className.includes('selected')).every(b=>[1,3,6,8,10].includes(Number(b.dataset.midi)%12)));
 ids.npxapply.onclick();for(let i=0;i<12;i++){assert.ok([1,3,6,8,10].includes(g.q.m%12));g.next()}
-ids.npxsettings.onclick();ids.pitchselectall.onclick();assert.equal(ids.pitchselection.children.filter(b=>b.className.includes('selected')).length,25);
+ids.npxsettings.onclick();ids.pitchselectall.onclick();assert.equal(ids.pitchselection.children.filter(b=>b.className.includes('selected')).length,36);
 ids.pitchselectnone.onclick();const pool=Array.from(g.candidates()),beforeEmptyPlay=plays.length;
 ids.npxapply.onclick();assert.equal(ids.npxshade.hidden,false);assert.deepEqual(Array.from(g.candidates()),pool);assert.equal(plays.length,beforeEmptyPlay);
 assert.equal(ids.pitchselectionstatus.attributes.role,'alert');

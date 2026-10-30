@@ -114,8 +114,13 @@ function sample(r){
  .finally(()=>{clearTimeout(timeout);loading.delete(r.file);notify()});
  loading.set(r.file,p);return p;
 }
-function recorded(m,r,b,onEnded){withAudio(a=>{let s=a.createBufferSource(),g=a.createGain(),t=a.currentTime;s.buffer=b;s.playbackRate.value=Math.pow(2,(m-r.m)/12);g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(.5,t+.015);g.gain.exponentialRampToValueAtTime(.001,t+2);s.connect(g);g.connect(bus);s.start(t);s.stop(t+2.05);trackPracticeSound(s,onEnded)})}
-function play(m,onEnded){if(!isEnabled())return;let r=nearest(m),b=cache.get(r.file);if(b)recorded(m,r,b,onEnded);else{sample(r);notify()}}
+function recorded(m,r,b,onEnded,options={}){withAudio(a=>{let s=a.createBufferSource(),g=a.createGain(),t=a.currentTime;s.buffer=b;s.playbackRate.value=Math.pow(2,(m-r.m)/12);
+ const short=Number.isFinite(options.duration)&&options.duration>=.2&&options.duration<=10;
+ if(short){const duration=options.duration,ramp=Math.min(.1,duration/2);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.5,t+ramp);g.gain.setValueAtTime(.5,t+duration-ramp);g.gain.linearRampToValueAtTime(0,t+duration)}
+ else{g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(.5,t+.015);g.gain.exponentialRampToValueAtTime(.001,t+2)}
+ s.connect(g);g.connect(bus);s.start(t);s.stop(t+(short?options.duration:2.05));trackPracticeSound(s,onEnded);if(typeof options.onStarted==='function')options.onStarted();
+ })}
+function play(m,onEnded,options){if(!isEnabled())return;let r=nearest(m),b=cache.get(r.file);if(b)recorded(m,r,b,onEnded,options);else{sample(r);notify()}}
 function wrong(){withAudio(a=>{let t=a.currentTime;for(let [d,hz] of [[0,247],[.12,196]]){let o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=hz;g.gain.setValueAtTime(.00001,t+d);g.gain.linearRampToValueAtTime(.055,t+d+.015);g.gain.exponentialRampToValueAtTime(.00001,t+d+.18);o.connect(g);g.connect(bus);o.start(t+d);o.stop(t+d+.19);trackPracticeSound(o)}})}
 
 function samplesFor(pitches){

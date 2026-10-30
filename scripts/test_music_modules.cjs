@@ -33,7 +33,7 @@ assert.equal(digest,'1fc45f05f64a31bdb60fabbbb7d9652b2d15275faae4453bece474a5a78
  class Audio{
   state='running';currentTime=0;destination={};
   createGain(){return {gain:{setValueAtTime(){},linearRampToValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){},disconnect(){}}}
-  createBufferSource(){const x={playbackRate:{},connect(){},start(){this.started=true},stop(){this.stopped=true}};sources.push(x);return x}
+  createBufferSource(){const x={playbackRate:{},connect(){},start(){this.started=true},stop(at){this.stopped=true;this.stopAt=at}};sources.push(x);return x}
  }
  class Decoder{decodeAudioData(b){decoded++;return Promise.resolve({bytes:b})}}
  const document={hidden:false,addEventListener(){}},window={AudioContext:Audio,OfflineAudioContext:Decoder,addEventListener(){}};
@@ -50,5 +50,10 @@ assert.equal(digest,'1fc45f05f64a31bdb60fabbbb7d9652b2d15275faae4453bece474a5a78
  a.play(61,()=>ended++);
  enabled=false;a.setEnabled(false);a.play(61);a.prepare([84]);assert.equal(sources.length,3);assert.equal(requests,2);
  sources[2].onended();assert.equal(ended,1,'Muted notes do not signal completed playback');
+ enabled=true;a.setEnabled(true);let started=0;
+ a.play(60,()=>ended++,{duration:.8,onStarted:()=>started++});
+ assert.equal(started,1,'Short trial announces actual playback start');
+ assert.equal(sources[3].stopAt,.8,'Training stimulus lasts 800 ms');
+ sources[3].onended();assert.equal(ended,2,'Short stimulus completion notifies training');
  console.log('Music modules passed: original SVG geometry, four clef modes, answer/reveal scoring, sample deduplication, MIDI playback and mute.');
 })().catch(e=>{console.error(e);process.exitCode=1});

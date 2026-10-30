@@ -3,22 +3,23 @@
 const root=document.getElementById('npx');if(root.dataset.ready)return;root.dataset.ready='1';
 const $=id=>root.querySelector('#'+id);
 const pianoInput=window.ArcadePianoInput;
-const init={range:'middle',hints:true,sensitivity:pianoInput.defaultSensitivity,selectedByRange:{
- lower:Array.from({length:25},(_,i)=>36+i),middle:Array.from({length:25},(_,i)=>48+i),upper:Array.from({length:25},(_,i)=>60+i)
+const init={range:'upper',hints:true,sensitivity:pianoInput.defaultSensitivity,selectedByRange:{
+ lower:Array.from({length:36},(_,i)=>36+i),middle:Array.from({length:36},(_,i)=>48+i),upper:Array.from({length:36},(_,i)=>60+i)
 }};
 const practiceSettings=window.ArcadeSettings.create({
- key:'arcade.settings.do-i-have-absolute-pitch',version:3,defaults:init,
+ key:'arcade.settings.do-i-have-absolute-pitch',version:4,defaults:init,
  upgrade:(version,value)=>{
+  if(version===3)return value;
   if(![1,2].includes(version))return null;
   const selectedByRange={};
-  for(const [range,lo] of [['lower',36],['middle',48],['upper',60]])selectedByRange[range]=Array.from({length:25},(_,i)=>lo+i).filter(m=>value.notes!=='white'||![1,3,6,8,10].includes(m%12));
+  for(const [range,lo] of [['lower',36],['middle',48],['upper',60]])selectedByRange[range]=Array.from({length:36},(_,i)=>lo+i).filter(m=>value.notes!=='white'||![1,3,6,8,10].includes(m%12));
   return {...value,hints:version===1?true:value.hints,selectedByRange};
  },
  normalize:(value,defaults)=>{
   const selectedByRange={};
   for(const [range,lo] of [['lower',36],['middle',48],['upper',60]]){
    const saved=value.selectedByRange?.[range];
-   const notes=Array.isArray(saved)?[...new Set(saved.filter(m=>Number.isInteger(m)&&m>=lo&&m<=lo+24))].sort((a,b)=>a-b):[];
+   const notes=Array.isArray(saved)?[...new Set(saved.filter(m=>Number.isInteger(m)&&m>=lo&&m<=lo+35))].sort((a,b)=>a-b):[];
    selectedByRange[range]=Array.isArray(saved)?notes:[...defaults.selectedByRange[range]];
   }
   const range=['middle','upper','lower'].includes(value.range)?value.range:defaults.range;
@@ -27,9 +28,9 @@ const practiceSettings=window.ArcadeSettings.create({
    hints:typeof value.hints==='boolean'?value.hints:defaults.hints,selectedByRange};
  }
 });
-let cfg=practiceSettings.load(),draft,q,bag=[],last=null,total=0,correct=0,judged=false,locked=false,heard=false,started=false,pending=false,timer,lastAttempt=null,motionTimer,playback=0;
+let cfg=practiceSettings.load(),draft,q,bag=[],last=null,total=0,correct=0,judged=false,locked=false,heard=false,started=false,pending=false,timer,lastAttempt=null,playback=0;
 const attempts=new Set();
-const motion=createMotion();
+const motion=window.ArcadePitchPlayback.create({root,button:$('pitchplay')});
 const audio=window.ArcadeMusicAudio.create({root,isEnabled:()=>true,getQuestion:()=>q,onStateChange:renderPianoState});
 const keys=window.PlayThatNoteKeyboard.create({container:$('npxletters'),onAnswer:m=>{if(!pianoMode)answer(m)}});
 let pianoMode=false,micActive=false,acceptMic=false,speakerBusy=false,micTimer,micError='';
@@ -39,12 +40,15 @@ $('npxsettings').before(inputButton);
 const micStatus=document.createElement('span');micStatus.className='pitch-input-status';micStatus.setAttribute('role','status');micStatus.setAttribute('aria-live','polite');
 $('npxpianoState').before(micStatus);
 const inputHint=document.createElement('p');inputHint.className='pitch-input-hint';
-inputHint.innerHTML='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+microphoneIcon+'</svg>Turn the microphone on to play your physical piano, or leave it off to tap the on-screen piano keys.';
+inputHint.innerHTML='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+microphoneIcon+'</svg>Turn the microphone on to play a physical piano, or leave it off to tap the on-screen piano keys.';
 $('npxmsg').after(inputHint);
-const privacy=document.createElement('p');privacy.className='pitch-privacy';privacy.innerHTML='<strong>Privacy:</strong> Microphone audio is processed entirely on your device. It is never recorded, stored, or uploaded to a server.';root.after(privacy);
+const privacy=document.createElement('p');privacy.className='pitch-privacy';privacy.innerHTML='<strong>Privacy:</strong> Microphone audio is processed entirely on the device. It is never recorded, stored, or uploaded to a server.';root.after(privacy);
+const resources=document.createElement('section');resources.className='pitch-resources';resources.setAttribute('aria-label','Learning guide and experimental sound notice');
+resources.innerHTML='<section class="pitch-experiment"><h2>About the Sound</h2><p><strong>Note:</strong> Sound playback is experimental and best effort. Pitch accuracy is not guaranteed. Users should verify sounds independently before relying on them.</p><details><summary>Sound source, processing &amp; limitations</summary><p>We use <a href="https://github.com/sfzinstruments/SalamanderGrandPiano" target="_blank" rel="noopener">Salamander Grand Piano V3</a> recordings by Alexander Holm (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>), MP3 velocity layer 8, collection v1.0.5. A nearby recording is played at an adjusted rate to generate each key, with a volume envelope. We do not run the full SFZ instrument or apply its tuning adjustments.</p><p>The mapping targets A4 = 440 Hz using twelve-tone equal-temperament ratios; this does not measure or certify the recordings’ actual tuning. We have not independently verified every rendered note’s frequency. Recording, playback and microphone detection errors may occur.</p><p>Users are responsible for assessing suitability and choosing whether to rely on these sounds.</p></details></section><section class="pitch-guide-link"><div><small>Practicing Absolute Pitch</small><h2>OUR FAMILY LEARNING NOTEBOOK</h2><p>Research, illustrated examples, and a step-by-step exploration.</p></div><a href="learn.html">Read the guide →</a></section>';
+root.after(resources);
 const sensitivityHeading=document.createElement('h3');sensitivityHeading.textContent='Microphone sensitivity';
 const sensitivityOptions=document.createElement('div');sensitivityOptions.className='npx-sounds';sensitivityOptions.setAttribute('role','group');sensitivityOptions.setAttribute('aria-label','Microphone sensitivity');
-const micHelp=document.createElement('p');micHelp.className='pitch-input-help';micHelp.textContent='Play one note at a time. Higher sensitivity hears quieter notes and more background noise. Microphone audio stays on your device.';
+const micHelp=document.createElement('p');micHelp.className='pitch-input-help';micHelp.textContent='Play one note at a time. Higher sensitivity hears quieter notes and more background noise. Microphone audio stays on the device.';
 $('npxloadpanel').before(sensitivityHeading,sensitivityOptions,micHelp);
 const mic=pianoInput.create({minRms:pianoInput.sensitivityThresholds[cfg.sensitivity],
  onState:(state,detail)=>{micActive=state==='listening';if(state==='error'){pianoMode=false;acceptMic=false;micError=detail||'Microphone unavailable. Please try again.'}inputUI()},
@@ -56,7 +60,7 @@ function inputUI(){
  for(const key of $('npxletters').children)key.disabled=pianoMode||locked;
  micStatus.textContent=micError||(!pianoMode?'Microphone off':speakerBusy?'Listening paused during playback':micActive?'Microphone on':'Starting microphone…');
 }
-function inputPrompt(){return pianoMode?'Play the matching piano key on your own piano':'Tap the matching piano key below'}
+function inputPrompt(){return pianoMode?'Play the matching piano key on a physical piano':'Tap the matching piano key below'}
 function pauseAnswers(){clearTimeout(micTimer);acceptMic=false;mic.reset()}
 function resumeAnswers(){pauseAnswers();if(!speakerBusy&&!document.hidden&&$('npxshade').hidden){acceptMic=true;mic.reset()}inputUI()}
 inputButton.onclick=()=>{
@@ -64,7 +68,7 @@ inputButton.onclick=()=>{
  if(pianoMode){mic.start();if(!speakerBusy)resumeAnswers()}
  if(heard&&!locked&&!speakerBusy)message(inputPrompt());
 };
-function bounds(c=cfg){return c.range==='lower'?[36,60]:c.range==='upper'?[60,84]:[48,72]}
+function bounds(c=cfg){return c.range==='lower'?[36,71]:c.range==='upper'?[60,95]:[48,83]}
 function candidates(c=cfg){return [...c.selectedByRange[c.range]]}
 function keyboardPitches(c=cfg){const [lo,hi]=bounds(c);return Array.from({length:hi-lo+1},(_,i)=>lo+i)}
 function copySettings(c){return {...c,selectedByRange:Object.fromEntries(Object.entries(c.selectedByRange).map(([range,notes])=>[range,[...notes]]))}}
@@ -75,43 +79,8 @@ function pitch(){
  last=bag.pop();return last;
 }
 function message(text,kind=''){$('npxmsg').textContent=text;$('npxmsg').className='npx-msg '+kind}
-// Decorative only: the same motion for every pitch, with no analyser or pitch clues.
-let motionAnimations=[];
-function createMotion(){
- const paper=$('pitchplay').parentElement;if(!paper)return null;
- const ripple=document.createElement('div');ripple.className='pitch-ripple';ripple.setAttribute('aria-hidden','true');
- let shape='';
- for(let x=0;x<=200;x+=2){const u=x/200,y=48-25*Math.sin(4*Math.PI*u)*Math.sin(Math.PI*u)**2;shape+=(x?'L':'M')+x+','+y.toFixed(3)}
- const fronts=[-1,1].map(direction=>{
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'),path=document.createElementNS('http://www.w3.org/2000/svg','path');
-  svg.setAttribute('class','pitch-wave-front');svg.setAttribute('viewBox','0 0 200 96');path.setAttribute('d',shape);
-  // Both outgoing fronts keep the same sine orientation.
-  svg.append(path);ripple.append(svg);return {element:svg,direction};
- });
- paper.prepend(ripple);return {paper,ripple,fronts};
-}
-function endMotion(){
- clearTimeout(motionTimer);root.dataset.pitchPlaying='false';
- for(const animation of motionAnimations)animation.cancel();motionAnimations=[];
-}
-function startMotion(){
- root.dataset.pitchPlaying='true';
- // Let the visual tail finish after the piano's decay, rather than cutting it off.
- motionTimer=setTimeout(endMotion,2450);
- if(!motion||typeof motion.ripple.animate!=='function'||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
- const half=motion.paper.clientWidth/2,origin=$('pitchplay').offsetWidth/2-32,options={duration:2450,easing:'linear',fill:'both'},ticket=playback;
- for(const {element,direction} of motion.fronts){
-  const start=direction*origin-100,end=direction*(half+110)-100;
-  motionAnimations.push(element.animate([
-   {transform:'translate3d('+start+'px,0,0) scaleY(1)',offset:0},
-   {transform:'translate3d('+(start+(end-start)*.42)+'px,0,0) scaleY(.55)',offset:.42},
-   {transform:'translate3d('+(start+(end-start)*.8)+'px,0,0) scaleY(.14)',offset:.8},
-   {transform:'translate3d('+end+'px,0,0) scaleY(0)',offset:1}
-  ],options));
- }
- const fade=motion.ripple.animate([{opacity:0,offset:0},{opacity:.72,offset:.04},{opacity:.52,offset:.35},{opacity:.2,offset:.7},{opacity:0,offset:1}],options);
- motionAnimations.push(fade);fade.finished.then(()=>{if(ticket===playback)endMotion()}).catch(()=>{});
-}
+function endMotion(){motion.stop()}
+function startMotion(){motion.start()}
 function stop(){pending=false;playback++;pauseAnswers();speakerBusy=false;endMotion();audio.stop();inputUI()}
 function playPitch(){
  if(!$('npxshade').hidden)return;
@@ -143,7 +112,7 @@ function next(){
  mic.reset();inputUI();
  $('npxkeyhint').hidden=true;
  $('npxreveal').disabled=false;$('npxnext').hidden=true;pitchButton();
- $('pitchhint').textContent=pianoMode?'Listen, then play the matching piano key on your own piano':'Listen, then tap the matching piano key';
+ $('pitchhint').textContent=pianoMode?'Listen, then play the matching piano key on a physical piano':'Listen, then tap the matching piano key';
  message(started?'Listen to the new pitch':'Tap “Play Pitch” to begin');
  if(started)playPitch();
 }
@@ -191,7 +160,7 @@ function choices(id,items,field){
 function settings(){
  sensitivityOptions.replaceChildren();
  for(const {id,label} of pianoInput.sensitivityOptions){const b=document.createElement('button');b.textContent=label;b.className=draft.sensitivity===id?'active':'';b.setAttribute('aria-pressed',String(draft.sensitivity===id));b.onclick=()=>{draft.sensitivity=id;settings()};sensitivityOptions.append(b)}
- choices('pitchranges',[['lower','C2–C4'],['middle','C3–C5'],['upper','C4–C6']],'range');
+ choices('pitchranges',[['lower','C2–B4'],['middle','C3–B5'],['upper','C4–B6']],'range');
  renderSelection();renderPianoState();
 }
 // Same touch keyboard renderer as the answer keyboard; selection is draft-only.
@@ -237,7 +206,7 @@ function renderPianoState(){
  $('npxloaddetail').textContent=$('npxpianoState').textContent;
  $('npxloadcount').textContent=status.done+'/'+status.total;
  $('npxloadprogress').max=status.total;$('npxloadprogress').value=status.done;
- $('npxloadhint').textContent=state==='error'?'Check your connection, then retry loading.':state==='ready'?'Ready to listen.':'Piano recordings are loading. Answers unlock after you play the pitch.';
+ $('npxloadhint').textContent=state==='error'?'Check the connection, then retry loading.':state==='ready'?'Ready to listen.':'Piano recordings are loading. Answers unlock after the pitch has been played.';
  $('npxretry').hidden=state!=='error';
  if(pending&&q&&$('npxshade').hidden&&audio.readiness([q.m]).state==='ready')playPitch();
 }

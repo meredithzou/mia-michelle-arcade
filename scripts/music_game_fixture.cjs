@@ -8,7 +8,7 @@
 const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 class Element{
- constructor(tag='div'){this.tagName=tag;this.children=[];this.dataset={};this.style={};this.attributes={};this.hidden=false;this.disabled=false;this.className='';this.textContent='';this.listeners={};this.classList={add:(c)=>{this.className+=' '+c},remove:(c)=>{this.className=this.className.split(' ').filter(x=>x!==c).join(' ')}}}
+ constructor(tag='div'){this.tagName=tag;this.children=[];this.dataset={};this.style={setProperty(name,value){this[name]=String(value)}};this.attributes={};this.hidden=false;this.disabled=false;this.className='';this.textContent='';this.listeners={};this.classList={add:(c)=>{this.className+=' '+c},remove:(c)=>{this.className=this.className.split(' ').filter(x=>x!==c).join(' ')}}}
  append(...xs){for(const x of xs){x.parentElement=this;this.children.push(x)}}
  before(...xs){this.adjacentBefore=xs}
  after(...xs){this.adjacentAfter=xs}
