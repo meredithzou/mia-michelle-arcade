@@ -11,6 +11,8 @@
 .npx-msg.low{color:#258b91}.npx-msg.high{color:#8754ce}
 .pitch-selection-actions{display:flex;gap:8px;flex-wrap:wrap}
 .pitch-selection-actions button{background:#f4effb;color:#655b7e;border:0;border-radius:9px;padding:10px 14px;min-height:44px}
+.pitch-selection-actions .pitch-custom-pick{display:inline-flex;align-items:center;min-height:44px;padding:10px 14px;border-radius:9px;background:#f4effb;color:#655b7e;font:inherit;box-sizing:border-box}
+.pitch-selection-actions button[aria-pressed="true"],.pitch-selection-actions .pitch-custom-pick[data-active="true"]{background:#e7dcfa;color:#583388;box-shadow:inset 0 0 0 2px #a78bd3;font-weight:750}
 #pitchselectionstatus{font-size:12px;color:#78698d;min-height:32px;margin:12px 0 4px}
 .pitch-selection-scroll{margin:0 0 10px}
 #pitchselection{height:160px}

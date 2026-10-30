@@ -5,6 +5,9 @@ default to C4–B6; C3–B5 and C2–B4 are also available. Settings schema v5 e
 the exact legacy 25-key full-range presets saved by v3/v4 to all 36 keys.
 Other saved custom pools and already expanded selections are preserved. New v5
 custom selections, including an intentional 25-key pool, remain unchanged.
+Settings highlight the matching All/White/Black/None shortcut. Other selections
+show a highlighted Your Pick status chip; it reflects the selected keys rather
+than changing them. The state is recomputed after edits, range changes and reopening.
 The shared keyboard renderer computes key widths and scrollable minimum width
 from `render(low, high)`; other games retain their 25-key ranges.
 
