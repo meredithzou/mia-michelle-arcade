@@ -44,18 +44,18 @@ No app server, login, or build framework is required. Game preferences are store
 
 ## Asset cache versions
 
-Local scripts, stylesheets, and images across the homepage, games, learning page, and privacy page use content-derived URLs such as `shared/arcade-nav.css?v=abcdef123456`. Versions are the first 12 characters of the file's Git blob hash. Unchanged files keep the same URL and remain cacheable.
+Direct local JavaScript and stylesheet references in HTML, including shared modules and configuration, use content-derived URLs such as `shared/arcade-nav.css?v=abcdef123456`. Homepage images keep the same content-version mechanism. Versions are the first 12 characters of the file's Git blob hash; unchanged files keep the same URL and remain cacheable.
 
-After changing a local asset or `site-config.js`, run the existing command (its historical filename is preserved):
+After changing these files, run the existing command (its historical filename is preserved):
 
 ```sh
 python3 scripts/update_preview_versions.py
 python3 scripts/update_preview_versions.py --check
 ```
 
-Commit all regenerated HTML and CSS with the asset change. The updater processes CSS images and imports before their parent stylesheets, then updates HTML references and the homepage's generated theme URL map. A theme image change therefore invalidates both its CSS URL and the theme loader's URL. Legacy hand-written `?v=` values are replaced by content hashes. CI rejects stale versions; do not edit version numbers manually.
+Commit the regenerated HTML with the asset change. The updater also refreshes the homepage's small theme URL map for directly loaded theme CSS. CI rejects stale versions; do not edit version numbers manually. CSS files themselves are not rewritten: imported CSS and decorative images referenced inside CSS are outside this check.
 
-This avoids old asset/configuration caches once visitors fetch the updated page. It does not shorten GitHub Pages deployment, bypass cached HTML, or force an already-open page to reload. Navigation URLs, external audio pinned to its package version, and saved preferences/progress are unchanged. Shared `.game-title-icon` CSS remains the single source for title icon geometry.
+This helps pages fetch updated scripts, styles and configuration after deployment. It does not shorten GitHub Pages deployment, bypass cached HTML, or force open pages to reload. External audio and saved preferences/progress are unchanged. Shared `.game-title-icon` CSS remains the single source for title icon geometry.
 
 ## Shared return button
 

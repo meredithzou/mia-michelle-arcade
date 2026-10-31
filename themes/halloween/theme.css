@@ -30,11 +30,11 @@ body::before {
   pointer-events: none;
   z-index: 0;
   background-image:
-    url("assets/web-top-left.svg?v=3ad68a9669d8"),
-    url("assets/web-top-right.svg?v=ed75e5b8a510"),
-    url("assets/bat.svg?v=5850241b693a"),
-    url("assets/sparkles.svg?v=cec670b01cf9"),
-    url("assets/sparkles.svg?v=cec670b01cf9");
+    url("assets/web-top-left.svg"),
+    url("assets/web-top-right.svg"),
+    url("assets/bat.svg"),
+    url("assets/sparkles.svg"),
+    url("assets/sparkles.svg");
   background-repeat: no-repeat;
   background-position:
     left -20px top -18px,
@@ -70,7 +70,7 @@ body::before {
   height: 116px;
   top: 20px;
   right: 26px;
-  background-image: url("assets/ghost.svg?v=fe9ab4f972ad");
+  background-image: url("assets/ghost.svg");
   filter: drop-shadow(0 6px 6px #5f41712e);
 }
 .hero::after {
@@ -79,7 +79,7 @@ body::before {
   left: auto;
   right: 86px;
   bottom: -14px;
-  background-image: url("assets/jack-o-lantern.svg?v=3c17eb2004ef");
+  background-image: url("assets/jack-o-lantern.svg");
 }
 .hero > * { position: relative; z-index: 1; }
 .hero .eyebrow { background: rgba(255,244,226,.78); color: #674a87; }
@@ -100,7 +100,7 @@ h2::after {
   height: 31px;
   margin-left: 7px;
   vertical-align: middle;
-  background: url("assets/bat.svg?v=5850241b693a") center / contain no-repeat;
+  background: url("assets/bat.svg") center / contain no-repeat;
 }
 
 /* Card designs keep their original layout. No overlays on either game. */

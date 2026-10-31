@@ -76,26 +76,22 @@ class HomepageImageVersionTests(unittest.TestCase):
         self.assertNotEqual(first, second)
         self.assertIn(f'site-config.js?v={image_version(config)}', second)
 
-    def test_nested_css_and_theme_image_propagate_to_page(self):
+    def test_direct_theme_css_is_versioned_without_traversing_dependencies(self):
         theme = self.root / "themes/halloween"
         theme.mkdir(parents=True)
-        image = theme / "ghost.svg"
-        image.write_text("first ghost")
-        child = theme / "child.css"
-        child.write_text('body { background:url("ghost.svg#icon") }')
-        parent = theme / "theme.css"
-        parent.write_text('@import "child.css";')
+        css = theme / "theme.css"
+        # These dependencies deliberately do not exist: the updater should not inspect them.
+        original = '@import "child.css"; body { background:url("ghost.svg") }'
+        css.write_text(original)
         page = self.root / "index.html"
         page.write_text('<link rel="stylesheet" href="themes/halloween/theme.css"><script>/* generated theme URLs */const themeStyles={};/* end theme URLs */</script>')
         update_site(self.root)
         first = page.read_text()
-        self.assertIn(f'themes/halloween/theme.css?v={image_version(parent)}', first)
-        self.assertIn(f'child.css?v={image_version(child)}', parent.read_text())
-        self.assertIn(f'ghost.svg?v={image_version(image)}#icon', child.read_text())
+        self.assertIn(f'themes/halloween/theme.css?v={image_version(css)}', first)
+        self.assertEqual(css.read_text(), original)
         self.assertEqual(update_site(self.root), [])
-        image.write_text("changed ghost")
-        changed = update_site(self.root)
-        self.assertEqual(set(changed), {"themes/halloween/child.css", "themes/halloween/theme.css", "index.html"})
+        css.write_text(original + 'body { color:purple }')
+        self.assertEqual(update_site(self.root), ["index.html"])
         self.assertNotEqual(page.read_text(), first)
         self.assertEqual(update_site(self.root), [])
 
@@ -133,11 +129,7 @@ class HomepageImageVersionTests(unittest.TestCase):
         with patch.object(versions, "ROOT", self.root), patch.object(sys, "argv", ["versions", "--check"]), contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(versions.main(), 0)
 
-    def test_cycles_and_out_of_root_assets_fail(self):
-        (self.root / "a.css").write_text('@import url("b.css");')
-        (self.root / "b.css").write_text('@import url("a.css");')
-        with self.assertRaises(ValueError):
-            update_site(self.root)
+    def test_out_of_root_assets_fail(self):
         with self.assertRaises(FileNotFoundError):
             version_html('<script src="../outside.js"></script>', self.root)
 
