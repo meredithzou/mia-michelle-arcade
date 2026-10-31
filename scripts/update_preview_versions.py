@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Update homepage image and layout stylesheet cache keys from the files' content (Git blob hashes).
+"""Update homepage image, layout stylesheet, and theme configuration cache keys from the files' content (Git blob hashes).
 
-Run without arguments after changing homepage images or layout stylesheets. --check is used
+Run without arguments after changing homepage images, layout stylesheets, or site-config.js. --check is used
 by CI so image updates cannot be merged with stale cache keys. This keeps the
 GitHub Pages site static: no JavaScript, service worker, or build step needed.
 """
@@ -13,7 +13,7 @@ import re
 
 ROOT = Path(__file__).resolve().parent.parent
 HOME = ROOT / "index.html"
-# Inspect only image tags and local layout stylesheet links.
+# Inspect only image tags, local layout stylesheet links, and the theme configuration script.
 IMG_TAG = re.compile(r"<img\b[^>]*>", re.IGNORECASE)
 LOCAL_IMAGE_SRC = re.compile(
     r"""(?P<attribute>\ssrc\s*=\s*)(?P<quote>["'])"""
@@ -30,6 +30,14 @@ LOCAL_STYLE_HREF = re.compile(
 )
 
 
+SCRIPT_TAG = re.compile(r"<script\b[^>]*>", re.IGNORECASE)
+LOCAL_CONFIG_SRC = re.compile(
+    r"""(?P<attribute>\ssrc\s*=\s*)(?P<quote>["'])"""
+    r"""(?P<path>site-config\.js)"""
+    r"""(?P<query>\?[^"']*)?(?P=quote)""", re.IGNORECASE,
+)
+
+
 def image_version(path):
     """Return a short content-derived Git blob SHA, independent of filename.
 
@@ -42,7 +50,7 @@ def image_version(path):
 
 
 def version_html(source, root):
-    """Version images and layout stylesheets without reformatting or changing other HTML.
+    """Version images, layout stylesheets, and theme configuration without reformatting or changing other HTML.
 
     Preserve image attributes and external URLs. Reject unrelated query
     parameters instead of silently removing an intentional image option.
@@ -55,7 +63,7 @@ def version_html(source, root):
             """Replace the current v= value with the asset's content hash."""
             query = match.group("query")
             if query and not re.fullmatch(r"\?v=[0-9a-fA-F]+", query):
-                raise ValueError(f"Unexpected image query: {match.group('path')}{query}")
+                raise ValueError(f"Unexpected asset query: {match.group('path')}{query}")
             asset = (root / match.group("path")).resolve()
             if not asset.is_relative_to(root) or not asset.is_file():
                 raise FileNotFoundError(f"Missing homepage asset: {match.group('path')}")
@@ -69,7 +77,8 @@ def version_html(source, root):
         if not re.search(r"""\brel\s*=\s*["']stylesheet["']""", match.group(0), re.IGNORECASE):
             return match.group(0)
         return replace_tag(match, LOCAL_STYLE_HREF)
-    return LINK_TAG.sub(replace_stylesheet, source)
+    source = LINK_TAG.sub(replace_stylesheet, source)
+    return SCRIPT_TAG.sub(lambda match: replace_tag(match, LOCAL_CONFIG_SRC), source)
 
 
 def main():
@@ -82,17 +91,17 @@ def main():
     updated = version_html(original, ROOT)
     if args.check:
         if updated != original:
-            print("Homepage image/style versions are stale. Run: python3 scripts/update_preview_versions.py")
+            print("Homepage asset versions are stale. Run: python3 scripts/update_preview_versions.py")
             print("".join(difflib.unified_diff(original.splitlines(True), updated.splitlines(True), fromfile="index.html", tofile="expected index.html")))
             return 1
-        print("Homepage image/style versions are up to date.")
+        print("Homepage asset versions are up to date.")
         return 0
 
     if updated != original:
         HOME.write_text(updated, encoding="utf-8")
-        print("Updated homepage image versions in index.html.")
+        print("Updated homepage asset versions in index.html.")
     else:
-        print("Homepage image/style versions already up to date.")
+        print("Homepage asset versions already up to date.")
     return 0
 
 
