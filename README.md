@@ -8,6 +8,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 
 | Game | What you do |
 | --- | --- |
+| [Snowball Playground](games/snowball-playground/) | Pack snowballs and throw them at a wall, targets, or a snowman. |
 | [Little Doctor Clinic](games/little-doctor-clinic/) | Help five animal patients with checkup tools, gentle care, stickers, and high fives. |
 | [Giant Little Garden](games/giant-little-garden/) | Plant seeds, water one patch or all six, and grow giant flowers and beanstalks. |
 | [Domino Knockdown!](games/domino-knockdown/) | Draw a path of plain dominoes, push the chain, and watch it tumble. |
@@ -25,7 +26,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 
 ## Homepage collections
 
-The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, Find the Pair!, Jigsaw Garden, Marble Run Lab, Domino Knockdown!, Giant Little Garden, Little Doctor Clinic), **Family Classics** (Chinese Checkers, Five in a Row, Chinese Chess), and **The Music Box** (the music games/tools). Keep new cards in the appropriate collection, with Piano Note Finder last in the music collection. `styles/home.css` gives cards an equal height and three/two/one columns at desktop/tablet/phone widths.
+The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, Find the Pair!, Jigsaw Garden, Marble Run Lab, Domino Knockdown!, Giant Little Garden, Little Doctor Clinic, Snowball Playground), **Family Classics** (Chinese Checkers, Five in a Row, Chinese Chess), and **The Music Box** (the music games/tools). Keep new cards in the appropriate collection, with Piano Note Finder last in the music collection. `styles/home.css` gives cards an equal height and three/two/one columns at desktop/tablet/phone widths.
 
 ## Project layout
 
