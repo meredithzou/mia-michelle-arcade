@@ -42,18 +42,18 @@ No app server, login, or build framework is required. Game preferences are store
 
 
 
-## Homepage image and layout CSS cache busting
+## Homepage asset cache busting
 
 Homepage images use URLs like `assets/example-preview.png?v=abcdef123456`. The 12-character version is computed from the image's Git blob content hash, so changing a screenshot automatically yields a new URL for browsers without renaming the actual image. There is no build system or runtime JavaScript.
 
-After changing a homepage image or a stylesheet in `styles/`, run:
+After changing a homepage image, a stylesheet in `styles/`, or the active theme in `site-config.js`, run:
 
 ```sh
 python3 scripts/update_preview_versions.py
 python3 scripts/update_preview_versions.py --check
 ```
 
-Commit the regenerated `index.html` with the asset change. The same content-hash versioning covers layout stylesheet links in `styles/`. Shared `.game-title-icon` CSS is the single source for title icon size, spacing, and alignment; do not duplicate those values inline. CI verifies the versions and fails if any image or layout stylesheet URL is stale; **never edit a version number by hand**. As with any GitHub Pages update, browsers still need to fetch the latest HTML after deployment before seeing the new URL.
+Commit the regenerated `index.html` with the asset change. The same content-hash versioning covers layout stylesheet links in `styles/` and the `site-config.js` script URL. Changing the active theme therefore gives its configuration a new URL, avoiding an old cached configuration after deployment. This does not speed up GitHub Pages deployment or force already-open pages to reload; visitors still need to fetch the updated homepage. Shared `.game-title-icon` CSS is the single source for title icon size, spacing, and alignment; do not duplicate those values inline. CI verifies the versions and fails if any image, layout stylesheet, or theme configuration URL is stale; **never edit a version number by hand**. As with any GitHub Pages update, browsers still need to fetch the latest HTML after deployment before seeing the new URL.
 
 ## Shared return button
 
@@ -107,3 +107,7 @@ This repository is published through GitHub Pages. The root `CNAME` file connect
 ## Intellectual property
 
 This repository does not currently include a project-wide open-source license. Public visibility and the ability to fork on GitHub do not by themselves grant broad reuse rights. Some game concepts or assets reference third-party works; see notices in the relevant game files and `assets/licenses/`. Please respect those rights when adapting or redistributing content.
+
+## Change review workflow
+
+Make changes on a separate branch and open a pull request. The repository owner reviews and merges it. Do not commit or push changes directly to `main`.
