@@ -57,6 +57,18 @@ class HomepageImageVersionTests(unittest.TestCase):
         self.assertIn(f'styles/home.css?v={image_version(css)}', second)
 
 
+    def test_theme_configuration_change_invalidates_cache(self):
+        config = self.root / "site-config.js"
+        config.write_text('window.ARCADE_CONFIG = { activeTheme: "pastel-rainbow" };')
+        source = '<script src="site-config.js"></script><script src="analytics/config.js"></script>'
+        first = version_html(source, self.root)
+        self.assertEqual(first, version_html(first, self.root))
+        self.assertIn('<script src="analytics/config.js"></script>', first)
+        config.write_text('window.ARCADE_CONFIG = { activeTheme: "halloween" };')
+        second = version_html(first, self.root)
+        self.assertNotEqual(first, second)
+        self.assertIn(f'site-config.js?v={image_version(config)}', second)
+
     def test_missing_image_fails(self):
         """Prevent publishing a version key for a nonexistent preview."""
         with self.assertRaises(FileNotFoundError):
