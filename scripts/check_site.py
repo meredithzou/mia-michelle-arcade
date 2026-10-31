@@ -65,7 +65,7 @@ class Page(HTMLParser):
         if tag == "body":
             self.body_classes = a.get("class", "").split()
         if tag == "link" and a.get("rel") == "stylesheet":
-            self.stylesheets.append(a.get("href"))
+            self.stylesheets.append(urlsplit(a.get("href", "")).path)
         if tag == "a":
             self._anchor = {"href": a.get("href", ""), "label": a.get("aria-label", ""), "text": "", "classes": a.get("class", "").split()}
         if tag == "title":
@@ -76,7 +76,7 @@ class Page(HTMLParser):
             if a.get("http-equiv", "").lower() == "refresh":
                 self.redirect = True
         if tag == "script" and a.get("src"):
-            self.scripts.append(a["src"])
+            self.scripts.append(urlsplit(a["src"]).path)
         if tag in ("a", "link", "script", "img", "source"):
             for attribute in ("href", "src", "srcset"):
                 if a.get(attribute):

@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""Regression tests for content-derived homepage image cache keys."""
+"""Regression tests for content-derived site asset cache keys."""
 from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
+import contextlib
+import io
+import update_preview_versions as versions
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from update_preview_versions import image_version, version_html
+from update_preview_versions import image_version, version_html, update_site
 
 
 class HomepageImageVersionTests(unittest.TestCase):
@@ -56,6 +60,78 @@ class HomepageImageVersionTests(unittest.TestCase):
         self.assertNotEqual(first, second)
         self.assertIn(f'styles/home.css?v={image_version(css)}', second)
 
+
+    def test_theme_configuration_change_invalidates_cache(self):
+        (self.root / "analytics").mkdir()
+        analytics = self.root / "analytics/config.js"
+        analytics.write_text("// analytics")
+        config = self.root / "site-config.js"
+        config.write_text('window.ARCADE_CONFIG = { activeTheme: "pastel-rainbow" };')
+        source = '<script src="site-config.js"></script><script src="analytics/config.js"></script>'
+        first = version_html(source, self.root)
+        self.assertEqual(first, version_html(first, self.root))
+        self.assertIn(f'<script src="analytics/config.js?v={image_version(analytics)}"></script>', first)
+        config.write_text('window.ARCADE_CONFIG = { activeTheme: "halloween" };')
+        second = version_html(first, self.root)
+        self.assertNotEqual(first, second)
+        self.assertIn(f'site-config.js?v={image_version(config)}', second)
+
+    def test_direct_theme_css_is_versioned_without_traversing_dependencies(self):
+        theme = self.root / "themes/halloween"
+        theme.mkdir(parents=True)
+        css = theme / "theme.css"
+        # These dependencies deliberately do not exist: the updater should not inspect them.
+        original = '@import "child.css"; body { background:url("ghost.svg") }'
+        css.write_text(original)
+        page = self.root / "index.html"
+        page.write_text('<link rel="stylesheet" href="themes/halloween/theme.css"><script>/* generated theme URLs */const themeStyles={};/* end theme URLs */</script>')
+        update_site(self.root)
+        first = page.read_text()
+        self.assertIn(f'themes/halloween/theme.css?v={image_version(css)}', first)
+        self.assertEqual(css.read_text(), original)
+        self.assertEqual(update_site(self.root), [])
+        css.write_text(original + 'body { color:purple }')
+        self.assertEqual(update_site(self.root), ["index.html"])
+        self.assertNotEqual(page.read_text(), first)
+        self.assertEqual(update_site(self.root), [])
+
+    def test_shared_script_versions_match_across_pages(self):
+        (self.root / "shared").mkdir()
+        script = self.root / "shared/input.js"
+        script.write_text("// shared input")
+        for name in ("a", "b"):
+            folder = self.root / "games" / name
+            folder.mkdir(parents=True)
+            (folder / "index.html").write_text('<script src="../../shared/input.js?v=mic-config-2"></script>')
+        update_site(self.root)
+        for page in (self.root / "games").rglob("*.html"):
+            self.assertIn(f'input.js?v={image_version(script)}', page.read_text())
+        script.write_text("// new input")
+        self.assertEqual(len(update_site(self.root)), 2)
+        self.assertEqual(update_site(self.root), [])
+
+    def test_inline_scripts_comments_navigation_and_external_urls_stay_intact(self):
+        source = ('<script>const example = \"<img src=\"missing.png\">\";</script>'
+                  '<!-- <img src="missing.png"> -->'
+                  '<a href="missing.html">Navigate</a>'
+                  '<script src="https://example.org/pinned.js?v=1"></script>')
+        self.assertEqual(version_html(source, self.root), source)
+
+    def test_check_reports_stale_tree_without_writing_it(self):
+        page = self.root / "index.html"
+        page.write_text('<img src="assets/example.png">')
+        before = {p.relative_to(self.root): p.read_bytes() for p in self.root.rglob("*") if p.is_file()}
+        with patch.object(versions, "ROOT", self.root), patch.object(sys, "argv", ["versions", "--check"]), contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(versions.main(), 1)
+        after = {p.relative_to(self.root): p.read_bytes() for p in self.root.rglob("*") if p.is_file()}
+        self.assertEqual(before, after)
+        update_site(self.root)
+        with patch.object(versions, "ROOT", self.root), patch.object(sys, "argv", ["versions", "--check"]), contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(versions.main(), 0)
+
+    def test_out_of_root_assets_fail(self):
+        with self.assertRaises(FileNotFoundError):
+            version_html('<script src="../outside.js"></script>', self.root)
 
     def test_missing_image_fails(self):
         """Prevent publishing a version key for a nonexistent preview."""

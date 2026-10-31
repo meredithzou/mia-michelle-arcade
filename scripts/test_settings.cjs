@@ -189,15 +189,18 @@ test("Chinese Checkers: saved new preferences win over older legacy values", () 
 });
 
 test("Integration: scripts load before game code; apply, mute, and preference actions persist", () => {
-  assert.ok(noteHTML.indexOf('src="../../shared/settings.js"') < noteHTML.indexOf('src="game.js"'));
-  assert.ok(checkers.indexOf('src="../../shared/settings.js"') < checkers.indexOf("(function(){"));
+  assert.ok(noteHTML.includes('src="../../shared/settings.js?'));
+  assert.ok(noteHTML.includes('src="game.js?'));
+  assert.ok(noteHTML.indexOf('src="../../shared/settings.js?') < noteHTML.indexOf('src="game.js?'));
+  assert.ok(checkers.includes('src="../../shared/settings.js?'));
+  assert.ok(checkers.indexOf('src="../../shared/settings.js?') < checkers.indexOf("(function(){"));
   assert.ok(note.includes("let cfg=practiceSettings.load()"));
   assert.ok(note.includes("practiceSettings.save(cfg)"));
   assert.ok(checkers.includes("const ccPrefs=ccStorage.load()"));
   assert.ok(checkers.includes("const savePref=()=>ccStorage.save("));
   assert.equal((checkers.match(/savePref\(\)/g) || []).length, 5);
   assert.ok(read("games/chicken-jockey-dash/index.html").includes("cj-dash-best"));
-  assert.ok(!read("games/chicken-jockey-dash/index.html").includes('src="../../shared/settings.js"'));
+  assert.ok(!read("games/chicken-jockey-dash/index.html").includes('src="../../shared/settings.js?'));
 });
 
 const defaultPlay={...defaultNote,accidentals:"mixed",input:"touch",sensitivity:"standard"};
@@ -325,7 +328,8 @@ test("Find the Pair!: corrupt or unavailable storage falls back to Easy",()=>{
   const f=fixture({}, {failWrite:true});
   assert.equal(f.api.create(pairSchema).save({level:"hard"}),false);
   equal(f.api.create(pairSchema).load(),{level:"easy"});
-  assert.ok(pairHTML.indexOf('src="../../shared/settings.js"') < pairHTML.indexOf("(function(){"));
+  assert.ok(pairHTML.includes('src="../../shared/settings.js?'));
+  assert.ok(pairHTML.indexOf('src="../../shared/settings.js?') < pairHTML.indexOf("(function(){"));
   assert.ok(pairHTML.includes("difficultyStorage.load().level"));
   assert.ok(pairHTML.includes("difficultyStorage.save({level})"));
 });

@@ -6,14 +6,20 @@
   <title>Mia and Michelle's Arcade</title>
   <link rel="stylesheet" href="styles/base.css?v=9aeb7169c9aa" />
   <link rel="stylesheet" href="styles/home.css?v=6d1e546cc0d7" />
-  <link rel="stylesheet" id="arcade-theme" href="themes/pastel-rainbow/theme.css" />
-  <script src="site-config.js"></script>
+  <link rel="stylesheet" id="arcade-theme" href="themes/pastel-rainbow/theme.css?v=8a7bf9634692" />
+  <script src="site-config.js?v=88527d0a44b6"></script>
   <script>
     (function () {
       const theme = (window.ARCADE_CONFIG && window.ARCADE_CONFIG.activeTheme) || "pastel-rainbow";
-      // Only allow folder-like theme identifiers; never accept arbitrary URLs.
-      if (/^[a-z0-9-]+$/.test(theme)) {
-        document.getElementById("arcade-theme").href = "themes/" + theme + "/theme.css";
+      /* generated theme URLs */
+      const themeStyles = {
+  "halloween": "themes/halloween/theme.css?v=449e499e2878",
+  "pastel-rainbow": "themes/pastel-rainbow/theme.css?v=8a7bf9634692"
+};
+      /* end theme URLs */
+      // Only load known local themes; never accept arbitrary URLs.
+      if (Object.prototype.hasOwnProperty.call(themeStyles, theme)) {
+        document.getElementById("arcade-theme").href = themeStyles[theme];
       }
     })();
   </script>
@@ -212,7 +218,7 @@
     </footer>
   </div>
   <!-- Cookie-free, aggregate site statistics via Cloudflare Web Analytics. -->
-  <script src="analytics/config.js"></script>
-  <script src="analytics/analytics.js"></script>
+  <script src="analytics/config.js?v=f0864bb809c7"></script>
+  <script src="analytics/analytics.js?v=51cd0bb429b4"></script>
 </body>
 </html>
