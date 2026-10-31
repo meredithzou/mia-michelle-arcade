@@ -107,7 +107,3 @@ This repository is published through GitHub Pages. The root `CNAME` file connect
 ## Intellectual property
 
 This repository does not currently include a project-wide open-source license. Public visibility and the ability to fork on GitHub do not by themselves grant broad reuse rights. Some game concepts or assets reference third-party works; see notices in the relevant game files and `assets/licenses/`. Please respect those rights when adapting or redistributing content.
-
-## Change review workflow
-
-Make changes on a separate branch and open a pull request. The repository owner reviews and merges it. Do not commit or push changes directly to `main`.
