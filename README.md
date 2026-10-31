@@ -42,18 +42,20 @@ No app server, login, or build framework is required. Game preferences are store
 
 
 
-## Homepage asset cache busting
+## Asset cache versions
 
-Homepage images use URLs like `assets/example-preview.png?v=abcdef123456`. The 12-character version is computed from the image's Git blob content hash, so changing a screenshot automatically yields a new URL for browsers without renaming the actual image. There is no build system or runtime JavaScript.
+Local scripts, stylesheets, and images across the homepage, games, learning page, and privacy page use content-derived URLs such as `shared/arcade-nav.css?v=abcdef123456`. Versions are the first 12 characters of the file's Git blob hash. Unchanged files keep the same URL and remain cacheable.
 
-After changing a homepage image, a stylesheet in `styles/`, or the active theme in `site-config.js`, run:
+After changing a local asset or `site-config.js`, run the existing command (its historical filename is preserved):
 
 ```sh
 python3 scripts/update_preview_versions.py
 python3 scripts/update_preview_versions.py --check
 ```
 
-Commit the regenerated `index.html` with the asset change. The same content-hash versioning covers layout stylesheet links in `styles/` and the `site-config.js` script URL. Changing the active theme therefore gives its configuration a new URL, avoiding an old cached configuration after deployment. This does not speed up GitHub Pages deployment or force already-open pages to reload; visitors still need to fetch the updated homepage. Shared `.game-title-icon` CSS is the single source for title icon size, spacing, and alignment; do not duplicate those values inline. CI verifies the versions and fails if any image, layout stylesheet, or theme configuration URL is stale; **never edit a version number by hand**. As with any GitHub Pages update, browsers still need to fetch the latest HTML after deployment before seeing the new URL.
+Commit all regenerated HTML and CSS with the asset change. The updater processes CSS images and imports before their parent stylesheets, then updates HTML references and the homepage's generated theme URL map. A theme image change therefore invalidates both its CSS URL and the theme loader's URL. Legacy hand-written `?v=` values are replaced by content hashes. CI rejects stale versions; do not edit version numbers manually.
+
+This avoids old asset/configuration caches once visitors fetch the updated page. It does not shorten GitHub Pages deployment, bypass cached HTML, or force an already-open page to reload. Navigation URLs, external audio pinned to its package version, and saved preferences/progress are unchanged. Shared `.game-title-icon` CSS remains the single source for title icon geometry.
 
 ## Shared return button
 

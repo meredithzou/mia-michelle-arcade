@@ -1,4 +1,4 @@
-@import url("keyboard.css");
+@import url("keyboard.css?v=a74440d58e1f");
 
 /* Arcade page shell: match the existing games; only the palette changes. */
 html,body{margin:0;min-height:100%;background:#f4f1f8}
