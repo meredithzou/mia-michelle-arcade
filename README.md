@@ -8,6 +8,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 
 | Game | What you do |
 | --- | --- |
+| [Giant Little Garden](games/giant-little-garden/) | Plant seeds, water one patch or all six, and grow giant flowers and beanstalks. |
 | [Domino Knockdown!](games/domino-knockdown/) | Draw a path of plain dominoes, push the chain, and watch it tumble. |
 | [Marble Run Lab](games/marble-run-lab/) | Build a track, drop a marble, and follow its trail. |
 | [Jigsaw Garden](games/jigsaw-garden/) | Fit 9, 16, or 25 pieces together, choose a scene, or use your own photo. |
