@@ -36,6 +36,8 @@ The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, 
 - `shared/music/` — reusable notation, piano audio, keyboard, and styling.
 - `shared/settings.js` — browser-local game preference storage.
 - `styles/`, `themes/`, `assets/` — site layout, themes, and previews.
+
+The homepage theme is selected in `site-config.js`. Available themes: `pastel-rainbow` (default), `halloween`, and `thanksgiving`. Thanksgiving adds a harvest illustration and scattered maple leaves to the homepage; game pages keep their own styles.
 - `analytics/` — optional-to-disable Cloudflare Web Analytics integration (see [analytics/README.md](analytics/README.md)).
 - `scripts/` — static-site and game regression tests.
 
