@@ -4,10 +4,10 @@ A touch-friendly rock climbing game. Follow one colored route from bottom to top
 
 - Easy: 12 big holds, narrower reaches, and an automatic glowing guide.
 - Medium: 15 holds and wider reaches; find the next hold without the automatic guide.
-- Hard: 18 smaller holds, wide reaches, and more distracting holds.
+- Hard: a 48-hold climbing maze with visible chalk connections, branching paths, and dead ends. Move sideways or down and backtrack to find the flag. Each route color has a different maze.
 - Purple, blue, and orange routes are available at every level.
 - Tap a hold to climb. Use the hint button to briefly highlight the next hold.
-- Up arrow or Space offers an assisted keyboard way to climb on every level.
+- Easy/Medium: Up arrow or Space assists climbing. Hard: arrow keys choose an adjacent linked hold; there is no automatic climb button.
 - No timer or falling. The game counts successful moves and missed taps.
 - Restart, changing route, or changing difficulty starts a fresh climb.
 
