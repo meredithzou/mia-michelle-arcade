@@ -1,4 +1,8 @@
-# Little Summit 🧗
+# Little Summit 🧗 — Version 0
+
+This is the daughter-led, playful first version, developed through her ideas and feedback with ChatGPT. Preserve it as Version 0. A more realistic, parent-led climbing simulator is a separate project direction and should not replace this game.
+
+Version 0 uses regular hold layouts and simplified pose checks. It does not use measured real-world routes, fixed-length articulated limb animation, or a validated optimal climbing solution.
 
 A touch-friendly rock climbing game. Follow one colored route from bottom to top and reach the flag.
 
