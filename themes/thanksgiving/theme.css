@@ -1,0 +1,79 @@
+/* Thanksgiving homepage theme. Activate with activeTheme: "thanksgiving". */
+:root {
+ --text:#583c32; --muted:#826c5d; --card:#fffdf8f5;
+ --shadow:0 12px 28px #435a4010;
+ --page-background:radial-gradient(ellipse at 2% 8%,#f4ddba80,transparent 35%),radial-gradient(ellipse at 100% 40%,#f1d2c050,transparent 35%),linear-gradient(180deg,#fff9ef,#faf2e5 65%,#fcf5eb);
+ --hero-background:linear-gradient(110deg,#863d49,#aa5650 52%,#ce915f);
+ --card-edge-background:linear-gradient(135deg,#e4c79b,#efd8ba 55%,#d9b0a9);
+ --play-button-background:linear-gradient(115deg,#914955,#ac5c61);
+}
+.hero { border:1px solid #f3ddc4; box-shadow:0 15px 34px #843c3524; padding-right:260px; }
+.hero::before { width:275px; height:215px; right:6px; top:12px; background:url('assets/harvest.svg') center/contain no-repeat; border-radius:0; opacity:1; }
+.hero::after { content:'A LITTLE GRATITUDE. A LOT OF PLAY.'; width:auto; height:auto; left:auto; right:24px; bottom:19px; background:none; border-radius:0; opacity:1; color:#f4e7ca; font-size:8px; font-weight:800; letter-spacing:.1em; }
+.hero .eyebrow { color:#f3e6c6; background:#ffffff18; border:1px solid #e5dfbd50; }
+.hero h1 { font-size:40px; line-height:1.12; color:#fff8e7; }
+.hero p { color:#f2f1df; }
+.pill { background:#f4eddb; color:#774a37; border-color:#e2ddc5; }
+.collections-nav a { color:#80523b; background:#fffdf6; border-color:#e6d3b9; }
+.collection h2 { color:#814637; }
+.section-kicker { color:#947153; }
+.collection-head p { color:#7b6b5b; }
+.section-icon { background:#f1dfbb; }
+.classics .section-icon { background:#efdfbc; }
+.music .section-icon { background:#eed8d5; }
+.collection + .collection { border-color:#e6d6c0; }
+.name { color:#614639; }
+.desc { color:#7b6b5b; }
+.chip { color:#81654a; background:#fbf2e3; border-color:#ecdbbf; }
+.btn.primary { box-shadow:0 6px 14px #91495520; }
+.thumbFrame { background:#fffaf1; border-color:#dfdfce; }
+@media(max-width:760px) {
+ .hero { padding-right:20px; padding-bottom:124px; }
+ .hero h1 { font-size:32px; }
+ .hero::before { width:174px; height:142px; top:auto; bottom:0; right:4px; }
+ .hero::after { left:20px; right:auto; bottom:42px; font-size:8px; max-width:145px; line-height:1.8; }
+}
+
+/* Blush parchment with scattered maple leaves. */
+:root {
+ --page-background:radial-gradient(ellipse at 20% 0%,#f9e8d4,transparent 48%),linear-gradient(145deg,#f7e6df,#f4ded5 48%,#f7eadd);
+}
+body { position:relative; isolation:isolate; }
+body::before, body::after { content:''; position:absolute; inset:0; z-index:0; pointer-events:none; background-repeat:no-repeat; }
+body::before {
+ background-image:url('assets/maple-left.svg'),url('assets/maple-left.svg'),url('assets/maple-right.svg'),url('assets/maple-right.svg'),url('assets/maple-right.svg'),url('assets/maple-leaf.svg'),url('assets/maple-leaf.svg');
+ background-size:75px 83px,46px 51px,100px 110px,58px 64px,85px 94px,48px 53px,72px 79px;
+ background-position:left 2% top 45px,right 3% top 340px,left 1% top 710px,right 1% top 1180px,left 2% top 1710px,right 2% top 2290px,left 1% top 2950px;
+ opacity:.27;
+}
+body::after {
+ background-image:url('assets/maple-leaf.svg'),url('assets/maple-leaf.svg'),url('assets/maple-leaf.svg'),url('assets/maple-leaf.svg'),url('assets/maple-leaf.svg');
+ background-size:41px 45px,62px 68px,38px 42px,70px 77px,46px 51px;
+ background-position:right 8% top 65px,left 6% top 445px,right 5% top 850px,left 5% top 1350px,right 4% top 1850px;
+ opacity:.16; transform:scaleX(-1);
+}
+.wrap { position:relative; z-index:1; }
+@media(max-width:760px) {
+ body::before { opacity:.18; background-size:48px 53px,32px 36px,65px 72px,40px 44px,55px 61px,33px 36px,47px 52px; }
+ body::after { opacity:.12; }
+}
+
+/* Center the caption beneath the visible harvest illustration. */
+.hero::after {
+ right:27px;
+ width:210px;
+ text-align:center;
+ font-size:7.5px;
+ letter-spacing:.08em;
+}
+@media(max-width:760px) {
+ .hero::after {
+  left:auto;
+  right:3px;
+  bottom:5px;
+  width:174px;
+  max-width:none;
+  font-size:6px;
+  line-height:1.5;
+ }
+}
