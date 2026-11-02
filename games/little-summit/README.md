@@ -1,0 +1,18 @@
+# Little Summit 🧗 — Version 0
+
+This is the daughter-led, playful first version, developed through her ideas and feedback with ChatGPT. Preserve it as Version 0. A more realistic, parent-led climbing simulator is a separate project direction and should not replace this game.
+
+Version 0 uses regular hold layouts and simplified pose checks. It does not use measured real-world routes, fixed-length articulated limb animation, or a validated optimal climbing solution.
+
+A touch-friendly rock climbing game. Follow one colored route from bottom to top and reach the flag.
+
+- Easy: 12 big holds, narrower reaches, and an automatic glowing guide.
+- Medium: 15 holds and wider reaches; find the next hold without the automatic guide.
+- Hard: move left/right hands and feet separately. A pose solver limits reach, keeps feet below the torso, and keeps the torso over the feet. Raise your feet to reach higher. Get both hands onto the top row to win. This is a simplified game model, not climbing instruction.
+- Purple, blue, and orange routes are available at every level.
+- Tap a hold to climb. Use the hint button to briefly highlight the next hold.
+- Easy/Medium: Up arrow or Space assists climbing. Hard: keys 1–4 choose a limb; arrow keys choose an adjacent hold for it. There is no automatic climb button.
+- No timer or falling. The game counts successful moves and missed taps.
+- Restart, changing route, or changing difficulty starts a fresh climb.
+
+Uses the shared arcade return button and analytics. No external assets, permissions, or saved player data.
