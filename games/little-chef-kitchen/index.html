@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5a66a">
+  <title>Little Chef Kitchen · Mia and Michelle's Arcade</title>
+  <link rel="stylesheet" href="style.css?v=04cce49470ce">
+  <link rel="stylesheet" href="../../shared/arcade-nav.css?v=6af3b9ba5701">
+</head>
+<body class="arcade-game-page" style="--arcade-return-bg:#b95d42;--arcade-return-focus:#ffe3a2">
+  <a class="arcade-return" href="../../index.html">← Mia and Michelle’s Arcade</a>
+  <main class="chef-game" aria-label="Little Chef Kitchen cooking game">
+    <header class="game-header">
+      <div class="header-art" aria-hidden="true">🥣 🍔 🍦</div>
+      <h1>👩‍🍳 Little Chef Kitchen</h1>
+      <p>Welcome to your very own restaurant!</p>
+      <div class="stats">
+        <span class="stat" id="round">Customer 1 / 8</span>
+        <span class="stat" id="score">⭐ 0 stars</span>
+        <span class="stat" id="best">🏆 Best: 0</span>
+      </div>
+    </header>
+
+    <div class="game-body">
+      <section aria-labelledby="menu-title">
+        <h2 class="section-title" id="menu-title">📖 Big Food Menu <small>Tap any food to try it!</small></h2>
+        <div class="menu" id="menu"></div>
+        <button class="surprise" id="surprise" type="button">🎲 Give me a surprise order!</button>
+      </section>
+
+      <section class="order-ticket" aria-live="polite" aria-label="Customer order">
+        <div class="customer-animal" id="animal" aria-hidden="true">🐰</div>
+        <div class="ticket-info">
+          <div class="customer-name" id="customer">BUNNY BELLA IS HUNGRY</div>
+          <h2 class="food-title" id="food-title">🍔 Cheeseburger!</h2>
+          <div class="recipe" id="recipe"></div>
+        </div>
+      </section>
+
+      <div class="game-grid">
+        <section aria-labelledby="ingredients-title">
+          <h2 class="section-title" id="ingredients-title">🧺 Choose Your Ingredients</h2>
+          <div class="ingredients" id="ingredients"></div>
+        </section>
+        <section aria-labelledby="counter-title">
+          <h2 class="section-title" id="counter-title">🍳 Kitchen Counter</h2>
+          <div class="counter">
+            <div class="counter-heading"><span>My Cooking Plate</span><span class="ingredient-count" id="count">0 ingredients</span></div>
+            <div class="prep-area" id="prep-area">
+              <div class="plate" id="plate"><div class="plate-food" id="plate-food"><span class="empty">Add ingredients!</span></div></div>
+              <div class="cooking-effect" id="cooking-effect" aria-hidden="true">🔥 🔥 🔥</div>
+            </div>
+            <p class="tip" id="tip">Find the ingredients on the order ticket.</p>
+            <div class="actions">
+              <button class="clear" id="clear" type="button">↺ Clear</button>
+              <button class="action" id="action" type="button" disabled>👩‍🍳 Prepare Food!</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <p class="status" id="status" aria-live="polite">Your restaurant is open! 💕</p>
+
+      <div class="result-overlay" id="result-overlay" role="dialog" aria-modal="true" aria-labelledby="result-title" hidden>
+        <div class="result-emoji" id="result-emoji">🐰</div>
+        <h2 id="result-title">YUMMY!</h2>
+        <p id="result-text"></p>
+        <button class="next" id="next" type="button">Next Customer →</button>
+      </div>
+    </div>
+    <footer>10 kinds of food · Lots of recipes · 8 happy customers · No time limits ✨</footer>
+  </main>
+  <script src="game.js?v=9d1c683c3dbb"></script>
+  <script src="../../analytics/config.js?v=f0864bb809c7"></script>
+  <script src="../../analytics/analytics.js?v=51cd0bb429b4"></script>
+</body>
+</html>
