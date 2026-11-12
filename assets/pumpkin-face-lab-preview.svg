@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title description">
+  <title id="title">Pumpkin Face Lab carving preview</title>
+  <desc id="description">A glowing orange pumpkin with one star eye, one heart eye, and a silly smile under a purple night sky.</desc>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#292044"/><stop offset="1" stop-color="#4a3154"/></linearGradient>
+    <radialGradient id="skin" cx=".44" cy=".4" r=".7"><stop stop-color="#ffd475"/><stop offset=".46" stop-color="#ffaa44"/><stop offset=".8" stop-color="#e76f38"/><stop offset="1" stop-color="#a34436"/></radialGradient>
+    <radialGradient id="light"><stop stop-color="#fffce7"/><stop offset=".5" stop-color="#ffe38a"/><stop offset="1" stop-color="#f99839"/></radialGradient>
+    <linearGradient id="stem" x2="1" y2="1"><stop stop-color="#a1b66a"/><stop offset="1" stop-color="#456d4d"/></linearGradient>
+    <filter id="shadow"><feGaussianBlur stdDeviation="15"/></filter>
+  </defs>
+  <rect width="960" height="600" fill="url(#sky)"/>
+  <g fill="#ffe9c4" opacity=".66"><circle cx="76" cy="89" r="2"/><circle cx="244" cy="53" r="2"/><circle cx="366" cy="94" r="1.5"/><circle cx="648" cy="66" r="2"/><circle cx="851" cy="153" r="2"/><circle cx="914" cy="81" r="1.5"/><circle cx="724" cy="235" r="1.4"/></g>
+  <path d="M796 89a39 39 0 1 0 51 52 38 38 0 0 1-51-52Z" fill="#fbe2a7"/>
+  <path d="M0 523 82 450l61 72 90-65 70 65 121-48 110 48 115-69 79 69 101-91 78 91 53-64v152H0Z" fill="#281e3d"/>
+  <ellipse cx="483" cy="516" rx="295" ry="40" fill="#130e26" opacity=".5" filter="url(#shadow)"/>
+  <path d="M471 134c-150-28-295 18-327 148-37 167 103 267 333 269 232 2 375-97 344-268-26-133-195-185-350-149Z" fill="url(#skin)" stroke="#783b3d" stroke-width="11"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M469 142C334 196 315 461 468 538" stroke="#b65932" stroke-width="34" opacity=".57"/>
+    <path d="M472 142C609 193 633 463 473 538" stroke="#b65932" stroke-width="34" opacity=".57"/>
+    <path d="M474 144C415 188 409 467 474 538" stroke="#ffe27d" stroke-width="13" opacity=".62"/>
+    <path d="M472 144C546 208 550 463 475 539" stroke="#ffe27d" stroke-width="13" opacity=".55"/>
+  </g>
+  <path d="M447 151c-6-41 0-80 29-111 29 5 48 15 54 30-22 15-29 50-24 82Z" fill="url(#stem)" stroke="#345d46" stroke-width="9"/>
+  <path d="M482 53c-16 26-12 57-10 82" fill="none" stroke="#d6dc8e" stroke-width="10" stroke-linecap="round"/>
+  <path d="M509 90c73-56 118-5 90 27" fill="none" stroke="#567b52" stroke-width="11" stroke-linecap="round"/>
+  <g fill="url(#light)" stroke="#5a2924" stroke-width="11" stroke-linejoin="round">
+    <path d="m312 270 21 48 50 2-38 32 13 50-46-27-44 28 12-51-40-31 52-4Z"/>
+    <path d="M624 319c-21-44-72-38-77-1-6 42 46 76 77 105 37-30 87-69 79-105-8-37-60-42-79 1Z"/>
+    <path d="M337 447Q479 520 629 442q-11 88-143 94-130-6-149-89Z"/>
+  </g>
+  <g fill="#de9462" opacity=".9"><ellipse cx="139" cy="560" rx="13" ry="5" transform="rotate(30 139 560)"/><ellipse cx="743" cy="561" rx="11" ry="5" transform="rotate(-35 743 561)"/><ellipse cx="823" cy="543" rx="10" ry="5" transform="rotate(20 823 543)"/></g>
+</svg>
