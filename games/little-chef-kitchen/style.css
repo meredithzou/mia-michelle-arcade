@@ -1,0 +1,99 @@
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: radial-gradient(circle at 12% 8%, #ffe7bd, transparent 32%), #fff4e7;
+  color: #624237;
+  font-family: ui-rounded, "Trebuchet MS", system-ui, sans-serif;
+}
+button { font: inherit; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button:focus-visible { outline: 3px solid #c46d3d; outline-offset: 3px; }
+button:disabled { cursor: default; }
+.chef-game {
+  max-width: 870px;
+  margin: 0 auto 32px;
+  background: #fff8ed;
+  overflow: hidden;
+  border-radius: 22px;
+  box-shadow: 0 16px 48px #89543724;
+}
+.game-header { position: relative; overflow: hidden; background: linear-gradient(120deg, #f9ae69, #eb8263); color: white; padding: 22px; }
+.game-header h1 { margin: 0; font-size: clamp(27px, 4.8vw, 38px); line-height: 1.15; text-shadow: 0 2px 1px #a55d3b33; }
+.game-header p { margin: 6px 0 0; font-size: 14px; font-weight: 600; }
+.header-art { position: absolute; right: 18px; top: 15px; font-size: 32px; transform: rotate(-8deg); opacity: .8; }
+.stats { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.stat { background: #fff8eaea; color: #955e44; border-radius: 25px; padding: 8px 12px; font-size: 12px; font-weight: 900; }
+.game-body { padding: 15px; }
+.section-title { font-size: 15px; font-weight: 900; margin: 8px 0 10px; }
+.section-title small { color: #a7876e; font-size: 11px; font-weight: 700; margin-left: 6px; }
+.menu { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.menu-button { border: 2px solid #eadbc9; background: white; border-radius: 15px; padding: 9px 2px; min-height: 76px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+.menu-button .emoji { font-size: 30px; line-height: 1.1; }
+.menu-button .name { font-size: 11px; font-weight: 900; text-align: center; }
+.menu-button.active { border-color: #e69857; background: #ffefd7; box-shadow: inset 0 0 0 1px #e69857; }
+.menu-button:disabled { opacity: .55; }
+.surprise { width: 100%; margin-top: 10px; padding: 11px; border: 0; border-radius: 11px; background: #f1e1ce; color: #906b52; font-size: 13px; font-weight: 900; }
+.order-ticket { display: flex; align-items: center; gap: 14px; margin: 15px 0; padding: 14px; border: 2px solid #eadbc8; border-radius: 18px; background: white; }
+.customer-animal { flex: 0 0 78px; height: 78px; border-radius: 17px; background: #fff0db; display: grid; place-items: center; font-size: 51px; }
+.ticket-info { min-width: 0; flex: 1; }
+.customer-name { font-size: 11px; letter-spacing: .6px; font-weight: 900; color: #ad806b; }
+.food-title { font-size: 21px; font-weight: 900; margin: 4px 0; line-height: 1.3; }
+.recipe { color: #926e5b; font-size: 12px; line-height: 1.9; }
+.game-grid { display: grid; grid-template-columns: 1fr 1.08fr; gap: 16px; }
+.ingredients { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.ingredient { border: 2px solid #e9d9c7; border-radius: 14px; background: white; min-height: 83px; padding: 8px 3px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; }
+.ingredient[aria-pressed="true"] { border-color: #88bf70; background: #e4f6da; }
+.ingredient:disabled { opacity: .7; }
+.ingredient .em { height: 40px; display: flex; align-items: center; justify-content: center; font-size: 29px; line-height: 1.1; }
+.ingredient .label { font-size: 11px; font-weight: 800; text-align: center; }
+.counter { border: 2px dashed #e4c8a9; background: #f8ebda; border-radius: 17px; padding: 12px; }
+.counter-heading { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 10px; font-size: 13px; font-weight: 900; }
+.ingredient-count { font-size: 11px; color: #a47d66; }
+.prep-area { position: relative; min-height: 285px; border-radius: 15px; background: radial-gradient(ellipse, #dec7ac, #f2e5d3); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.plate { width: 182px; height: 182px; display: flex; align-items: center; justify-content: center; border: 10px solid #fafbf9; border-radius: 50%; background: radial-gradient(circle, #fffefa 0 56%, #e6ebe8 57% 64%, white 65%); box-shadow: 0 8px 14px #5e483b40, inset 0 0 0 2px #d8ded8; transition: transform .15s; }
+.plate-food { max-width: 130px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; font-size: 32px; line-height: 1.15; }
+.plate-food.finished { font-size: 79px; animation: chef-pop .35s ease; }
+.empty { font-size: 12px; text-align: center; color: #b4a399; font-weight: 800; }
+.cooking-effect { position: absolute; bottom: 4px; opacity: 0; font-size: 25px; }
+.cooking-effect.on { opacity: 1; animation: chef-fire .4s alternate infinite; }
+.tip { min-height: 40px; text-align: center; font-size: 12px; font-weight: 800; color: #96735d; margin: 0; padding: 12px 3px 6px; }
+.actions { display: flex; gap: 8px; }
+.clear { border: 2px solid #e3cdb6; background: white; color: #97745e; border-radius: 12px; padding: 0 15px; font-weight: 900; }
+.action { flex: 1; min-height: 51px; border: 0; border-radius: 13px; background: linear-gradient(#f3a362, #df7a50); color: white; box-shadow: 0 4px 0 #b96040; padding: 10px; font-size: 17px; font-weight: 900; }
+.action:disabled { opacity: .45; box-shadow: none; }
+.status { min-height: 45px; text-align: center; font-size: 13px; color: #a07057; font-weight: 800; padding: 13px 3px 4px; margin: 0; }
+.result-overlay { position: fixed; inset: 0; z-index: 100; background: #fff9eff7; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; }
+.result-overlay[hidden] { display: none; }
+.result-emoji { font-size: 94px; animation: chef-pop .4s ease; }
+.result-overlay h2 { margin: 12px 0 5px; color: #a65e42; font-size: 30px; }
+.result-overlay p { max-width: 340px; line-height: 1.6; }
+.next { border: 0; background: #e98a57; color: white; border-radius: 15px; padding: 15px 24px; min-height: 52px; font-size: 18px; font-weight: 900; margin-top: 12px; }
+.spark { position: absolute; top: 34px; font-size: 26px; pointer-events: none; animation: chef-spark .75s forwards; }
+.chef-game footer { padding: 8px 12px 18px; text-align: center; color: #aa8a76; font-size: 11px; }
+
+/* A little ketchup squeeze bottle, distinct from the fresh tomato emoji. */
+.ketchup-bottle { display: inline-flex; width: 29px; height: 38px; align-items: center; justify-content: center; position: relative; vertical-align: middle; flex-shrink: 0; }
+.ketchup-bottle::before { content: ""; position: absolute; left: 4px; bottom: 0; width: 21px; height: 29px; border-radius: 8px 8px 6px 6px; background: linear-gradient(100deg, #bd292a, #f34d3f 45%, #d82f31); border: 1px solid #ab2a2b; box-shadow: inset -3px 0 2px #a92a2925; }
+.ketchup-bottle::after { content: ""; position: absolute; left: 11px; top: 1px; width: 7px; height: 10px; background: #c52b2e; border-radius: 2px 2px 1px 1px; border: 1px solid #a22228; }
+.ketchup-bottle b { position: absolute; bottom: 6px; left: 8px; width: 13px; height: 14px; line-height: 14px; text-align: center; background: #fff6e5; border-radius: 3px; color: #d3302e; font-size: 10px; font-weight: 900; z-index: 1; }
+.recipe .ketchup-bottle { transform: scale(.67); margin: -7px -3px; transform-origin: center; }
+.plate-food .ketchup-bottle { margin: 0 1px; }
+@keyframes chef-pop { from { transform: scale(.65); } 70% { transform: scale(1.12); } to { transform: scale(1); } }
+@keyframes chef-fire { from { transform: translateY(3px); } to { transform: translateY(-4px); } }
+@keyframes chef-spark { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-48px); } }
+@media (max-width: 650px) {
+  .chef-game { border-radius: 0; margin-bottom: 0; }
+  .game-grid { grid-template-columns: 1fr; }
+  .ingredients { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .prep-area { min-height: 190px; }
+  .plate { width: 151px; height: 151px; }
+  .header-art { font-size: 22px; opacity: .35; }
+  .game-header { padding: 18px; }
+}
+@media (max-width: 365px) {
+  .menu-button .emoji { font-size: 25px; }
+  .menu-button .name { font-size: 9px; }
+  .customer-animal { flex-basis: 60px; height: 65px; font-size: 41px; }
+  .food-title { font-size: 18px; }
+  .ingredient .label { font-size: 10px; }
+}

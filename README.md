@@ -9,6 +9,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 | Game | What you do |
 | --- | --- |
 | [Little Summit](games/little-summit/) | Climb colored routes with Easy, Medium, and Hard levels. |
+| [Little Chef Kitchen](games/little-chef-kitchen/) | Cook varied recipes for animal customers, from soups and burgers to ice cream and cupcakes. |
 | [Snowball Playground](games/snowball-playground/) | Pack snowballs and throw them at a wall, targets, or a snowman. |
 | [Little Doctor Clinic](games/little-doctor-clinic/) | Help five animal patients with checkup tools, gentle care, stickers, and high fives. |
 | [Giant Little Garden](games/giant-little-garden/) | Plant seeds, water one patch or all six, and grow giant flowers and beanstalks. |
@@ -27,7 +28,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 
 ## Homepage collections
 
-The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, Find the Pair!, Jigsaw Garden, Marble Run Lab, Domino Knockdown!, Giant Little Garden, Little Doctor Clinic, Snowball Playground, Little Summit), **Family Classics** (Chinese Checkers, Five in a Row, Chinese Chess), and **The Music Box** (the music games/tools). Keep new cards in the appropriate collection, with Piano Note Finder last in the music collection. `styles/home.css` gives cards an equal height and three/two/one columns at desktop/tablet/phone widths.
+The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, Find the Pair!, Jigsaw Garden, Marble Run Lab, Domino Knockdown!, Giant Little Garden, Little Doctor Clinic, Snowball Playground, Little Summit, Little Chef Kitchen), **Family Classics** (Chinese Checkers, Five in a Row, Chinese Chess), and **The Music Box** (the music games/tools). Keep new cards in the appropriate collection, with Piano Note Finder last in the music collection. `styles/home.css` gives cards an equal height and three/two/one columns at desktop/tablet/phone widths.
 
 ## Project layout
 
@@ -98,6 +99,7 @@ node scripts/test_play_that_note_microphone.cjs
 node scripts/test_find_the_pair.cjs
 node scripts/test_marble_run.cjs
 node scripts/test_chinese_chess.cjs
+node scripts/test_little_chef_kitchen.cjs
 python3 scripts/test_homepage_layout.py
 python3 scripts/test_preview_versions.py
 python3 scripts/update_preview_versions.py --check
