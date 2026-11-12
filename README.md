@@ -9,6 +9,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 | Game | What you do |
 | --- | --- |
 | [Little Summit](games/little-summit/) | Climb colored routes with Easy, Medium, and Hard levels. |
+| [Pumpkin Face Lab](games/pumpkin-face-lab/) | Carve glowing or black pumpkin faces, tilt shapes, draw freehand, and save your favorites. |
 | [Little Chef Kitchen](games/little-chef-kitchen/) | Cook varied recipes for animal customers, from soups and burgers to ice cream and cupcakes. |
 | [Snowball Playground](games/snowball-playground/) | Pack snowballs and throw them at a wall, targets, or a snowman. |
 | [Little Doctor Clinic](games/little-doctor-clinic/) | Help five animal patients with checkup tools, gentle care, stickers, and high fives. |
@@ -28,7 +29,7 @@ A family-made collection of touch-friendly browser games for kids and grown-ups.
 
 ## Homepage collections
 
-The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, Find the Pair!, Jigsaw Garden, Marble Run Lab, Domino Knockdown!, Giant Little Garden, Little Doctor Clinic, Snowball Playground, Little Summit, Little Chef Kitchen), **Family Classics** (Chinese Checkers, Five in a Row, Chinese Chess), and **The Music Box** (the music games/tools). Keep new cards in the appropriate collection, with Piano Note Finder last in the music collection. `styles/home.css` gives cards an equal height and three/two/one columns at desktop/tablet/phone widths.
+The homepage groups games into **From an Idea to a Game** (Chicken Jockey Dash, Find the Pair!, Jigsaw Garden, Marble Run Lab, Domino Knockdown!, Giant Little Garden, Little Doctor Clinic, Snowball Playground, Little Summit, Little Chef Kitchen, Pumpkin Face Lab), **Family Classics** (Chinese Checkers, Five in a Row, Chinese Chess), and **The Music Box** (the music games/tools). Keep new cards in the appropriate collection, with Piano Note Finder last in the music collection. `styles/home.css` gives cards an equal height and three/two/one columns at desktop/tablet/phone widths.
 
 ## Project layout
 
