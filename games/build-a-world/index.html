@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f8f5ff">
+  <meta name="description" content="Build-a-World! A magical little creative block-building game for Mia and Michelle's Arcade.">
+  <title>Build-a-World! | Mia &amp; Michelle's Arcade</title>
+  <link rel="stylesheet" href="../../shared/arcade-nav.css?v=6af3b9ba5701">
+  <style>
+    :root{--ink:#322b58;--muted:#797493;--purple:#7356dc;--violet:#eee8ff;--line:#e9e5f4;--shadow:0 14px 42px #6854ac16;--green:#e5f7e9}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:ui-rounded,"SF Pro Rounded","Nunito","Trebuchet MS",system-ui,sans-serif;background:radial-gradient(ellipse at 13% 7%,#f0e9ff 0,transparent 37%),radial-gradient(ellipse at 90% 5%,#dcf7ed 0,transparent 35%),#fcfbff;color:var(--ink)}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #f9ab4a;outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.4}.app{max-width:1420px;margin:0 auto;padding:21px 26px 34px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:22px}.brand{display:flex;gap:10px;align-items:center;color:#615385;font-weight:900;font-size:13px;letter-spacing:.025em}.brand-icon{display:grid;place-items:center;width:41px;height:41px;background:linear-gradient(145deg,#a48af6,#6d58d7);color:white;border-radius:14px;box-shadow:0 7px 18px #8e75e747;font-size:23px}.top-controls{display:flex;gap:9px;align-items:center}.pill{border:1px solid #e7dffb;border-radius:999px;padding:10px 16px;background:white;color:#6b56a4;font-size:12px;font-weight:900;box-shadow:0 3px 9px #5c4ba50c}.pill:hover{background:#f5efff}.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:23px}.eyebrow{display:inline-flex;align-items:center;gap:7px;background:#f1eafa;color:#805abe;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;padding:7px 13px}.hero h1{font-size:clamp(34px,4.7vw,62px);line-height:1.02;letter-spacing:-.065em;margin:10px 0 8px;font-weight:1000;color:#38305c}.hero h1 span{color:#8b67df}.subtitle{margin:0;color:var(--muted);font-size:15px;font-weight:600}.mission{width:min(375px,36%);background:linear-gradient(120deg,#fff9ed,#fff1df);border:1px solid #ffe5ba;border-radius:22px;padding:14px 16px;display:flex;gap:10px;align-items:center;box-shadow:0 6px 24px #edb87018}.mission .star{background:#ffdea2;border-radius:14px;display:grid;place-items:center;flex-shrink:0;width:45px;height:45px;font-size:24px}.mission strong{display:block;font-size:12px;color:#a76c2e;letter-spacing:.035em}.mission span{font-size:13px;font-weight:800;color:#70553d;line-height:1.3}.mission button{background:white;border:1px solid #f6d9ab;border-radius:50%;width:31px;height:31px;color:#a66c28;flex-shrink:0;font-size:18px}.game{display:grid;grid-template-columns:235px minmax(0,1fr);align-items:start;gap:18px}.side,.studio{background:white;border:1px solid #ece8f5;border-radius:26px;box-shadow:var(--shadow)}.side{padding:19px 15px}.side h2{font-size:15px;display:flex;justify-content:space-between;align-items:center;margin:0 5px 14px}.side h2 .subtle{font-size:11px;color:#9e94b6;font-weight:700}.tabs{display:flex;background:#f4f1fb;padding:4px;border-radius:13px;margin-bottom:14px}.tab{flex:1;background:transparent;border:0;border-radius:10px;padding:9px 5px;font-size:12px;font-weight:900;color:#88809d}.tab.active{color:#6247bd;background:#fff;box-shadow:0 2px 9px #40306d19}.palette{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.tile{min-height:77px;background:#faf9fe;border:2px solid transparent;border-radius:15px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;color:#615b79;transition:transform .12s,border-color .12s,background .12s}.tile:hover{transform:translateY(-2px);background:#f4effe}.tile.active{border-color:#896bf4;background:#f3edff;box-shadow:inset 0 0 0 1px #ac9af8}.tile-icon{width:36px;height:35px;display:grid;place-items:center;font-size:23px;filter:drop-shadow(0 2px 1px #8b77a31c)}.tile-name{font-size:11px;font-weight:900}.side-tip{margin-top:16px;padding:13px 11px;background:#f5f2ff;border-radius:16px;color:#817699;font-size:11px;line-height:1.5;font-weight:650}.side-tip strong{color:#6655a9}.studio{padding:14px;min-width:0}.studio-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:5px 6px 14px}.studio-label{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:1000}.live-dot{width:10px;height:10px;border-radius:50%;background:#7fd4a4;box-shadow:0 0 0 4px #dff9eb}.studio-head small{font-size:12px;color:#9b94ad;font-weight:750}.studio-actions{display:flex;gap:8px}.small-btn{background:#f6f3fb;border:1px solid #ebe5f4;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;color:#665a85}.small-btn:hover{background:#ebe3ff}.small-btn.primary{background:#7459d6;color:white;border-color:#7459d6}.world-scroll{border-radius:20px;overflow-x:auto;overscroll-behavior-x:contain;background:linear-gradient(#bfefff,#defafa);scrollbar-width:thin;scrollbar-color:#cfc6f1 transparent}.canvas-box{position:relative;min-width:590px}.world{width:100%;height:auto;display:block;touch-action:none;cursor:crosshair;border-radius:18px}.canvas-box:after{content:'';pointer-events:none;position:absolute;inset:0;border:1px solid #ffffff82;border-radius:18px}.world-label{display:flex;justify-content:space-between;align-items:center;padding:10px 6px 2px;color:#9991aa;font-weight:750;font-size:11px;gap:8px}.world-label span:first-child{color:#6b5bc4}.world-label .hint{font-weight:650}.bottom{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end;margin-top:15px}.templates-label{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#9d91b0;font-weight:1000;margin:0 0 9px 5px}.templates{display:flex;gap:9px;overflow-x:auto;padding-bottom:3px}.preset{flex:0 0 auto;background:#f9f7fd;border:1px solid #eae5f3;border-radius:14px;padding:10px 13px;color:#5f557a;font-size:12px;font-weight:900;display:flex;align-items:center;gap:7px;white-space:nowrap}.preset.active{background:#eee7ff;border-color:#bca9fa;color:#6650b8}.preset:hover{background:#f0ebfc}.preset .emoji{font-size:19px}.edit-actions{display:flex;gap:7px}.round-btn{height:40px;min-width:41px;border:1px solid #e9e5f4;background:white;border-radius:13px;display:grid;place-items:center;font-size:19px;color:#756a98}.round-btn:hover{background:#f5f0fe}.round-btn.danger{color:#c0717b}.help-note{font-size:11px;color:#9a91af;text-align:center;margin:15px 0 0;font-weight:700}.toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,30px);opacity:0;pointer-events:none;background:#44366e;color:white;border-radius:999px;padding:12px 20px;font-size:13px;font-weight:900;z-index:10;transition:opacity .2s,transform .2s;box-shadow:0 12px 35px #25164f44}.toast.show{opacity:1;transform:translate(-50%,0)}dialog{border:0;padding:0;border-radius:24px;max-width:min(440px,calc(100vw - 36px));color:var(--ink);box-shadow:0 24px 80px #31245b4a}dialog::backdrop{background:#2119408c}.dialog-content{padding:28px;text-align:center}.dialog-content h2{margin:0 0 8px;font-size:27px}.dialog-content p{line-height:1.6;color:#7a718f;font-size:14px}.dialog-buttons{display:flex;gap:9px;justify-content:center;margin-top:16px}.dialog-buttons button{border:0;border-radius:12px;padding:12px 18px;background:#eee9f8;color:#5b5180;font-weight:900}.dialog-buttons .yes{background:#7459d6;color:white}.party{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9}.confetti{position:absolute;top:-30px;width:12px;height:18px;border-radius:3px;animation:drop 2.4s ease-in forwards}@keyframes drop{to{transform:translate(var(--dx),110vh) rotate(var(--spin));opacity:0}}@media(max-width:1070px){.game{grid-template-columns:205px minmax(0,1fr);gap:12px}.side{padding:15px 11px}.studio{padding:10px}.tile{min-height:70px}.mission{width:330px}.hero h1{font-size:47px}.small-btn{padding:8px 9px}}@media(max-width:760px){.app{padding:14px 12px 30px}.topbar{margin-bottom:20px}.brand{font-size:11px}.brand-icon{width:34px;height:34px}.top-controls .pill{padding:9px 10px}.hero{display:block;margin-bottom:14px}.hero h1{font-size:41px}.subtitle{font-size:13px}.mission{width:100%;margin-top:16px}.game{display:flex;flex-direction:column;gap:12px}.side{order:2;width:100%;padding:13px}.studio{order:1;width:100%;padding:9px}.side h2{margin:0 5px 9px}.palette{display:flex;overflow-x:auto;gap:7px;padding-bottom:4px}.tile{min-height:70px;min-width:75px;flex:0 0 75px}.side-tip{margin-top:9px;padding:9px 12px}.studio-head{gap:5px;flex-wrap:wrap}.studio-label{font-size:12px}.studio-head small{font-size:10px}.studio-actions{margin-left:auto}.small-btn{font-size:11px}.world-label{font-size:10px}.bottom{grid-template-columns:1fr}.edit-actions{justify-content:flex-start}.templates{width:100%}.help-note{line-height:1.5}.world{border-radius:14px}}
+    @media(prefers-reduced-motion:reduce){*,*:after,*:before{animation:none!important;transition:none!important}}
+  </style>
+  <style>
+    .small-btn.surprise{background:linear-gradient(115deg,#fa88c0,#9e75f0);color:white;border-color:#d49ae9;box-shadow:0 4px 12px #b87cdb35}
+    .small-btn.surprise:hover{background:linear-gradient(115deg,#ec6fad,#865ce4)}
+  </style>
+</head>
+<body class="arcade-game-page" style="--arcade-return-bg:#7459d6;--arcade-return-focus:#f9ab4a">
+  <a class="arcade-return" href="../../index.html">← Mia and Michelle’s Arcade</a>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand"><div class="brand-icon">✿</div><span>MIA &amp; MICHELLE'S ARCADE <span style="color:#b8abc9">/ GAME LAB</span></span></div>
+      <div class="top-controls"><button class="pill" id="howBtn">❔ How to play</button><button class="pill" id="saveBtn">💾 Save picture</button></div>
+    </header>
+    <section class="hero"><div><div class="eyebrow">✦ Imagine · Build · Play</div><h1>Build-a-<span>World!</span> 🏡</h1><p class="subtitle">A little world where you can build absolutely anything.</p></div>
+      <div class="mission"><div class="star">⭐</div><div style="flex:1"><strong>YOUR BUILDING CHALLENGE</strong><span id="missionText">Build a cozy house with two windows!</span></div><button id="newMission" aria-label="Give me a different challenge" title="New challenge">↻</button></div>
+    </section>
+    <main class="game">
+      <aside class="side"><h2>🎨 Your building blocks <span class="subtle" id="selectedLabel">Wood</span></h2><div class="tabs"><button class="tab active" data-tab="build" id="buildTab">🧱 Building</button><button class="tab" data-tab="nature" id="natureTab">🌱 Nature + fun</button></div><div id="palette" class="palette" aria-label="Choose a building block"></div><div class="side-tip"><strong>Little builder tip!</strong> Tap a block, then tap or drag your finger across the world to place it. You can build as high as you like!</div></aside>
+      <section class="studio" aria-label="Building area">
+        <div class="studio-head"><div class="studio-label"><span class="live-dot"></span> MY LITTLE WORLD <small id="pieceCount">0 blocks placed</small></div><div class="studio-actions"><button class="small-btn surprise" id="surpriseBtn" title="Make a random surprise building">🎁 Surprise Me!</button><button class="small-btn" id="rebuildBtn" title="Clear all blocks and start over">🔄 Rebuild</button><button class="small-btn" id="dayBtn" title="Change time of day">🌙 Night</button><button class="small-btn primary" id="celebrateBtn">🎉 Celebrate!</button></div></div>
+        <div class="world-scroll" id="worldScroll"><div class="canvas-box"><canvas class="world" id="world" width="864" height="576" aria-label="Creative building canvas. Select a block and tap to place it."></canvas></div></div>
+        <div class="world-label"><span>✨ Your imagination is the only limit</span><span class="hint">Tap or drag to build · Swipe the edge to explore</span></div>
+        <div class="bottom"><div><p class="templates-label">🏘️ Start with a world</p><div class="templates"><button class="preset active" data-template="cottage"><span class="emoji">🏡</span>Cozy house</button><button class="preset" data-template="castle"><span class="emoji">🏰</span>Magic castle</button><button class="preset" data-template="treehouse"><span class="emoji">🌳</span>Treehouse</button><button class="preset" data-template="blank"><span class="emoji">☁️</span>Empty world</button></div></div><div><p class="templates-label">🪄 Magic tools</p><div class="edit-actions"><button class="round-btn" id="undoBtn" title="Undo" aria-label="Undo">↶</button><button class="round-btn" id="redoBtn" title="Redo" aria-label="Redo">↷</button><button class="round-btn danger" id="clearBtn" title="Clear all blocks" aria-label="Clear all blocks">🗑️</button></div></div></div>
+      </section>
+    </main>
+    <p class="help-note">Made with imagination for Mia &amp; Michelle's Arcade · Your world is saved automatically on this device. 🌟</p>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div><div id="party" class="party" aria-hidden="true"></div>
+  <dialog id="confirmDialog"><div class="dialog-content"><div style="font-size:50px">🏗️</div><h2 id="confirmTitle">Start a new world?</h2><p id="confirmDescription">Your current building will be replaced.</p><div class="dialog-buttons"><button id="confirmCancel">Keep building</button><button class="yes" id="confirmYes">Let's do it!</button></div></div></dialog>
+  <dialog id="helpDialog"><div class="dialog-content"><div style="font-size:52px">🧱</div><h2>How to play</h2><p>Choose a block from the colorful toolbox. Then <b>tap anywhere</b> in your world to place it. <b>Drag</b> to build walls, floors, and fun shapes faster.<br><br>Tap <b>🎁 Surprise Me!</b> to see a random building, or <b>🔄 Rebuild</b> to clear every block. You can use ↶ Undo to bring your last creation back. Change day to night and save your picture too!</p><div class="dialog-buttons"><button class="yes" id="helpClose">Let's build! ✨</button></div></div></dialog>
+  <script>
+    (()=>{
+      'use strict';
+      const canvas=document.getElementById('world'), ctx=canvas.getContext('2d');
+      const COLS=18,ROWS=12,S=48,TOTAL=COLS*ROWS,KEY='mia-build-a-world-v1';
+      const el=id=>document.getElementById(id);
+      const kinds=[
+        {id:'wood',name:'Wood',icon:'🪵',tab:'build'}, {id:'brick',name:'Brick',icon:'🧱',tab:'build'},
+        {id:'stone',name:'Stone',icon:'🪨',tab:'build'}, {id:'glass',name:'Window',icon:'🪟',tab:'build'},
+        {id:'roof',name:'Roof',icon:'🔺',tab:'build'}, {id:'door',name:'Door',icon:'🚪',tab:'build'},
+        {id:'gold',name:'Gold',icon:'⭐',tab:'build'}, {id:'erase',name:'Eraser',icon:'🧽',tab:'build'},
+        {id:'grass',name:'Grass',icon:'🌿',tab:'nature'}, {id:'flower',name:'Flowers',icon:'🌷',tab:'nature'},
+        {id:'trunk',name:'Tree trunk',icon:'🌲',tab:'nature'}, {id:'leaves',name:'Leaves',icon:'🍃',tab:'nature'},
+        {id:'water',name:'Water',icon:'💧',tab:'nature'}, {id:'rainbow',name:'Rainbow',icon:'🌈',tab:'nature'},
+        {id:'cloud',name:'Cloud',icon:'☁️',tab:'nature'}, {id:'erase',name:'Eraser',icon:'🧽',tab:'nature'}
+      ];
+      const missions=['Build a cozy house with two windows!','Make a castle with two tall towers!','Build a house up in a tree!','Create the most colorful tower ever!','Make a garden full of flowers!','Build a secret house with a golden door!','Try making a bridge over a river!','Make a house for a tiny dragon!'];
+      let board=Array(TOTAL).fill(null),selected='wood',tab='build',night=false,hover=-1,dragging=false,strokeChanged=false,undo=[],redo=[],dirty=false,activeTemplate='cottage',starterTemplate='cottage',lastSurprise=-1,toastTimer,confirmAction=null;
+      const idx=(x,y)=>y*COLS+x,put=(x,y,t)=>{if(x>=0&&x<COLS&&y>=0&&y<ROWS)board[idx(x,y)]=t};
+      function template(name){const a=Array(TOTAL).fill(null);const p=(x,y,t)=>{if(x>=0&&x<COLS&&y>=0&&y<ROWS)a[idx(x,y)]=t};
+        if(name==='cottage'){
+          for(let y=6;y<=9;y++)for(let x=5;x<=12;x++)p(x,y,'wood');
+          for(let x=4;x<=13;x++)p(x,5,'roof');p(5,6,'brick');p(12,6,'brick');
+          p(7,7,'glass');p(10,7,'glass');p(9,9,'door');p(5,9,'brick');p(12,9,'brick');
+          p(1,9,'flower');p(2,9,'flower');p(15,9,'flower');p(16,9,'flower');
+        } else if(name==='castle'){
+          for(let x=4;x<=13;x++)for(let y=6;y<=9;y++)p(x,y,'stone');
+          for(let y=3;y<=9;y++)for(let x of [3,4,5,12,13,14])p(x,y,'brick');
+          for(let x of [3,5,12,14])p(x,2,'roof');
+          for(let x=6;x<=11;x++)p(x,5,'roof');
+          p(4,5,'glass');p(13,5,'glass');p(7,7,'glass');p(10,7,'glass');
+          p(8,9,'door');p(9,9,'door');p(8,8,'door');p(9,8,'door');p(8,7,'gold');p(9,7,'gold');
+          p(1,9,'flower');p(16,9,'flower');
+        } else if(name==='treehouse'){
+          for(let y=5;y<=10;y++)p(9,y,'trunk');for(let y=6;y<=8;y++)p(10,y,'trunk');
+          for(let x=5;x<=13;x++)p(x,6,'wood');for(let x=6;x<=12;x++)for(let y=4;y<=5;y++)p(x,y,'wood');
+          for(let x=5;x<=13;x++)p(x,3,'roof');p(7,5,'glass');p(11,5,'glass');p(9,5,'door');
+          for(let x=4;x<=14;x++)for(let y=1;y<=2;y++)if(Math.abs(x-9)+(y===1?1:0)<5)p(x,y,'leaves');
+          p(3,8,'flower');p(15,9,'flower');
+        }
+        return a;
+      }
+      function saved(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.board)&&d.board.length===TOTAL){board=d.board.map(v=>kinds.some(t=>t.id===v)?v:null);night=!!d.night;selected=kinds.some(t=>t.id===d.selected)?d.selected:'wood';activeTemplate=d.activeTemplate||'custom';starterTemplate=['cottage','castle','treehouse','blank'].includes(d.starterTemplate)?d.starterTemplate:(['cottage','castle','treehouse','blank'].includes(activeTemplate)?activeTemplate:'cottage');return true}}catch(e){}return false}
+      function persist(){try{localStorage.setItem(KEY,JSON.stringify({board,night,selected,activeTemplate,starterTemplate}))}catch(e){}}
+      const clone=()=>board.slice();function checkpoint(){undo.push(clone());if(undo.length>70)undo.shift();redo=[]}
+      function toast(msg){const t=el('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200)}
+      function round(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
+      function cloud(x,y,w,opacity=1){ctx.globalAlpha=opacity;ctx.fillStyle=night?'#d8d7f7':'#ffffff';ctx.beginPath();ctx.ellipse(x,y,w*.28,w*.16,0,0,Math.PI*2);ctx.ellipse(x+w*.22,y-w*.06,w*.26,w*.21,0,0,Math.PI*2);ctx.ellipse(x+w*.47,y,w*.30,w*.16,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1}
+      function background(){const grad=ctx.createLinearGradient(0,0,0,576);if(night){grad.addColorStop(0,'#26224f');grad.addColorStop(.72,'#5d5b8d');grad.addColorStop(1,'#b4a0a3')}else{grad.addColorStop(0,'#8ad3f6');grad.addColorStop(.7,'#d9f9ff');grad.addColorStop(1,'#fff1d2')}ctx.fillStyle=grad;ctx.fillRect(0,0,864,576);
+        if(night){ctx.fillStyle='#fff7d1';ctx.beginPath();ctx.arc(728,93,33,0,Math.PI*2);ctx.fill();ctx.fillStyle='#302a57';ctx.beginPath();ctx.arc(743,82,30,0,Math.PI*2);ctx.fill();for(let i=0;i<39;i++){const x=(i*139+37)%864,y=(i*73+22)%310;ctx.fillStyle=i%4===0?'#fff2ad':'#e4dcff';ctx.globalAlpha=.6+(i%3)*.15;ctx.beginPath();ctx.arc(x,y,i%5===0?2:1,0,7);ctx.fill()}ctx.globalAlpha=1}
+        else{ctx.fillStyle='#fff3b3';ctx.beginPath();ctx.arc(738,90,45,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff7c4';ctx.lineWidth=4;for(let a=0;a<8;a++){const t=a*Math.PI/4;ctx.beginPath();ctx.moveTo(738+57*Math.cos(t),90+57*Math.sin(t));ctx.lineTo(738+67*Math.cos(t),90+67*Math.sin(t));ctx.stroke()}}
+        cloud(84,117,120,night?.23:.8);cloud(395,77,95,night?.15:.60);cloud(613,196,120,night?.2:.62);
+        ctx.fillStyle=night?'#686e82':'#b8e7c8';ctx.beginPath();ctx.moveTo(0,478);ctx.bezierCurveTo(160,360,270,445,410,455);ctx.bezierCurveTo(600,339,715,428,864,382);ctx.lineTo(864,576);ctx.lineTo(0,576);ctx.fill();
+        ctx.fillStyle=night?'#55736b':'#9cdca7';ctx.beginPath();ctx.moveTo(0,508);ctx.bezierCurveTo(154,425,310,521,453,476);ctx.bezierCurveTo(625,410,735,527,864,458);ctx.lineTo(864,576);ctx.lineTo(0,576);ctx.fill();
+        ctx.fillStyle=night?'#3d6255':'#6fcb87';ctx.fillRect(0,480,864,96);ctx.fillStyle=night?'#6a985e':'#85d99b';ctx.fillRect(0,480,864,9);ctx.fillStyle=night?'#35564b':'#5fb976';ctx.fillRect(0,564,864,12);
+        for(let i=0;i<70;i++){const x=(i*107+13)%864,y=494+(i*61)%70;ctx.fillStyle=night?'#58816b':'#8ce2a1';ctx.fillRect(x,y,3,6)}
+      }
+      function block(t,x,y){const X=x*S,Y=y*S,P=3,W=S-6,H=S-6;ctx.save();ctx.translate(X+P,Y+P);
+        const shell=(base,stroke='#ffffff55')=>{ctx.fillStyle=base;round(0,0,W,H,6);ctx.fill();ctx.lineWidth=1.7;ctx.strokeStyle=stroke;ctx.stroke()};
+        if(t==='wood'){shell('#dca16e');ctx.fillStyle='#c6824e';ctx.fillRect(0,11,W,4);ctx.fillRect(0,28,W,3);ctx.fillStyle='#edbc8c';ctx.fillRect(3,5,W-6,3);ctx.strokeStyle='#b7794a';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(15,0);ctx.lineTo(15,12);ctx.moveTo(29,16);ctx.lineTo(29,29);ctx.moveTo(10,32);ctx.lineTo(10,H);ctx.stroke();ctx.fillStyle='#e9c5a1';ctx.beginPath();ctx.arc(35,6,2,0,7);ctx.fill()}
+        else if(t==='brick'){shell('#e98c87');ctx.strokeStyle='#ffd9c3';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,20);ctx.lineTo(W,20);ctx.moveTo(21,0);ctx.lineTo(21,20);ctx.moveTo(11,20);ctx.lineTo(11,H);ctx.stroke();ctx.fillStyle='#f7a6a0';ctx.fillRect(3,3,12,3);ctx.fillRect(25,25,12,3)}
+        else if(t==='stone'){shell('#a3a4bc');ctx.fillStyle='#c2bfd1';round(4,4,14,11,3);ctx.fill();round(20,20,17,15,4);ctx.fill();ctx.fillStyle='#8589a8';round(5,25,12,8,3);ctx.fill();ctx.strokeStyle='#8589aa';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(21,0);ctx.lineTo(21,15);ctx.moveTo(0,20);ctx.lineTo(19,20);ctx.moveTo(25,19);ctx.lineTo(W,19);ctx.stroke()}
+        else if(t==='glass'){shell('#99cbdf');ctx.fillStyle='#c8f3f3';round(6,6,W-12,H-12,2);ctx.fill();ctx.strokeStyle='#fcfcff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(W/2,5);ctx.lineTo(W/2,H-5);ctx.moveTo(5,H/2);ctx.lineTo(W-5,H/2);ctx.stroke();ctx.fillStyle='#ffffff77';ctx.beginPath();ctx.moveTo(7,7);ctx.lineTo(17,7);ctx.lineTo(7,19);ctx.fill();ctx.fillStyle='#568cac';ctx.fillRect(1,35,W-2,5)}
+        else if(t==='roof'){ctx.fillStyle='#bf5c78';ctx.beginPath();ctx.moveTo(-1,H-1);ctx.lineTo(W/2,1);ctx.lineTo(W+1,H-1);ctx.closePath();ctx.fill();ctx.fillStyle='#e98791';ctx.beginPath();ctx.moveTo(7,H-4);ctx.lineTo(W/2,9);ctx.lineTo(W-7,H-4);ctx.closePath();ctx.fill();ctx.strokeStyle='#fdb7a5';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(W/2,10);ctx.lineTo(10,H-4);ctx.stroke()}
+        else if(t==='door'){shell('#e7c596');ctx.fillStyle='#8552a0';round(6,3,W-12,H-3,[15,15,2,2]);ctx.fill();ctx.fillStyle='#a473bb';round(10,8,W-20,H-10,[12,12,2,2]);ctx.fill();ctx.fillStyle='#ead58e';ctx.beginPath();ctx.arc(W-15,26,3,0,7);ctx.fill();ctx.fillStyle='#5e347b';ctx.fillRect(7,H-4,W-14,4)}
+        else if(t==='gold'){shell('#f1bf54');ctx.fillStyle='#ffe8a2';round(5,5,W-10,H-10,5);ctx.fill();ctx.save();ctx.translate(W/2,H/2);ctx.fillStyle='#eba73a';ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?8:17;ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r)}ctx.closePath();ctx.fill();ctx.restore()}
+        else if(t==='grass'){shell('#89c16e');ctx.fillStyle='#5d9c52';ctx.fillRect(0,18,W,H-18);ctx.fillStyle='#b5e88d';round(0,0,W,15,4);ctx.fill();ctx.strokeStyle='#6db35d';ctx.lineWidth=3;for(let i=4;i<40;i+=11){ctx.beginPath();ctx.moveTo(i,17);ctx.lineTo(i-3,7);ctx.lineTo(i+4,12);ctx.stroke()}}
+        else if(t==='flower'){ctx.strokeStyle='#579d60';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(21,39);ctx.lineTo(21,16);ctx.moveTo(20,31);ctx.lineTo(10,25);ctx.moveTo(21,28);ctx.lineTo(30,23);ctx.stroke();ctx.fillStyle='#ef8cb5';for(let i=0;i<5;i++){const a=i*2*Math.PI/5;ctx.beginPath();ctx.arc(21+9*Math.cos(a),14+9*Math.sin(a),7,0,7);ctx.fill()}ctx.fillStyle='#ffe19b';ctx.beginPath();ctx.arc(21,14,6,0,7);ctx.fill()}
+        else if(t==='trunk'){shell('#a97654');ctx.fillStyle='#cc9971';round(8,0,W-16,H,3);ctx.fill();ctx.strokeStyle='#966b51';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(17,0);ctx.lineTo(14,25);ctx.moveTo(28,10);ctx.lineTo(32,H);ctx.stroke()}
+        else if(t==='leaves'){shell('#6cbd7d');ctx.fillStyle='#9edfa3';for(const [a,b,r] of [[13,15,10],[26,10,11],[34,25,9],[14,32,10]]){ctx.beginPath();ctx.arc(a,b,r,0,7);ctx.fill()}ctx.fillStyle='#4a9e6b';ctx.beginPath();ctx.arc(27,31,6,0,7);ctx.fill()}
+        else if(t==='water'){shell('#69bedf');ctx.fillStyle='#a2e8f4';ctx.lineWidth=4;ctx.strokeStyle='#c9f9ff';for(let n=0;n<3;n++){ctx.beginPath();ctx.moveTo(4,10+n*12);ctx.bezierCurveTo(12,4+n*12,17,16+n*12,26,10+n*12);ctx.bezierCurveTo(32,5+n*12,38,11+n*12,39,10+n*12);ctx.stroke()}}
+        else if(t==='rainbow'){shell('#fbefff');ctx.save();round(3,3,W-6,H-6,4);ctx.clip();const c=['#f48d99','#f8bb75','#f5dc79','#89cfaa','#8abaf1','#b8a0e9'];c.forEach((v,i)=>{ctx.strokeStyle=v;ctx.lineWidth=7;ctx.beginPath();ctx.arc(W/2,H+3,37-i*6,Math.PI,Math.PI*2);ctx.stroke()});ctx.restore()}
+        else if(t==='cloud'){ctx.fillStyle='#b9aed6';ctx.beginPath();ctx.ellipse(14,28,12,11,0,0,7);ctx.ellipse(25,17,15,14,0,0,7);ctx.ellipse(34,27,11,10,0,0,7);ctx.fill();ctx.fillStyle='#f7f5ff';ctx.beginPath();ctx.ellipse(12,25,12,11,0,0,7);ctx.ellipse(24,16,15,14,0,0,7);ctx.ellipse(34,25,11,10,0,0,7);ctx.fill()}
+        ctx.restore();
+      }
+      function render(){background();for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const v=board[idx(x,y)];if(v)block(v,x,y)}if(hover>=0){const x=hover%COLS,y=Math.floor(hover/COLS);ctx.fillStyle=selected==='erase'?'#f5a2a65a':'#ffffff48';ctx.fillRect(x*S+2,y*S+2,S-4,S-4);ctx.strokeStyle=selected==='erase'?'#ec687a':'#7157d5';ctx.setLineDash([5,4]);ctx.lineWidth=2.5;ctx.strokeRect(x*S+2,y*S+2,S-4,S-4);ctx.setLineDash([])}
+        el('pieceCount').textContent=`${board.filter(Boolean).length} blocks placed`;el('dayBtn').textContent=night?'☀️ Day':'🌙 Night';el('undoBtn').disabled=!undo.length;el('redoBtn').disabled=!redo.length;
+      }
+      function palette(){el('palette').innerHTML='';for(const k of kinds.filter(t=>t.tab===tab)){const b=document.createElement('button');b.className='tile'+(selected===k.id?' active':'');b.setAttribute('aria-pressed',selected===k.id?'true':'false');b.innerHTML=`<span class="tile-icon">${k.icon}</span><span class="tile-name">${k.name}</span>`;b.addEventListener('click',()=>{selected=k.id;el('selectedLabel').textContent=k.name;palette();persist()});el('palette').append(b)}el('buildTab').classList.toggle('active',tab==='build');el('natureTab').classList.toggle('active',tab==='nature')}
+      function setTab(t){tab=t;if(!kinds.some(k=>k.tab===tab&&k.id===selected))selected=t==='build'?'wood':'flower';el('selectedLabel').textContent=kinds.find(k=>k.id===selected)?.name||'Wood';palette()}
+      function point(event){const r=canvas.getBoundingClientRect(),x=Math.floor((event.clientX-r.left)*canvas.width/r.width/S),y=Math.floor((event.clientY-r.top)*canvas.height/r.height/S);return(x>=0&&x<COLS&&y>=0&&y<ROWS)?idx(x,y):-1}
+      function paint(i){if(i<0)return;const value=selected==='erase'?null:selected;if(board[i]===value)return;if(!strokeChanged){checkpoint();strokeChanged=true}board[i]=value;activeTemplate='custom';render()}
+      function line(from,to){if(from<0||to<0){paint(to);return}let x1=from%COLS,y1=Math.floor(from/COLS),x2=to%COLS,y2=Math.floor(to/COLS);let n=Math.max(Math.abs(x2-x1),Math.abs(y2-y1));if(!n){paint(to);return}for(let i=0;i<=n;i++)paint(idx(Math.round(x1+(x2-x1)*i/n),Math.round(y1+(y2-y1)*i/n)))}
+      let lastPoint=-1;canvas.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;dragging=true;strokeChanged=false;lastPoint=point(e);hover=lastPoint;canvas.setPointerCapture(e.pointerId);paint(lastPoint);e.preventDefault()});canvas.addEventListener('pointermove',e=>{const i=point(e);if(dragging){line(lastPoint,i);lastPoint=i}else{hover=i;render()}});function end(){if(dragging){dragging=false;if(strokeChanged){dirty=true;persist()}strokeChanged=false;lastPoint=-1;render()}}canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);canvas.addEventListener('lostpointercapture',end);canvas.addEventListener('pointerleave',()=>{if(!dragging){hover=-1;render()}});
+      function refreshPreset(){document.querySelectorAll('.preset').forEach(b=>b.classList.toggle('active',b.dataset.template===activeTemplate))}
+      function ask(title,description,yes,action){confirmAction=action;el('confirmTitle').textContent=title;el('confirmDescription').textContent=description;el('confirmYes').textContent=yes;el('confirmDialog').showModal()}
+      function loadTemplate(name){const load=()=>{checkpoint();board=template(name);activeTemplate=name;starterTemplate=name;dirty=false;refreshPreset();render();persist();toast(name==='blank'?'Your blank world is ready! ☁️':'New building ready! Make it yours! ✨')};if(dirty)ask('Try another world?','Your current design is saved on this device only until you replace it. You can save a picture first.','Change world',load);else load()}
+      function rebuild(){if(!board.some(Boolean)){toast('Your board is already empty! ✨');return}ask('Start with an empty board?','Every building block will be cleared, with no example building. You can tap Undo if you want your creation back.','Yes, rebuild!',()=>{checkpoint();board=Array(TOTAL).fill(null);activeTemplate='blank';starterTemplate='blank';dirty=false;refreshPreset();render();persist();toast('Empty board! Build anything you like! 🏗️')})}
+      function makeSurprise(){
+        const a=Array(TOTAL).fill(null),p=(x,y,t)=>{if(x>=0&&x<COLS&&y>=0&&y<ROWS)a[idx(x,y)]=t};
+        const range=(x1,y1,x2,y2,t)=>{for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++)p(x,y,t)};
+        const pick=items=>items[Math.floor(Math.random()*items.length)],r=n=>Math.floor(Math.random()*n);
+        let kind=r(6);if(kind===lastSurprise)kind=(kind+1+r(5))%6;lastSurprise=kind;
+        let name='';
+        if(kind===0){
+          name='Wonder House';const x=4+r(3),w=8+r(2),wall=pick(['wood','brick','stone','rainbow']);
+          range(x,6,x+w-1,9,wall);range(x-1,5,x+w,5,'roof');
+          p(x+2,7,'glass');p(x+w-3,7,'glass');p(x+Math.floor(w/2),9,'door');
+          p(x-2,9,'flower');p(x+w+1,9,'flower');p(x-3,7,'leaves');p(x-3,8,'trunk');
+          p(x+w+2,7,'leaves');p(x+w+2,8,'trunk');
+        }else if(kind===1){
+          name='Magic Castle';const wall=pick(['stone','brick','gold']);
+          range(4,6,13,9,wall);range(3,3,5,9,'stone');range(12,3,14,9,'stone');
+          range(6,5,11,5,'roof');for(const x of [3,5,12,14])p(x,2,'roof');
+          p(4,5,'glass');p(13,5,'glass');p(7,7,'glass');p(10,7,'glass');
+          p(8,8,'door');p(9,8,'door');p(8,9,'door');p(9,9,'door');
+          p(8,6,'gold');p(9,6,'gold');p(1,9,'flower');p(16,9,'flower');
+          if(r(2))for(let x=6;x<=11;x+=2)p(x,4,'gold');
+        }else if(kind===2){
+          name='Secret Treehouse';const trunk=8+r(3),wall=pick(['wood','rainbow','brick']);
+          range(trunk,6,trunk+1,9,'trunk');range(trunk-4,6,trunk+4,6,'wood');
+          range(trunk-3,4,trunk+3,5,wall);range(trunk-4,3,trunk+4,3,'roof');
+          p(trunk-2,5,'glass');p(trunk+2,5,'glass');p(trunk,5,'door');
+          for(let y=1;y<=2;y++)for(let x=trunk-5;x<=trunk+5;x++)if(Math.abs(x-trunk)+(y===1?1:0)<5)p(x,y,'leaves');
+          p(trunk-6,9,'flower');p(trunk+6,9,'flower');
+        }else if(kind===3){
+          name='Rainbow Rocket';const hull=pick(['stone','wood','gold']);
+          range(7,4,10,8,hull);range(8,3,9,3,'roof');p(8,2,'roof');p(9,2,'roof');
+          range(6,7,6,9,'brick');range(11,7,11,9,'brick');
+          p(8,5,'glass');p(9,5,'glass');p(8,7,'rainbow');p(9,7,'rainbow');
+          p(8,9,'gold');p(9,9,'gold');p(7,9,'rainbow');p(10,9,'rainbow');
+          p(3,7,'cloud');p(14,5,'cloud');
+        }else if(kind===4){
+          name='Friendly Robot';const metal=pick(['stone','brick','wood']);
+          range(6,3,11,5,metal);p(7,4,'glass');p(10,4,'glass');p(8,5,'gold');p(9,5,'gold');
+          range(7,6,10,8,metal);p(8,7,'rainbow');p(9,7,'rainbow');
+          range(5,6,5,8,'stone');range(12,6,12,8,'stone');
+          range(7,9,7,9,'wood');range(10,9,10,9,'wood');
+          p(8,2,'gold');p(8,1,'roof');p(2,9,'flower');p(15,9,'flower');
+        }else{
+          name='Rainbow Tower';const x=6+r(2);const layers=['wood','rainbow','brick','gold','stone'];
+          for(let y=2;y<=9;y++)for(let dx=0;dx<6;dx++)p(x+dx,y,layers[(y+r(5))%layers.length]);
+          for(let y=3;y<=7;y+=2){p(x+1,y,'glass');p(x+4,y,'glass')}
+          p(x+2,9,'door');p(x+3,9,'door');
+          for(let dx=0;dx<6;dx++)p(x+dx,1,'roof');p(x+2,0,'gold');p(x+3,0,'gold');
+          p(2,9,'flower');p(15,9,'flower');
+        }
+        checkpoint();board=a;activeTemplate='custom';starterTemplate='blank';dirty=true;refreshPreset();render();persist();toast('Surprise! '+name+'! 🎁');
+      }
+      function confetti(){const party=el('party'),colors=['#ffc76c','#a08cf6','#76d2b2','#ff98be','#79bcec'];party.innerHTML='';for(let i=0;i<56;i++){const piece=document.createElement('i');piece.className='confetti';piece.style.left=(i*47.13%100)+'%';piece.style.background=colors[i%5];piece.style.animationDelay=(i%9*.09)+'s';piece.style.setProperty('--dx',((i*37)%170-85)+'px');piece.style.setProperty('--spin',((i*151)%1200)+'deg');party.append(piece)}setTimeout(()=>party.innerHTML='',3400);toast('WOW! What an amazing creation! 🌟')}
+      function savePicture(){try{const link=document.createElement('a');link.download='my-build-a-world.png';link.href=canvas.toDataURL('image/png');document.body.appendChild(link);link.click();link.remove();toast('Your masterpiece is ready! 🖼️')}catch(e){toast('Picture download is unavailable in this browser')}}
+      function clear(){if(!board.some(Boolean)){toast('Your world is already empty!');return}ask('Clear your world?','This will remove all the pieces you placed. You can undo it right afterward.','Clear world',()=>{checkpoint();board=Array(TOTAL).fill(null);activeTemplate='blank';starterTemplate='blank';dirty=false;refreshPreset();render();persist();toast('All clear! Start something new ☁️')})}
+      function init(){if(!saved()){board=template('cottage');persist()}else dirty=true;tab=kinds.find(k=>k.id===selected)?.tab||'build';setTab(tab);refreshPreset();render();
+        document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));document.querySelectorAll('[data-template]').forEach(b=>b.addEventListener('click',()=>loadTemplate(b.dataset.template)));
+        el('undoBtn').addEventListener('click',()=>{if(!undo.length)return;redo.push(clone());board=undo.pop();dirty=true;activeTemplate='custom';refreshPreset();render();persist()});el('redoBtn').addEventListener('click',()=>{if(!redo.length)return;undo.push(clone());board=redo.pop();dirty=true;activeTemplate='custom';refreshPreset();render();persist()});
+        el('clearBtn').addEventListener('click',clear);el('rebuildBtn').addEventListener('click',rebuild);el('surpriseBtn').addEventListener('click',makeSurprise);el('dayBtn').addEventListener('click',()=>{night=!night;render();persist()});el('celebrateBtn').addEventListener('click',confetti);el('saveBtn').addEventListener('click',savePicture);
+        let mission=0;el('newMission').addEventListener('click',()=>{mission=(mission+1+Math.floor(Math.random()*(missions.length-1)))%missions.length;el('missionText').textContent=missions[mission]});
+        el('howBtn').addEventListener('click',()=>el('helpDialog').showModal());el('helpClose').addEventListener('click',()=>el('helpDialog').close());el('confirmCancel').addEventListener('click',()=>el('confirmDialog').close());el('confirmYes').addEventListener('click',()=>{el('confirmDialog').close();if(confirmAction)confirmAction();confirmAction=null});
+        document.addEventListener('keydown',e=>{if(e.target.matches('input,textarea')||el('helpDialog').open||el('confirmDialog').open)return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();el(e.shiftKey?'redoBtn':'undoBtn').click()}else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();el('redoBtn').click()}});
+      }
+      init();
+    })();
+  </script>
+  <script src="../../analytics/config.js?v=f0864bb809c7"></script>
+  <script src="../../analytics/analytics.js?v=51cd0bb429b4"></script>
+</body>
+</html>
