@@ -15,6 +15,12 @@
   <style>
     .small-btn.surprise{background:linear-gradient(115deg,#fa88c0,#9e75f0);color:white;border-color:#d49ae9;box-shadow:0 4px 12px #b87cdb35}
     .small-btn.surprise:hover{background:linear-gradient(115deg,#ec6fad,#865ce4)}
+    @media (max-width:760px){
+      .bottom{grid-template-columns:minmax(0,1fr)}
+      .bottom>div{min-width:0}
+      .templates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;overflow:visible;padding-bottom:0}
+      .preset{width:100%;min-width:0;min-height:48px;padding:10px 8px;white-space:normal;justify-content:center;text-align:center;line-height:1.2}
+    }
   </style>
 </head>
 <body class="arcade-game-page" style="--arcade-return-bg:#7459d6;--arcade-return-focus:#f9ab4a">
